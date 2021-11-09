@@ -1,13 +1,15 @@
 local TF = {}
 
 
---Peripheral Names (incase something changes )
+--Peripheral/Item Names (incase something changes )
 PeriDiskDrive = "computercraft:disk_drive"
+PeriFloppyDisk = "computercraft:disk"
 PeriPickaxe = "minecraft:diamond_pickaxe"
 PeriWorkbench = "minecraft:crafting_table"
 PeriWirelessAdvanced = "computercraft:wireless_modem_advanced"
 PeriWireless = "computercraft:wireless_modem_normal"
 PeriStorage = "forge:storage" -- any Storage 
+PeriTurtle = "computercraft:turtle_normal"
 
 
 --Paste bins
@@ -284,14 +286,32 @@ function TF.Equip(Item)
     return true
 end
 
+function TF.SendMainframeMessage(Message, Protocol)
+    local TFMainframeID
+    while TFMainframeID == nil do
+        rednet.broadcast("Hello" , "MainframeRequest")
+        local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
+        TFMainframeID = Sender
+        if TFMainframeID == nil then
+            rednet.broadcast("No Responce" , "MainframeFail")
+        end
+    end
+    rednet.send(TFMainframeID, Message, Protocol)
+end
+
 function TF.SyncKnowledge()
     -- Look for Database computer
 
 end
 
+function TF.UploadKnowledge(Knowledge)
+    --local Message = textutils.serialize(Knowledge)
+    local Message = Knowledge
+    TF.SendMainframeMessage(Message, "KnowledgeUpload")
+end
 function TF.SaveKnowledge(Knowledge)
     -- Save Knowledge in the CraftingKnowledge folder
-    KText = string.gsub(Knowledge["Result"][1]["Name"], ":","-")
+    KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
     KFile = fs.open("CraftingKnowledge/" .. KText ,"w")
     KFile.write(textutils.serialize(Knowledge["Ingredients"]))
     KFile.close()
@@ -311,15 +331,18 @@ function TF.SearchKnowledge(TFItemName)
     
     for i = 1, #FoundItems do
         FResults = fs.open( FoundItems[i] , "r" )
+        LResults = FResults.readAll()
+        FResults.close()
+        LResults = textutils.unserialize(LResults)
         x1 = { Itemname = TFItemName }
-        ReturnList[#ReturnList + 1] = { Result = x1 , Ingredients = FResults }
+        ReturnList[#ReturnList + 1] = { Result = x1 , Ingredients = LResults }
     end
 
     return ReturnList -- return the crafting knowledge
 end
 
 function TF.RunClass(ClassName)
-    if CanSwitchClass(TurtleClass) then --if you can switch then go download or Run the Class
+    if TF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
         if ClassName == "Student" or ClassName == "student" then
             --qzt7K4sd
             if fs.exists("Student.lua") then
@@ -330,6 +353,7 @@ function TF.RunClass(ClassName)
             end
         else
             print("Unknown Class Name")
+            print(ClassName)
         end
     end
 end
@@ -363,17 +387,17 @@ function TF.CanSwitchClass(TurtleClass)
         -- first See if theres a pickaxe equiped
         if not turtle.detectUp() then -- first see if theres a block above 
             local Temp1, Temp2 = turtle.digUp()
-            if Temp2 == "No tool to dig with"
+            if Temp2 == "No tool to dig with" then
                return false 
             end
         elseif not turtle.detectDown() then -- first see if theres a block below 
             local Temp1, Temp2 = turtle.digDown()
-            if Temp2 == "No tool to dig with"
+            if Temp2 == "No tool to dig with" then
                return false 
             end
         elseif not turtle.detect() then -- first see if theres a block in front 
             local Temp1, Temp2 = turtle.dig()
-            if Temp2 == "No tool to dig with"
+            if Temp2 == "No tool to dig with" then
                return false 
             end
         else -- turn right and try again    
@@ -384,13 +408,43 @@ function TF.CanSwitchClass(TurtleClass)
             return false -- then you cant be one
         end
     else 
-        error("Unknown Class to Switch to")
+        error("Unknown Class to Switch to : " .. TurtleClass )
     end
     return true
 end
 
-function PlaceTurtleByClass(TurtleClass)
+function TF.PlaceTurtleByClass(TurtleClass)
+    while Drive == nil do
+        print("Please Give Me a Disk Drive")
+        os.pullEvent("turtle_inventory")
+        Drive = TF.PlaceItemByID(PeriDiskDrive,"Internal")
+    end
+    while Disk == nil do
+        print("Please Give Me a Floppy Disk")
+        os.pullEvent("turtle_inventory")
+        Disk = TF.PlaceItemByID(PeriFloppyDisk,"Internal")
+    end
+    while Turtle == nil do
+        print("Please Give Me a Turtle")
+        os.pullEvent("turtle_inventory")
+        Turtle = TF.PlaceItemByID(PeriTurtle,"Internal")
+    end
+    while TurtleModem == nil do
+        print("Please Give Me a Modem")
+        os.pullEvent("turtle_inventory")
+        TurtleModem = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
+        if TurtleModem == nil then
+            TurtleModem = TF.SearchInvByID(PeriWireless,"Internal") -- then for standard
+        end
+    end
 
+    --Place DiskDrive
+    --insert Floppy
+    --Write a program in the start up of the floppy
+    --  Equips the Modem and connects to the mainframe 
+    --  downloads the class selected
+    --  runs class
+    --Place turtle and start it
 
 end 
 

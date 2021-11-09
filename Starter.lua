@@ -4,8 +4,15 @@
 --     Build Command Computer // 
 
 
--- First thing Label Turtle 
-os.setComputerLabel("Starter Bot")
+
+
+
+-- Await Mainframe Connection
+local Modem = peripheral.find("modem")
+
+
+
+
 
 -- Get the Base Turtle
 if fs.exists("TB.lua") then
@@ -14,6 +21,19 @@ else
     shell.run("pastebin", "get", "aERjx7BE","TB.lua")
     TB = require("TB")
 end
+
+
+
+
+
+
+
+
+
+
+-- First thing Label Turtle 
+os.setComputerLabel("Starter Bot")
+
 
 -- Detect if there Chest
 function ChestCheck()
@@ -63,6 +83,8 @@ function MineCheck()
             sleep(2)
             TF.RunClass("Student")
         end
+        --place mining Turtle
+            
 
         
     elseif re == "m" or re == "M" then -- if told to go mine

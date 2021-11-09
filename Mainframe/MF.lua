@@ -1,3 +1,5 @@
+local MF = {}
+
 function MF.SearchKnowledge(MFItemName)
     local ReturnList = {}
     TTFItemName = string.gsub(MFItemName, ":","-")
@@ -18,3 +20,12 @@ function MF.SearchKnowledge(MFItemName)
     return ReturnList -- return the crafting knowledge
 end
 
+function MF.SaveKnowledge(Knowledge)
+    -- Save Knowledge in the CraftingKnowledge folder
+    KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
+    KFile = fs.open("CraftingKnowledge/" .. KText ,"w")
+    KFile.write(textutils.serialize(Knowledge["Ingredients"]))
+    KFile.close()
+end
+
+return MF
