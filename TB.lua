@@ -10,11 +10,11 @@ else
     DGPS = require("DGPS")
 end
 -- Get Functions API
-if fs.exists("TF.lua") then
-    TF = require("TF")
+if fs.exists("GF.lua") then
+    GF = require("GF")
 else
-    shell.run("pastebin", "get", "vUrS0uh1","TF.lua")
-    TF = require("TF")
+    shell.run("pastebin", "get", "vUrS0uh1","GF.lua")
+    GF = require("GF")
 end
 
 -- Make Crafting Knowledge Folder

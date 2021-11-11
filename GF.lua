@@ -300,8 +300,22 @@ function TF.SendMainframeMessage(Message, Protocol)
 end
 
 function TF.SyncKnowledge()
-    -- Look for Database computer
-
+    local ReturnList = {}
+    FoundItems = fs.list("CraftingKnowledge/")
+    print("Syncing " .. #FoundItems)
+    for i = 1, #FoundItems do
+        ResultItemName = string.gsub(FoundItems[i], ":","-")
+        FResults = fs.open("CraftingKnowledge/"..FoundItems[i] , "r" )
+        LResults = FResults.readAll()
+        FResults.close()
+        LResults = textutils.unserialize(LResults)
+        x1 = { Itemname = ResultItemName }
+        ReturnList[#ReturnList + 1] = { Result = x1 , Ingredients = LResults }
+    end
+    for i=1, #ReturnList do
+        --print(ReturnList[i]["Result"]["Itemname"])
+        TF.UploadKnowledge(ReturnList[i])
+    end
 end
 
 function TF.UploadKnowledge(Knowledge)
@@ -309,35 +323,30 @@ function TF.UploadKnowledge(Knowledge)
     local Message = Knowledge
     TF.SendMainframeMessage(Message, "KnowledgeUpload")
 end
+
 function TF.SaveKnowledge(Knowledge)
     -- Save Knowledge in the CraftingKnowledge folder
     KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
     KFile = fs.open("CraftingKnowledge/" .. KText ,"w")
     KFile.write(textutils.serialize(Knowledge["Ingredients"]))
     KFile.close()
-
 end
 
-function TF.SearchKnowledge(TFItemName)
+function TF.SearchKnowledge(ResultItemName)
     local ReturnList = {}
-    TTFItemName = string.gsub(TFItemName, ":","-")
-    
-    FoundItems = fs.find("CraftingKnowledge/" .. TTFItemName)
-
+    TResultItemName = string.gsub(ResultItemName, ":","-")
+    FoundItems = fs.find("CraftingKnowledge/" .. TResultItemName)
     if #FoundItems == 0 then
         return nil
     end
-    --print("Found "..#FoundItems)'
-    
     for i = 1, #FoundItems do
         FResults = fs.open( FoundItems[i] , "r" )
         LResults = FResults.readAll()
         FResults.close()
         LResults = textutils.unserialize(LResults)
-        x1 = { Itemname = TFItemName }
+        x1 = { Itemname = ResultItemName }
         ReturnList[#ReturnList + 1] = { Result = x1 , Ingredients = LResults }
     end
-
     return ReturnList -- return the crafting knowledge
 end
 

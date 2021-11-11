@@ -23,14 +23,6 @@ else
 end
 
 
-
-
-
-
-
-
-
-
 -- First thing Label Turtle 
 os.setComputerLabel("Starter Bot")
 
