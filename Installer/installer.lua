@@ -9,7 +9,8 @@ fs.delete("Mainframe.lua")
 fs.copy("Install/Mainframe/Mainframe.lua", "Mainframe.lua")
 fs.copy("Install/Installer/Update.lua", "Update.lua")
 fs.copy("Install/","LocalGit")
- 
+
+
 -- Make the Mainframe run on Startup
 file = fs.open("Startup.lua","w")
 file.write([[shell.run("Mainframe.lua")]])

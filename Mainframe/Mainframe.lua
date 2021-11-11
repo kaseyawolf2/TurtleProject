@@ -5,7 +5,7 @@ end
 
 -- Get the General Functions
 GF = require("LocalGit/APIs/GF")
-MF = require("MF")
+MF = require("LocalGit/APIs/MF")
 
 os.setComputerLabel("Mainframe")
 
@@ -33,10 +33,7 @@ rednet.close()
 sleep(1)
 rednet.open(peripheral.getName(peripheral.find("modem")))
 
-
 term.setCursorPos(1, 1)
-
-
 
 while true do
     BootMainframe()
