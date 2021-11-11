@@ -1,6 +1,6 @@
 https://computercraft.info/wiki/Category:APIs
-
-
+wPbHNfDM
+pastebin get wPbHNfDM Installer
 
 pastebin get cUYTGbpb bbpack // git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
 

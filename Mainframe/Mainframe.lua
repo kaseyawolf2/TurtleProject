@@ -15,12 +15,6 @@ else
     TB = require("TB")
 end
 
--- Make the Mainframe run on Startup
-if not fs.exists("Startup.lua") then
-    file = fs.open("Startup.lua","w")
-    file.write([[shell.run("Mainframe.lua")]])
-    file.close()
-end
 os.setComputerLabel("Mainframe")
 
 MasterMainframeID = nil
