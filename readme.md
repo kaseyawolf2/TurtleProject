@@ -19,7 +19,7 @@ Installer
     Installs the mainframe
     Updates the Startup File
     Downloads the all the Github files
-x
+
 
 Mainframe
     Can Have Multiple PC as Mainframes
