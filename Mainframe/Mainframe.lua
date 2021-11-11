@@ -1,8 +1,3 @@
--- Make Crafting Knowledge Folder
-if not fs.isDir("CraftingKnowledge") then
-    fs.makeDir("CraftingKnowledge")
-end
-
 -- Get the General Functions
 GF = require("LocalGit/APIs/GF")
 MF = require("LocalGit/APIs/MF")
