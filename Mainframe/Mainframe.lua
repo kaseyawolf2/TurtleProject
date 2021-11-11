@@ -1,25 +1,18 @@
-
--- Await Mainframe Connection
-local Modem = peripheral.find("modem")
-
 -- Make Crafting Knowledge Folder
 if not fs.isDir("CraftingKnowledge") then
     fs.makeDir("CraftingKnowledge")
 end
 
--- Get the Mainframe Functions
-if fs.exists("TB.lua") then
-    TB = require("TB")
-else
-    shell.run("pastebin", "get", "aERjx7BE","TB.lua")
-    TB = require("TB")
-end
+-- Get the General Functions
+GF = require("GF")
 
 os.setComputerLabel("Mainframe")
 
 MasterMainframeID = nil
 MyID = os.getComputerID()
 
+
+-- Find/Await A Modem and open Rednet
 HasWireless = false
 while not HasWireless do
     term.clear()
@@ -38,6 +31,8 @@ term.clear()
 rednet.close()
 sleep(1)
 rednet.open(peripheral.getName(peripheral.find("modem")))
+
+
 term.setCursorPos(1, 1)
 
 function SearchKnowledge(MFItemName)
@@ -128,35 +123,39 @@ function BootMainframe()
     term.clear()
 end
 
+function ListenResond()
+    while true do
+        term.setCursorPos(1, 1)
+        print("Mainframe Online")
+        local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
+        if Protocol == "KnowledgeRequest" then
+            print("Knowledge Request from " .. Sender .. " for " .. tostring(Message))
+        elseif Protocol == "KnowledgeUpload" then
+            SaveKnowledge(Message)
+            print("Knowledge from " .. Sender .. " for " .. tostring(Message["Result"]["Itemname"]))
+        elseif Protocol == "KnowledgeSync" then
+            
+        elseif Protocol == "MainframeRequest" then
+            print("Mainframe Request from " .. Sender)
+            rednet.send(Sender, "Im The Mainframe" ,"MainframeResponce")
+        elseif Protocol == "MainframeOnline" then
+            print("Mainframe Online from " .. Sender)
+            rednet.send(Sender, "Im The Mainframe" ,"MainframeOnline")
+        elseif Protocol == "MainframeFail" then
+            print("Mainframe Failure")                
+        else
+            print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
+        end
+        term.setCursorPos(1, 1)
+        term.clearLine()
+        term.scroll(-1)
+    end
+end
+
 while true do
     BootMainframe()
     if MasterMainframeID == MyID then
-        while true do
-            term.setCursorPos(1, 1)
-            print("Mainframe Online")
-            local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
-            if Protocol == "KnowledgeRequest" then
-                print("Knowledge Request from " .. Sender .. " for " .. tostring(Message))
-            elseif Protocol == "KnowledgeUpload" then
-                SaveKnowledge(Message)
-                print("Knowledge from " .. Sender .. " for " .. tostring(Message["Result"]["Itemname"]))
-            elseif Protocol == "KnowledgeSync" then
-                
-            elseif Protocol == "MainframeRequest" then
-                print("Mainframe Request from " .. Sender)
-                rednet.send(Sender, "Im The Mainframe" ,"MainframeResponce")
-            elseif Protocol == "MainframeOnline" then
-                print("Mainframe Online from " .. Sender)
-                rednet.send(Sender, "Im The Mainframe" ,"MainframeOnline")
-            elseif Protocol == "MainframeFail" then
-                print("Mainframe Failure")                
-            else
-                print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
-            end
-            term.setCursorPos(1, 1)
-            term.clearLine()
-            term.scroll(-1)
-        end
+        ListenResond() 
     else
         term.clear()
         term.setCursorPos(1, 1)
