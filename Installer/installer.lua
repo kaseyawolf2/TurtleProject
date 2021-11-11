@@ -6,6 +6,7 @@ shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","Ins
  
 fs.delete("LocalGit")
 fs.delete("Mainframe.lua")
+fs.delete("Update.lua")
 fs.copy("Install/Mainframe/Mainframe.lua", "Mainframe.lua")
 fs.copy("Install/Installer/Update.lua", "Update.lua")
 fs.copy("Install/","LocalGit")
