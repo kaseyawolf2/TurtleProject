@@ -1,6 +1,24 @@
 https://computercraft.info/wiki/Category:APIs
 
 
+
+pastebin get cUYTGbpb bbpack // git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
+
+bbpack mount https://github.com/setzerbomb/apmt/tree/master install
+
+
+    bbpack mount https://github.com/kaseyawolf2/TurtleProject 
+
+
+    pastebin get cUYTGbpb bbpack
+    bbpack mount https://github.com/setzerbomb/apmt/tree/master install
+    cp install\turtle turtle
+    mv turtle\startup startup
+    reboot
+
+
+
+
 Starter System
     Wait till requred resources / mine for them
     Builds GPS System https://pastebin.com/qLthLak5 -- make it smarter/ a pre gps system http://computercraft.info/wiki/Turtle_GPS_self-tracker_expansion_(tutorial)
