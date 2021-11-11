@@ -36,13 +36,13 @@ rednet.open(peripheral.getName(peripheral.find("modem")))
 term.setCursorPos(1, 1)
 
 while true do
-    BootMainframe()
+    MF.BootMainframe()
     if MasterMainframeID == MyID then
-        ListenResond() 
+        MF.ListenResond() 
     else
         term.clear()
         term.setCursorPos(1, 1)
         print("Mainframe in Backup Mode")
-        parallel.waitForAny(ListenForFailure,MainframeCheckIn) -- end if Receives Failure message, or Check in fails
+        parallel.waitForAny(MF.ListenForFailure,MF.MainframeCheckIn) -- end if Receives Failure message, or Check in fails
     end
 end

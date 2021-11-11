@@ -1,6 +1,6 @@
 local MF = {}
 
-function ListenForStartups()
+function MF.ListenForStartups()
     print("Broadcasting Startup")
     rednet.broadcast("Im Starting Up" , "MainframeOnline")
     while true do 
@@ -15,7 +15,7 @@ function ListenForStartups()
     end
 end
 
-function ListenForFailure()
+function MF.ListenForFailure()
     while true do 
         local Sender, Message, Protocol = rednet.receive("MainframeFail")
         print("Start up Detected From : " .. tostring(Sender))
@@ -25,7 +25,7 @@ function ListenForFailure()
     end
 end
 
-function ListenForMainframe()
+function MF.ListenForMainframe()
     for i=1,5 do
         rednet.broadcast("Hello" , "MainframeRequest")
         print("Mainframe Attempt " .. i .. " : " .. tostring(Sender))
@@ -37,7 +37,7 @@ function ListenForMainframe()
     end
 end
 
-function MainframeCheckIn()
+function MF.MainframeCheckIn()
     while true do 
         rednet.broadcast("Hello" , "MainframeRequest")
         local Sender, Message, Protocol = rednet.receive("MainframeResponce",30)
@@ -50,14 +50,14 @@ function MainframeCheckIn()
     end    
 end
 
-function BootMainframe()
+function MF.BootMainframe()
     term.clear()
     term.setCursorPos(1, 1)
     print("Mainframe Booting...")
     MasterMainframeID = nil
 
     print("Anyone already the Mainframe or Starting up?")
-    parallel.waitForAny(ListenForStartups,ListenForMainframe)
+    parallel.waitForAny(MF.ListenForStartups,MF.ListenForMainframe)
     if MasterMainframeID == nil then
         MasterMainframeID = MyID
     end
@@ -65,7 +65,7 @@ function BootMainframe()
     term.clear()
 end
 
-function ListenResond()
+function MF.ListenResond()
     while true do
         term.setCursorPos(1, 1)
         print("Mainframe Online")
