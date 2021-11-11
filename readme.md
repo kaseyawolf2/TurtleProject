@@ -9,7 +9,11 @@ run
 
 
 Tools Used or may use
-bbpack -- pastebin get cUYTGbpb bbpack // git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
+bbpack -- git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
+    pastebin get cUYTGbpb bbpack        
+GPS System Builder --   https://pastebin.com/qLthLak5
+    pastebin get qLthLak5 GPSbuild
+
 https://computercraft.info/wiki/Category:APIs
 https://tweaked.cc/
 
@@ -19,7 +23,6 @@ Installer
     Installs the mainframe
     Updates the Startup File
     Downloads the all the Github files
-
 
 Mainframe
     Can Have Multiple PC as Mainframes
@@ -49,11 +52,12 @@ Mainframe
                     Update
                     RTB
 
-
 Starter System
-    Wait till requred resources / mine for them
-    Builds GPS System https://pastebin.com/qLthLak5 -- make it smarter/ a pre gps system http://computercraft.info/wiki/Turtle_GPS_self-tracker_expansion_(tutorial)
-    Build Command Computer // 
+    Connect to GPS
+        if No GPS
+            Await Resources to build one
+            build it
+    Builds  -- make it smarter/ http://computercraft.info/wiki/Turtle_GPS_self-tracker_expansion_(tutorial)
 
 Command System
     NEEDs to be able to have multiple Command PCs / be hotswapable
