@@ -1,30 +1,56 @@
+To Start using 
+place any PC down (Turtles May Work but my cause issues later idk)
+
+run
+    pastebin get wPbHNfDM Installer
+    Installer
+
+
+Tools Used or may use
+bbpack -- pastebin get cUYTGbpb bbpack // git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
 https://computercraft.info/wiki/Category:APIs
-wPbHNfDM
-pastebin get wPbHNfDM Installer
+https://tweaked.cc/
 
-pastebin get cUYTGbpb bbpack // git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
+Currently Implemented Features
 
-bbpack mount https://github.com/setzerbomb/apmt/tree/master install
+Installer
+    Installs the mainframe
+    Updates the Startup File
+    Downloads the all the Github files
+
+Mainframe
+    Can Have Multiple PC as Mainframes
+        Backups Listen For a failed Responce then they start up and take over command
+    Houses Crafting Knowledge
+        Saves New Knowledge
+        Can Search for a Requested Recipe and transmit it to the requester
 
 
-    bbpack mount https://github.com/kaseyawolf2/TurtleProject 
+To Do List
 
-
-    pastebin get cUYTGbpb bbpack
-    bbpack mount https://github.com/setzerbomb/apmt/tree/master install
-    cp install\turtle turtle
-    mv turtle\startup startup
-    reboot
-
-
+Mainframe
+    Local Git
+        Send Files from LocalGit to New Turtles
+    Crafting Knowledge
+        Sync Knowledge With The rest of the mainframes
+    Request Reponce
+        Make it a Background Program so i can send mass commands
+    GUI
+        Make a Gui
+    Monitor Support
+        Make a GUI and tabs
+            Communication Tab
+                The Past few Communications
+            Command Tab
+                Send out Mass Commands
+                    Update
+                    RTB
 
 
 Starter System
     Wait till requred resources / mine for them
     Builds GPS System https://pastebin.com/qLthLak5 -- make it smarter/ a pre gps system http://computercraft.info/wiki/Turtle_GPS_self-tracker_expansion_(tutorial)
     Build Command Computer // 
-
-
 
 Command System
     NEEDs to be able to have multiple Command PCs / be hotswapable
@@ -74,8 +100,6 @@ Crafting System
     IF Ae2 or Refined 
         Stop and request 
     IF CHest storage then get items then craft
-
-
 
 Command&Control System
     Send Commands to turtles
