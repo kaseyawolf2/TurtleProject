@@ -1,3 +1,5 @@
+https://pastebin.com/wPbHNfDM
+
 To Start using 
 place any PC down (Turtles May Work but my cause issues later idk)
 
@@ -17,6 +19,7 @@ Installer
     Installs the mainframe
     Updates the Startup File
     Downloads the all the Github files
+x
 
 Mainframe
     Can Have Multiple PC as Mainframes
