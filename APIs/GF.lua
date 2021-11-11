@@ -1,4 +1,4 @@
-local TF = {}
+local GF = {}
 
 
 --Peripheral/Item Names (incase something changes )
@@ -12,10 +12,8 @@ PeriStorage = "forge:storage" -- any Storage
 PeriTurtle = "computercraft:turtle_normal"
 
 
---Paste bins
-PasteStudent = "qzt7K4sd"
 
-function TF.FindPeripheralByMethod(Method)
+function GF.FindPeripheralByMethod(Method)
     local ReturnList = {}
     for x = 1,6 do -- Check the 6 sides
         perf = peripheral.getNames()[x] -- this gets the side its on
@@ -34,7 +32,7 @@ function TF.FindPeripheralByMethod(Method)
     return ReturnList -- outputs chest side
 end
 
-function TF.SearchInvByID(IdName,InvToSearch)
+function GF.SearchInvByID(IdName,InvToSearch)
     local ReturnList = {}
     if InvToSearch == nil or InvToSearch == "Internal" then
         for s = 1, 16 do --Search Internal Inv
@@ -47,7 +45,7 @@ function TF.SearchInvByID(IdName,InvToSearch)
         end    
     end
     if InvToSearch == nil then
-        Chests = TF.FindPeripheralByMethod("size")
+        Chests = GF.FindPeripheralByMethod("size")
         if Chests ~= nil then
             for i = 1, #Chests do
                 CurChest = peripheral.wrap(Chests[i])
@@ -78,7 +76,7 @@ function TF.SearchInvByID(IdName,InvToSearch)
     return ReturnList
 end
 
-function TF.SearchInvByTag(TagName,InvToSearch)
+function GF.SearchInvByTag(TagName,InvToSearch)
     local ReturnList = {}
     if InvToSearch == nil or InvToSearch == "Internal" then
         for i = 1, 16 do
@@ -91,7 +89,7 @@ function TF.SearchInvByTag(TagName,InvToSearch)
         end
     end
     if InvToSearch == nil then
-        Chests = TF.FindPeripheralByMethod("size")
+        Chests = GF.FindPeripheralByMethod("size")
         if Chests ~= nil then
             for i = 1, #Chests do
                 CurChest = peripheral.wrap(Chests[i])
@@ -122,7 +120,7 @@ function TF.SearchInvByTag(TagName,InvToSearch)
     return ReturnList
 end
 
-function TF.PlaceBlockByList(Listofitems,PlaceDir)
+function GF.PlaceBlockByList(Listofitems,PlaceDir)
     if #Listofitems == 0 or Listofitems == nil then
         return false -- end if the list is empty
     end
@@ -150,7 +148,7 @@ function TF.PlaceBlockByList(Listofitems,PlaceDir)
     end
 end
 
-function TF.SearchInvForEmptySlot(InvToSearch)
+function GF.SearchInvForEmptySlot(InvToSearch)
     local ReturnList = {}
     if InvToSearch == nil or InvToSearch == "Internal" then
         for i = 1, 16 do
@@ -161,7 +159,7 @@ function TF.SearchInvForEmptySlot(InvToSearch)
         end
     end
     if InvToSearch == nil then
-        Chests = TF.FindPeripheralByMethod("size")
+        Chests = GF.FindPeripheralByMethod("size")
         if Chests ~= nil then
             for i = 1, #Chests do
                 CurChest = peripheral.wrap(Chests[i])
@@ -189,18 +187,18 @@ function TF.SearchInvForEmptySlot(InvToSearch)
 
 end
 
-function TF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
-    Chest = TF.SearchInvByTag(PeriStorage,"Internal")
+function GF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
+    Chest = GF.SearchInvByTag(PeriStorage,"Internal")
     while Chest == nil do
         print("Please Give Me a chest")
         os.pullEvent("turtle_inventory")
-        Chest = TF.SearchInvByTag(PeriStorage,"Internal")
+        Chest = GF.SearchInvByTag(PeriStorage,"Internal")
     end
     if turtle.detectUp() == false then
-        TF.PlaceBlockByList(Chest,"Up")
+        GF.PlaceBlockByList(Chest,"Up")
         TChest = "top"
     elseif turtle.detectDown() == false then 
-        TF.PlaceBlockByList(Chest,"Down")
+        GF.PlaceBlockByList(Chest,"Down")
         TChest = "bottom"
     else 
         print("Failed to place Transfer Chest")
@@ -212,7 +210,7 @@ function TF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
         print("Failed to move any items")
         return false
     end
-    TF.Equip("pickaxe")
+    GF.Equip("pickaxe")
     if TChest == "top" then
         turtle.suckUp()
         if not turtle.digUp() then
@@ -236,11 +234,11 @@ function TF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
     return true
 end
 
-function TF.Equip(Item)
+function GF.Equip(Item)
     if Item == "modem" then -- only equipment that can go to the left
-        EQ = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
+        EQ = GF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
         if EQ == nil then
-            EQ = TF.SearchInvByID(PeriWireless,"Internal") -- then for standard
+            EQ = GF.SearchInvByID(PeriWireless,"Internal") -- then for standard
         end
         if EQ == nil then -- if still zero then return false
             return false
@@ -252,7 +250,7 @@ function TF.Equip(Item)
             end --else try the next one iguess
         end
     elseif Item == "pickaxe" then
-        EQ = TF.SearchInvByID(PeriPickaxe,"Internal")
+        EQ = GF.SearchInvByID(PeriPickaxe,"Internal")
         if EQ == nil then -- if zero then return false
             return false
         end
@@ -263,7 +261,7 @@ function TF.Equip(Item)
             end --else try the next one iguess
         end
     elseif Item == "workbench" then 
-        EQ = TF.SearchInvByID(PeriWorkbench,"Internal")
+        EQ = GF.SearchInvByID(PeriWorkbench,"Internal")
         if EQ == nil then -- if zero then return false
             return false
         end
@@ -286,20 +284,20 @@ function TF.Equip(Item)
     return true
 end
 
-function TF.SendMainframeMessage(Message, Protocol)
-    local TFMainframeID
-    while TFMainframeID == nil do
+function GF.SendMainframeMessage(Message, Protocol)
+    local GFMainframeID
+    while GFMainframeID == nil do
         rednet.broadcast("Hello" , "MainframeRequest")
         local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
-        TFMainframeID = Sender
-        if TFMainframeID == nil then
+        GFMainframeID = Sender
+        if GFMainframeID == nil then
             rednet.broadcast("No Responce" , "MainframeFail")
         end
     end
-    rednet.send(TFMainframeID, Message, Protocol)
+    rednet.send(GFMainframeID, Message, Protocol)
 end
 
-function TF.SyncKnowledge()
+function GF.SyncKnowledge()
     local ReturnList = {}
     FoundItems = fs.list("CraftingKnowledge/")
     print("Syncing " .. #FoundItems)
@@ -314,17 +312,17 @@ function TF.SyncKnowledge()
     end
     for i=1, #ReturnList do
         --print(ReturnList[i]["Result"]["Itemname"])
-        TF.UploadKnowledge(ReturnList[i])
+        GF.UploadKnowledge(ReturnList[i])
     end
 end
 
-function TF.UploadKnowledge(Knowledge)
+function GF.UploadKnowledge(Knowledge)
     --local Message = textutils.serialize(Knowledge)
     local Message = Knowledge
-    TF.SendMainframeMessage(Message, "KnowledgeUpload")
+    GF.SendMainframeMessage(Message, "KnowledgeUpload")
 end
 
-function TF.SaveKnowledge(Knowledge)
+function GF.SaveKnowledge(Knowledge)
     -- Save Knowledge in the CraftingKnowledge folder
     KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
     KFile = fs.open("CraftingKnowledge/" .. KText ,"w")
@@ -332,7 +330,7 @@ function TF.SaveKnowledge(Knowledge)
     KFile.close()
 end
 
-function TF.SearchKnowledge(ResultItemName)
+function GF.SearchKnowledge(ResultItemName)
     local ReturnList = {}
     TResultItemName = string.gsub(ResultItemName, ":","-")
     FoundItems = fs.find("CraftingKnowledge/" .. TResultItemName)
@@ -350,8 +348,8 @@ function TF.SearchKnowledge(ResultItemName)
     return ReturnList -- return the crafting knowledge
 end
 
-function TF.RunClass(ClassName)
-    if TF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
+function GF.RunClass(ClassName)
+    if GF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
         if ClassName == "Student" or ClassName == "student" then
             --qzt7K4sd
             if fs.exists("Student.lua") then
@@ -367,28 +365,28 @@ function TF.RunClass(ClassName)
     end
 end
 
-function TF.PlaceItemByID(IdName,PlaceDir,InvToSearch)
+function GF.PlaceItemByID(IdName,PlaceDir,InvToSearch)
     --Find Item
-    Items = TF.SearchInvByID(IdName,InvToSearch)
+    Items = GF.SearchInvByID(IdName,InvToSearch)
     -- place it base off the list
-    return TF.PlaceBlockByList(Items,PlaceDir)
+    return GF.PlaceBlockByList(Items,PlaceDir)
 end
 
-function TF.PlaceItemByTag(TagName,PlaceDir,InvToSearch)
-    Items = TF.SearchInvByTag(TagName,InvToSearch)
-    return TF.PlaceBlockByList(Items,PlaceDir)
+function GF.PlaceItemByTag(TagName,PlaceDir,InvToSearch)
+    Items = GF.SearchInvByTag(TagName,InvToSearch)
+    return GF.PlaceBlockByList(Items,PlaceDir)
 end
 
-function TF.CanSwitchClass(TurtleClass)
+function GF.CanSwitchClass(TurtleClass)
     if TurtleClass == "Crafter" or TurtleClass == "crafter" then
         if not peripheral.find("workbench") then -- if no Crafting table equiped
-            if TF.SearchInvByID(PeriWorkbench) == nil then -- and none in inventory or nearby
+            if GF.SearchInvByID(PeriWorkbench) == nil then -- and none in inventory or nearby
                 return false -- then you cant be one
             end
         end
     elseif TurtleClass == "Student" or TurtleClass == "student" then
         if not peripheral.find("workbench") then -- if no Crafting table equiped
-            if TF.SearchInvByID(PeriWorkbench) == nil then -- and none in inventory or nearby
+            if GF.SearchInvByID(PeriWorkbench) == nil then -- and none in inventory or nearby
                 return false -- then you cant be one
             end
         end
@@ -411,9 +409,9 @@ function TF.CanSwitchClass(TurtleClass)
             end
         else -- turn right and try again    
             DGPS.turnRight()
-            TF.CanSwitchClass(TurtleClass)
+            GF.CanSwitchClass(TurtleClass)
         end
-        if TF.SearchInvByID("minecraft:diamond_pickaxe") == nil then -- and none in inventory or nearby
+        if GF.SearchInvByID("minecraft:diamond_pickaxe") == nil then -- and none in inventory or nearby
             return false -- then you cant be one
         end
     else 
@@ -422,28 +420,28 @@ function TF.CanSwitchClass(TurtleClass)
     return true
 end
 
-function TF.PlaceTurtleByClass(TurtleClass)
+function GF.PlaceTurtleByClass(TurtleClass)
     while Drive == nil do
         print("Please Give Me a Disk Drive")
         os.pullEvent("turtle_inventory")
-        Drive = TF.PlaceItemByID(PeriDiskDrive,"Internal")
+        Drive = GF.PlaceItemByID(PeriDiskDrive,"Internal")
     end
     while Disk == nil do
         print("Please Give Me a Floppy Disk")
         os.pullEvent("turtle_inventory")
-        Disk = TF.PlaceItemByID(PeriFloppyDisk,"Internal")
+        Disk = GF.PlaceItemByID(PeriFloppyDisk,"Internal")
     end
     while Turtle == nil do
         print("Please Give Me a Turtle")
         os.pullEvent("turtle_inventory")
-        Turtle = TF.PlaceItemByID(PeriTurtle,"Internal")
+        Turtle = GF.PlaceItemByID(PeriTurtle,"Internal")
     end
     while TurtleModem == nil do
         print("Please Give Me a Modem")
         os.pullEvent("turtle_inventory")
-        TurtleModem = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
+        TurtleModem = GF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
         if TurtleModem == nil then
-            TurtleModem = TF.SearchInvByID(PeriWireless,"Internal") -- then for standard
+            TurtleModem = GF.SearchInvByID(PeriWireless,"Internal") -- then for standard
         end
     end
 
@@ -457,4 +455,4 @@ function TF.PlaceTurtleByClass(TurtleClass)
 
 end 
 
-return TF
+return GF
