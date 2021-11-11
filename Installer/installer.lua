@@ -1,20 +1,18 @@
-
 if not fs.exists("bbpack") then
     shell.run("pastebin", "get", "cUYTGbpb","bbpack")
 end
-
-shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","install")
-
---fs.copy("install/Mainframe/", "/rom/")
-
-
+ 
+shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","Install")
+ 
+fs.delete("LocalGit")
+fs.delete("Mainframe.lua")
+fs.copy("Install/Mainframe/Mainframe.lua", "Mainframe.lua")
+fs.copy("Install/Installer/Update.lua", "Update.lua")
+fs.copy("Install/","LocalGit")
+ 
 -- Make the Mainframe run on Startup
-if not fs.exists("Startup.lua") then
-    file = fs.open("Startup.lua","w")
-    file.write([[shell.run("Mainframe.lua")]])
-    file.close()
-end
-
-
-
+file = fs.open("Startup.lua","w")
+file.write([[shell.run("Mainframe.lua")]])
+file.close()
+ 
 os.reboot()
