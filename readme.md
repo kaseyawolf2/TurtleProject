@@ -1,7 +1,9 @@
 https://pastebin.com/wPbHNfDM
 
 To Start using 
-place any PC down (Turtles May Work but my cause issues later idk)
+place any PC down 
+and  a turtle
+run the installer on both
 
 run
     pastebin get wPbHNfDM Installer
@@ -33,6 +35,8 @@ Mainframe
 
 
 To Do List
+Installer
+    Detect if theres a mainframe already and download from it
 
 Mainframe
     Local Git

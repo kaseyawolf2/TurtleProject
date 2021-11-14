@@ -1,5 +1,7 @@
 local GF = {}
 
+GFMainframeID = nil -- At start have no idea who is Mainframe
+
 -- Make Crafting Knowledge Folder
 if not fs.isDir("CraftingKnowledge") then
     fs.makeDir("CraftingKnowledge")
@@ -24,17 +26,32 @@ function GF.FindPeripheralByMethod(Method)
     return ReturnList -- outputs chest side
 end
 
-function GF.SendMainframeMessage(Message, Protocol)
-    local GFMainframeID
-    while GFMainframeID == nil do
-        rednet.broadcast("Hello" , "MainframeRequest")
+function GF.MainframeRequest()
+    while true do
+        rednet.broadcast("Hello", "MainframeRequest")
         local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
         GFMainframeID = Sender
-        if GFMainframeID == nil then
-            rednet.broadcast("No Responce" , "MainframeFail")
+        if GFMainframeID ~= nil then
+            return
         end
     end
+end
+
+function GF.MainframeTimeout(WaitTime)
+    if WaitTime == nil then
+        WaitTime = 30
+    end
+    sleep(WaitTime)
+    rednet.broadcast("No Responce" , "MainframeFail")
+end
+
+function GF.SendMainframeMessage(Message, Protocol)
+    while GFMainframeID == nil do
+        --Send a mainframe Request every second untill responce or 30 seconds have passed
+        parallel.waitForAny(GF.MainframeTimeout,GF.MainframeRequest)
+    end
     rednet.send(GFMainframeID, Message, Protocol)
+    return rednet.receive(Protocol)
 end
 
 function GF.SyncKnowledge()

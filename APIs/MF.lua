@@ -72,19 +72,37 @@ function MF.ListenResond()
         local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
         if Protocol == "KnowledgeRequest" then
             print("Knowledge Request from " .. Sender .. " for " .. tostring(Message))
+
+            
+
         elseif Protocol == "KnowledgeUpload" then
             SaveKnowledge(Message)
             print("Knowledge from " .. Sender .. " for " .. tostring(Message["Result"]["Itemname"]))
+
+
+
+
         elseif Protocol == "KnowledgeSync" then
             
+
+
         elseif Protocol == "MainframeRequest" then
             print("Mainframe Request from " .. Sender)
             rednet.send(Sender, "Im The Mainframe" ,"MainframeResponce")
+
+
+
         elseif Protocol == "MainframeOnline" then
             print("Mainframe Online from " .. Sender)
             rednet.send(Sender, "Im The Mainframe" ,"MainframeOnline")
+
+
+
         elseif Protocol == "MainframeFail" then
-            print("Mainframe Failure")                
+            print("Mainframe Failure Detected")                
+
+
+
         else
             print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
         end
