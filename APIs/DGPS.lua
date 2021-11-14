@@ -1,5 +1,5 @@
 -- Turtle Self-tracking System created by Latias1290.
--- Made to Dead Reconing by Kaseyawolf2
+-- Tweaked by Kaseyawolf2
 local DGPS =  {}
 
 local DGPS_xPos = 0
