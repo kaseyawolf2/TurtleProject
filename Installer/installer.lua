@@ -25,6 +25,7 @@ else-- if a turtle
     --Mount Github Repo
     shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","Install")
     --Remove old files and make a local copy from the mounted Repo 
+    fs.delete("LocalGit")
     fs.delete("Starter.lua")
     fs.delete("Update.lua")
     fs.copy("Install/Turtle/Starter.lua", "Starter.lua")
