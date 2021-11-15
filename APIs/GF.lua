@@ -1,7 +1,5 @@
 local GF = {}
 
-GFMainframeID = nil -- At start have no idea who is Mainframe
-
 -- Make Crafting Knowledge Folder
 if not fs.isDir("CraftingKnowledge") then
     fs.makeDir("CraftingKnowledge")
@@ -26,7 +24,7 @@ function GF.FindPeripheralByMethod(Method)
     return ReturnList -- outputs chest side
 end
 
-function GF.MainframeRequest()
+function GF.MainframeRequest() -- Dont call this call Mainframe Connect
     local MainframeID = nil
     while true do
         rednet.broadcast("Hello", "MainframeRequest")
@@ -38,7 +36,7 @@ function GF.MainframeRequest()
     end
 end
 
-function GF.MainframeTimeout(WaitTime)
+function GF.MainframeTimeout(WaitTime) -- Dont call this call Mainframe Connect
     if WaitTime == nil then
         WaitTime = 30
     end
