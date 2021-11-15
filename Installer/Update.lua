@@ -1,3 +1,4 @@
+term.clear()
 if not turtle then -- check if a turtle or PC
     -- download and set up
     if not fs.exists("bbpack") then -- BBpack has a github Downloader
