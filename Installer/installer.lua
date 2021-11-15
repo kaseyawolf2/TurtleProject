@@ -1,6 +1,6 @@
-if not turtle then
-    -- set up mainframe
-    if not fs.exists("bbpack") then
+if not turtle then -- check if a turtle or PC
+    -- download and set up
+    if not fs.exists("bbpack") then -- BBpack has a github Downloader
         shell.run("pastebin", "get", "cUYTGbpb","bbpack")
     end
     --Mount Github Repo
@@ -17,14 +17,20 @@ if not turtle then
     file.write([[shell.run("Mainframe.lua")]])
     file.close()
 else-- if a turtle
-    -- await connection to Mainframe 
-    -- if no mainframe then ask for one
-    -- download GPS Builder
-    -- Await resources for it
-    -- build it 
-    -- delete gps builder
-
-
-
+    -- download and set up
+    if not fs.exists("bbpack") then -- BBpack has a github Downloader
+        shell.run("pastebin", "get", "cUYTGbpb","bbpack")
+    end
+    --Mount Github Repo
+    shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","Install")
+    --Remove old files and make a local copy from the mounted Repo 
+    fs.delete("Starter.lua")
+    fs.delete("Update.lua")
+    fs.copy("Install/Turtle/Starter.lua", "Starter.lua")
+    fs.copy("Install/Installer/Update.lua", "Update.lua")
+    -- Make the turtle run on Startup
+    file = fs.open("Startup.lua","w")
+    file.write([[shell.run("Starter.lua")]])
+    file.close()
 end 
 os.reboot()
