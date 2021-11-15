@@ -52,7 +52,7 @@ function GF.MainframeConnect(TimeOut,BreakoutNumber)
     end
     while MainframeID == nil do
         --Send a mainframe Request every second untill responce or 30 seconds have passed
-        parallel.waitForAny(function GF.MainframeTimeout(TimeOut) end ,function MainframeID = GF.MainframeRequest() end)
+        parallel.waitForAny(function() GF.MainframeTimeout(TimeOut) end , function() MainframeID = GF.MainframeRequest() end)
         if BreakoutNumber ~= nil then
             if i == c then
                 return nil
