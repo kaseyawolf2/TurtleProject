@@ -26,7 +26,7 @@ function MF.BackupMode()
 end
 
 function MF.BootMainframe()
-    local function MF.ListenForStartups()
+    local function ListenForStartups()
         print("Broadcasting Startup")
         rednet.broadcast("Im Starting Up" , "MainframeOnline")
         while true do 
@@ -40,7 +40,7 @@ function MF.BootMainframe()
             end
         end
     end
-    local function MF.ListenForMainframe()
+    local function ListenForMainframe()
         for i=1,5 do
             rednet.broadcast("Hello" , "MainframeRequest")
             print("Mainframe Attempt " .. i .. " : " .. tostring(Sender))
@@ -59,7 +59,7 @@ function MF.BootMainframe()
     print("Mainframe Booting...")
     MasterMainframeID = nil
     print("Anyone already the Mainframe or Starting up?")
-    parallel.waitForAny(MF.ListenForStartups,MF.ListenForMainframe)
+    parallel.waitForAny(ListenForStartups,ListenForMainframe)
     if MasterMainframeID == nil then
         MasterMainframeID = MyID
     end
