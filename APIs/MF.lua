@@ -1,7 +1,7 @@
 local MF = {}
 
 function MF.BackupMode()
-    local function MF.ListenForFailure()
+    local function ListenForFailure()
         while true do 
             local Sender, Message, Protocol = rednet.receive("MainframeFail")
             print("Start up Detected From : " .. tostring(Sender))
@@ -10,7 +10,7 @@ function MF.BackupMode()
             end
         end
     end
-    local function MF.MainframeCheckIn()
+    local function MainframeCheckIn()
         while true do 
             rednet.broadcast("Hello" , "MainframeRequest")
             local Sender, Message, Protocol = rednet.receive("MainframeResponce",30)
@@ -22,7 +22,7 @@ function MF.BackupMode()
             end
         end    
     end
-    parallel.waitForAny(MF.ListenForFailure,MF.MainframeCheckIn) -- end if Receives Failure message, or Check in fails
+    parallel.waitForAny(ListenForFailure,MainframeCheckIn) -- end if Receives Failure message, or Check in fails
 end
 
 function MF.BootMainframe()
