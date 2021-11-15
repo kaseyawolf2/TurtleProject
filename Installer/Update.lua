@@ -13,6 +13,7 @@ if not turtle then -- check if a turtle or PC
     fs.copy("Install/Installer/Update.lua", "Update.lua")
     fs.copy("Install/","LocalGit")
     -- Make the Mainframe run on Startup
+    fs.delete("Startup.lua")
     file = fs.open("Startup.lua","w")
     file.write([[shell.run("Mainframe.lua")]])
     file.close()
@@ -29,6 +30,7 @@ else-- if a turtle
     fs.copy("Install/Turtle/Starter.lua", "Starter.lua")
     fs.copy("Install/Installer/Update.lua", "Update.lua")
     -- Make the turtle run on Startup
+    fs.delete("Startup.lua")
     file = fs.open("Startup.lua","w")
     file.write([[shell.run("Starter.lua")]])
     file.close()
