@@ -24,27 +24,27 @@ function GF.FindPeripheralByMethod(Method)
     return ReturnList -- outputs chest side
 end
 
-function GF.MainframeRequest() -- Dont call this call Mainframe Connect
-    local MainframeID = nil
-    while true do
-        rednet.broadcast("Hello", "MainframeRequest")
-        local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
-        MainframeID = Sender
-        if MainframeID ~= nil then
-            return MainframeID
+function GF.MainframeConnect(TimeOut,BreakoutNumber)
+    local function GF.MainframeRequest() -- Dont call this call Mainframe Connect
+        local MainframeID = nil
+        while true do
+            rednet.broadcast("Hello", "MainframeRequest")
+            local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
+            MainframeID = Sender
+            if MainframeID ~= nil then
+                return MainframeID
+            end
         end
     end
-end
 
-function GF.MainframeTimeout(WaitTime) -- Dont call this call Mainframe Connect
-    if WaitTime == nil then
-        WaitTime = 30
+    local function GF.MainframeTimeout(WaitTime) -- Dont call this call Mainframe Connect
+        if WaitTime == nil then
+            WaitTime = 30
+        end
+        sleep(WaitTime)
+        rednet.broadcast("No Responce" , "MainframeFail")
     end
-    sleep(WaitTime)
-    rednet.broadcast("No Responce" , "MainframeFail")
-end
-
-function GF.MainframeConnect(TimeOut,BreakoutNumber)
+    
     local MainframeID = nil
     if BreakoutNumber ~= nil then
         local i = BreakoutNumber
