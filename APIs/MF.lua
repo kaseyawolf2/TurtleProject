@@ -64,7 +64,7 @@ function MF.BootMainframe()
     term.clear()
 end
 
-function MF.ListenResond()
+function MF.ListenRespond()
     while true do
         term.setCursorPos(1, 1)
         print("Mainframe Online")
