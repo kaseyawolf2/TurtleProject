@@ -51,7 +51,9 @@ function MF.BootMainframe()
             end
         end
     end
-
+    rednet.close()
+    sleep(1)
+    rednet.open(peripheral.getName(peripheral.find("modem")))
     term.clear()
     term.setCursorPos(1, 1)
     print("Mainframe Booting...")

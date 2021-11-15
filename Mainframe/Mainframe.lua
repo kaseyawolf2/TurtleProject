@@ -4,10 +4,6 @@ MF = require("LocalGit/APIs/MF")
 
 os.setComputerLabel("Mainframe")
 
-MasterMainframeID = nil
-MyID = os.getComputerID()
-
-
 -- Find/Await A Modem and open Rednet
 HasWireless = false
 while not HasWireless do
@@ -24,20 +20,6 @@ while not HasWireless do
     end
 end
 term.clear()
-rednet.close()
-sleep(1)
-rednet.open(peripheral.getName(peripheral.find("modem")))
-
 term.setCursorPos(1, 1)
 
-while true do
-    MF.BootMainframe()
-    if MasterMainframeID == MyID then
-        MF.ListenRespond() 
-    else
-        term.clear()
-        term.setCursorPos(1, 1)
-        print("Mainframe in Backup Mode")
-        MF.BackupMode()
-    end
-end
+multishell.launch(fg,"LocalGit/Mainframe/Responder/lua")
