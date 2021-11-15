@@ -27,12 +27,13 @@ function GF.FindPeripheralByMethod(Method)
 end
 
 function GF.MainframeRequest()
+    local MainframeID = nil
     while true do
         rednet.broadcast("Hello", "MainframeRequest")
         local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
-        GFMainframeID = Sender
-        if GFMainframeID ~= nil then
-            return
+        MainframeID = Sender
+        if MainframeID ~= nil then
+            return MainframeID
         end
     end
 end
@@ -45,12 +46,27 @@ function GF.MainframeTimeout(WaitTime)
     rednet.broadcast("No Responce" , "MainframeFail")
 end
 
-function GF.SendMainframeMessage(Message, Protocol)
-    while GFMainframeID == nil do
-        --Send a mainframe Request every second untill responce or 30 seconds have passed
-        parallel.waitForAny(GF.MainframeTimeout,GF.MainframeRequest)
+function GF.MainframeConnect(TimeOut,BreakoutNumber)
+    local MainframeID = nil
+    if BreakoutNumber ~= nil then
+        local i = BreakoutNumber
+        local c = 1
     end
-    rednet.send(GFMainframeID, Message, Protocol)
+    while MainframeID == nil do
+        --Send a mainframe Request every second untill responce or 30 seconds have passed
+        parallel.waitForAny(function GF.MainframeTimeout(TimeOut) end ,function MainframeID = GF.MainframeRequest() end)
+        if BreakoutNumber ~= nil then
+            if i == c then
+                return nil
+            end
+        end
+    end
+    return MainframeID
+end
+
+function GF.SendMainframeMessage(Message, Protocol)
+    local MainframeID = GF.MainframeConnect()
+    rednet.send(MainframeID, Message, Protocol)
     return rednet.receive(Protocol)
 end
 
