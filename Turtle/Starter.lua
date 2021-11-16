@@ -1,5 +1,5 @@
-GF = require("/LocalGit/APIs/GF")
-TF = require("/LocalGit/APIs/TF")
+GF = require("./LocalGit/APIs/GF")
+TF = require("./LocalGit/APIs/TF")
 
 
 -- await connection to Mainframe
