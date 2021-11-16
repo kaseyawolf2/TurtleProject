@@ -58,13 +58,12 @@ function MF.BootMainframe()
     --Clear Screen and reset to top
     term.clear()
     term.setCursorPos(1, 1)
-    local PCID = os.getComputerID()
     print("Mainframe Booting...")
     MasterMainframeID = nil
     print("Anyone already the Mainframe or Starting up?")
     parallel.waitForAny(ListenForStartups,ListenForMainframe)
     if MasterMainframeID == nil then
-        MasterMainframeID = PCID
+        MasterMainframeID = os.getComputerID()
     end
     term.clear()
 end
