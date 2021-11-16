@@ -28,9 +28,11 @@ else-- if a turtle
     fs.delete("LocalGit")
     fs.delete("Starter.lua")
     fs.delete("Update.lua")
-    fs.copy("/Install/Turtle/Starter.lua", "Starter.lua")
-    fs.copy("/Install/Installer/Update.lua", "Update.lua")
     fs.copy("/Install/","LocalGit")
+    --fs.copy("/Install/Turtle/Starter.lua", "Starter.lua")
+    shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
+    --fs.copy("/Install/Installer/Update.lua", "Update.lua")
+    shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
     -- Make the turtle run on Startup
     fs.delete("Startup.lua")
     file = fs.open("Startup.lua","w")
