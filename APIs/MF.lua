@@ -32,7 +32,7 @@ function MF.BootMainframe()
         while true do 
             local Sender, Message, Protocol = rednet.receive("MainframeOnline")
             print("Start up Detected From : " .. tostring(Sender))
-            if Sender < MyID then
+            if Sender < PCID then
                 MasterMainframeID = Sender
                 return false
             else
@@ -51,17 +51,20 @@ function MF.BootMainframe()
             end
         end
     end
+    --Open Rednet
     rednet.close()
     sleep(1)
     rednet.open(peripheral.getName(peripheral.find("modem")))
+    --Clear Screen and reset to top
     term.clear()
     term.setCursorPos(1, 1)
+    local PCID = os.getComputerID()
     print("Mainframe Booting...")
     MasterMainframeID = nil
     print("Anyone already the Mainframe or Starting up?")
     parallel.waitForAny(ListenForStartups,ListenForMainframe)
     if MasterMainframeID == nil then
-        MasterMainframeID = MyID
+        MasterMainframeID = PCID
     end
     term.clear()
 end
