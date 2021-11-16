@@ -1,5 +1,4 @@
-GF = require("./LocalGit/APIs/GF")
-MF = require("./LocalGit/APIs/MF")
+GF , MF = ... -- you need to pass them in to multi shell
 
 MasterMainframeID = nil
 MyID = os.getComputerID()
