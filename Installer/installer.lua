@@ -1,11 +1,14 @@
 term.clear()
 term.setCursorPos(1, 1)
 -- download and set up
-if not fs.exists("bbpack") then -- BBpack has a github Downloader
+if not fs.exists("/LocalGit/ExternalPrograms/bbpack.lua") then -- BBpack has a github Downloader
     shell.run("pastebin", "get", "cUYTGbpb","bbpack")
+    --Mount Github Repo
+    shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","/Install")
+    fs.delete("bbpack")
+else
+    shell.run("/LocalGit/ExternalPrograms/bbpack.lua", "mount", "https://github.com/kaseyawolf2/TurtleProject","/Install")
 end
---Mount Github Repo
-shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","/Install")
 --Remove old files and make a local copy from the mounted Repo 
 fs.delete("LocalGit")
 fs.copy("/Install/","LocalGit")
