@@ -22,4 +22,4 @@ end
 term.clear()
 term.setCursorPos(1, 1)
 
-multishell.launch({},"LocalGit/Mainframe/Responder/lua")
+multishell.launch({GF,MF},"LocalGit/Mainframe/Responder.lua")
