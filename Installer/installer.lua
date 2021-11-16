@@ -1,3 +1,5 @@
+term.clear()
+term.setCursorPos(1, 1)
 -- download and set up
 if not fs.exists("bbpack") then -- BBpack has a github Downloader
     shell.run("pastebin", "get", "cUYTGbpb","bbpack")
