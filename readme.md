@@ -36,7 +36,9 @@ Mainframe
 
 To Do List
 Installer
-    Detect if theres a mainframe already and download from it
+
+TF
+    fix eqiup
 
 Mainframe
     Local Git

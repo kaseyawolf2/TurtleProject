@@ -267,7 +267,7 @@ function TF.RunClass(ClassName)
     if TF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
         if ClassName == "Student" or ClassName == "student" then
             --qzt7K4sd
-            if fs.exists("Student.lua") then
+            if fs.exists("/LocalGit/Turtle/Student.lua") then
                 shell.run("Student")
             else
                 shell.run("pastebin", "get", PasteStudent,"Student.lua")
