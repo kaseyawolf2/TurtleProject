@@ -1,6 +1,6 @@
 -- Get the General Functions
-GF = require("LocalGit/APIs/GF")
-MF = require("LocalGit/APIs/MF")
+GF = require("/LocalGit/APIs/GF.lua")
+MF = require("/LocalGit/APIs/MF.lua")
 
 os.setComputerLabel("Mainframe")
 
@@ -22,4 +22,4 @@ end
 term.clear()
 term.setCursorPos(1, 1)
 
-multishell.launch({GF,MF},"LocalGit/Mainframe/Responder.lua")
+multishell.launch({GF,MF},"/LocalGit/Mainframe/Responder.lua")

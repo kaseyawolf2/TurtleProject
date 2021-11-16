@@ -1,5 +1,5 @@
-GF = require("LocalGit/APIs/GF")
-MF = require("LocalGit/APIs/MF")
+GF = require("/LocalGit/APIs/GF")
+MF = require("/LocalGit/APIs/MF")
 
 MasterMainframeID = nil
 MyID = os.getComputerID()
