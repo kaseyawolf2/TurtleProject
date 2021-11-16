@@ -18,16 +18,16 @@ file = fs.open("Startup.lua","w")
 if not turtle then -- check if a turtle or PC
     file.write([[
 fs.delete("Installer")
-shell.setAlias("Mainframe", "/LocalGit/Mainframe/Mainframe.lua")
-shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
+shell.setAlias("Mainframe", "./LocalGit/Mainframe/Mainframe.lua")
+shell.setAlias("Update", "./LocalGit/Installer/Installer.lua")
 shell.run("Mainframe")
 ]])
     file.close()
 else-- if a turtle
     file.write([[
 fs.delete("Installer")
-shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
-shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
+shell.setAlias("Starter", "./LocalGit/Turtle/Starter.lua")
+shell.setAlias("Update", "./LocalGit/Installer/Installer.lua")
 shell.run("Starter")
 ]])
     file.close()
