@@ -32,7 +32,7 @@ function MF.BootMainframe()
         while true do 
             local Sender, Message, Protocol = rednet.receive("MainframeOnline")
             print("Start up Detected From : " .. tostring(Sender))
-            if Sender < PCID then
+            if Sender < os.getComputerID() then
                 MasterMainframeID = Sender
                 return false
             else
