@@ -22,4 +22,8 @@ end
 term.clear()
 term.setCursorPos(1, 1)
 
-multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
+if term.isColor() then
+    multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
+else
+    shell.run("/LocalGit/Mainframe/Responder.lua",GF,MF)
+end
