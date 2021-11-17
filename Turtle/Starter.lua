@@ -1,12 +1,13 @@
+GF = require("/LocalGit/APIs/GF")
+TF = require("/LocalGit/APIs/TF")
 
--- -- Get the Base Turtle
--- if fs.exists("TB.lua") then
---     TB = require("TB")
--- else
---     shell.run("pastebin", "get", "aERjx7BE","TB.lua")
---     TB = require("TB")
--- end
 
---Connect to MainFrame 
-    --download APIs
-        --
+-- await connection to Mainframe
+-- if no mainframe then ask for one
+-- download GPS Builder
+-- Await resources for it
+-- build it 
+-- delete gps builder
+
+local x  = GF.MainframeConnect()
+print(x)

@@ -1,8 +1,8 @@
 local GF = {}
 
 -- Make Crafting Knowledge Folder
-if not fs.isDir("CraftingKnowledge") then
-    fs.makeDir("CraftingKnowledge")
+if not fs.isDir("/CraftingKnowledge") then
+    fs.makeDir("/CraftingKnowledge")
 end
 
 function GF.FindPeripheralByMethod(Method)
@@ -24,26 +24,57 @@ function GF.FindPeripheralByMethod(Method)
     return ReturnList -- outputs chest side
 end
 
-function GF.SendMainframeMessage(Message, Protocol)
-    local GFMainframeID
-    while GFMainframeID == nil do
-        rednet.broadcast("Hello" , "MainframeRequest")
-        local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
-        GFMainframeID = Sender
-        if GFMainframeID == nil then
-            rednet.broadcast("No Responce" , "MainframeFail")
+function GF.MainframeConnect(TimeOut,BreakoutNumber)
+    local function MainframeRequest() -- Dont call this call Mainframe Connect
+        local MainframeID = nil
+        while true do
+            rednet.broadcast("Hello", "MainframeRequest")
+            local Sender, Message, Protocol = rednet.receive("MainframeResponce", 1)
+            MainframeID = Sender
+            if MainframeID ~= nil then
+                return MainframeID
+            end
         end
     end
-    rednet.send(GFMainframeID, Message, Protocol)
+
+    local function MainframeTimeout(WaitTime) -- Dont call this call Mainframe Connect
+        if WaitTime == nil then
+            WaitTime = 30
+        end
+        sleep(WaitTime)
+        rednet.broadcast("No Responce" , "MainframeFail")
+    end
+    
+    local MainframeID = nil
+    if BreakoutNumber ~= nil then
+        local i = BreakoutNumber
+        local c = 1
+    end
+    while MainframeID == nil do
+        --Send a mainframe Request every second untill responce or 30 seconds have passed
+        parallel.waitForAny(function() MainframeTimeout(TimeOut) end , function() MainframeID = MainframeRequest() end)
+        if BreakoutNumber ~= nil then
+            if i == c then
+                return nil
+            end
+        end
+    end
+    return MainframeID
+end
+
+function GF.SendMainframeMessage(Message, Protocol)
+    local MainframeID = GF.MainframeConnect()
+    rednet.send(MainframeID, Message, Protocol)
+    return rednet.receive(Protocol)
 end
 
 function GF.SyncKnowledge()
     local ReturnList = {}
-    FoundItems = fs.list("CraftingKnowledge/")
+    FoundItems = fs.list("/CraftingKnowledge/")
     print("Syncing " .. #FoundItems)
     for i = 1, #FoundItems do
         ResultItemName = string.gsub(FoundItems[i], ":","-")
-        FResults = fs.open("CraftingKnowledge/"..FoundItems[i] , "r" )
+        FResults = fs.open("/CraftingKnowledge/"..FoundItems[i] , "r" )
         LResults = FResults.readAll()
         FResults.close()
         LResults = textutils.unserialize(LResults)
@@ -65,7 +96,7 @@ end
 function GF.SaveKnowledge(Knowledge)
     -- Save Knowledge in the CraftingKnowledge folder
     KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
-    KFile = fs.open("CraftingKnowledge/" .. KText ,"w")
+    KFile = fs.open("/CraftingKnowledge/" .. KText ,"w")
     KFile.write(textutils.serialize(Knowledge["Ingredients"]))
     KFile.close()
 end
@@ -73,7 +104,7 @@ end
 function GF.SearchKnowledge(ResultItemName)
     local ReturnList = {}
     TResultItemName = string.gsub(ResultItemName, ":","-")
-    FoundItems = fs.find("CraftingKnowledge/" .. TResultItemName)
+    FoundItems = fs.find("/CraftingKnowledge/" .. TResultItemName)
     if #FoundItems == 0 then
         return nil
     end

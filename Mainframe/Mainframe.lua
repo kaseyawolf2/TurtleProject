@@ -1,12 +1,8 @@
 -- Get the General Functions
-GF = require("LocalGit/APIs/GF")
-MF = require("LocalGit/APIs/MF")
+GF = require("/LocalGit/APIs/GF")
+MF = require("/LocalGit/APIs/MF")
 
 os.setComputerLabel("Mainframe")
-
-MasterMainframeID = nil
-MyID = os.getComputerID()
-
 
 -- Find/Await A Modem and open Rednet
 HasWireless = false
@@ -24,20 +20,10 @@ while not HasWireless do
     end
 end
 term.clear()
-rednet.close()
-sleep(1)
-rednet.open(peripheral.getName(peripheral.find("modem")))
-
 term.setCursorPos(1, 1)
 
-while true do
-    MF.BootMainframe()
-    if MasterMainframeID == MyID then
-        MF.ListenResond() 
-    else
-        term.clear()
-        term.setCursorPos(1, 1)
-        print("Mainframe in Backup Mode")
-        parallel.waitForAny(MF.ListenForFailure,MF.MainframeCheckIn) -- end if Receives Failure message, or Check in fails
-    end
+if term.isColor() then
+    multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
+else
+    shell.run("/LocalGit/Mainframe/Responder.lua")
 end
