@@ -23,7 +23,9 @@ term.clear()
 term.setCursorPos(1, 1)
 
 if term.isColor() then
+    print("Advanced PC starting Responder in a new tab")
     multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
 else
+    print("Standard PC Starting Responder")
     shell.run("/LocalGit/Mainframe/Responder.lua")
 end
