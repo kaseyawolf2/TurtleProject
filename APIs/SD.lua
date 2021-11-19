@@ -15,6 +15,9 @@ if monitor.isColor() then -- Is advanced
     MultiPanY = 2
     tempx = 0
     tempz = 0
+    tempx2 = 0
+    tempz2 = 0
+    Deltatemp = 1
 
 
     function SD.Draw()
@@ -81,20 +84,54 @@ if monitor.isColor() then -- Is advanced
                     --# add buttons
                     Page:add("Back", MiningAreasList, 2, 2, MultiPanX, MultiPanY, colors.red, colors.lime)
                     --XMin
-                    Page:add("X-", function() tempx = tempx - 1
-                        MiningAreaPanel(ID) end , 4, 6, 7, 8, colors.red, colors.lime)
-                    Page:add("X+", function() tempx = tempx + 1
-                        MiningAreaPanel(ID) end, 16, 6, 18, 8, colors.red, colors.lime)
+                    Page:add("X1-", function() tempx = tempx - Deltatemp
+                        MiningAreaPanel(ID) end , 4, 6, 8, 8, colors.red, colors.lime)
+                    Page:add("X1+", function() tempx = tempx + Deltatemp
+                        MiningAreaPanel(ID) end, 16, 6, 20, 8, colors.red, colors.lime)
                     --ZMin
-                    Page:add("Z-", function() tempz = tempz - 1 
+                    Page:add("Z1-", function() tempz = tempz - Deltatemp
                         MiningAreaPanel(ID) end, 4, 10, 8, 12, colors.red, colors.lime)
-                    Page:add("Z+", function() tempz = tempz + 1 
-                        MiningAreaPanel(ID) end, 16, 10, 18, 12, colors.red, colors.lime)
+                    Page:add("Z1+", function() tempz = tempz + Deltatemp
+                        MiningAreaPanel(ID) end, 16, 10, 20, 12, colors.red, colors.lime)
+                    --XMax
+                    Page:add("X2-", function() tempx2 = tempx2 - Deltatemp
+                        MiningAreaPanel(ID) end , 22, 6, 26, 8, colors.red, colors.lime)
+                    Page:add("X2+", function() tempx2 = tempx2 + Deltatemp
+                        MiningAreaPanel(ID) end, 34, 6, 38, 8, colors.red, colors.lime)
+                    --ZMax
+                    Page:add("Z2-", function() tempz2 = tempz2 - Deltatemp 
+                        MiningAreaPanel(ID) end, 22, 10, 26, 12, colors.red, colors.lime)
+                    Page:add("Z2+", function() tempz2 = tempz2 + Deltatemp 
+                        MiningAreaPanel(ID) end, 34, 10, 38, 12, colors.red, colors.lime)
+
+                    --ΔChange
+                    Page:add("-1", function() Deltatemp = Deltatemp - 1
+                        MiningAreaPanel(ID) end , 4, 14, 8, 16, colors.red, colors.lime)
+                    Page:add("-10", function() Deltatemp = Deltatemp - 10
+                        MiningAreaPanel(ID) end, 10, 14, 14, 16, colors.red, colors.lime)
+                    Page:add("-100", function() Deltatemp = Deltatemp - 100
+                        MiningAreaPanel(ID) end, 16, 14, 20, 16, colors.red, colors.lime)
+
+                    Page:add("+100", function() Deltatemp = Deltatemp + 100
+                        MiningAreaPanel(ID) end, 22, 14, 26, 16, colors.red, colors.lime)
+                    Page:add("+10", function() Deltatemp = Deltatemp + 10
+                        MiningAreaPanel(ID) end, 28, 14, 32, 16, colors.red, colors.lime)
+                    Page:add("+1", function() Deltatemp = Deltatemp + 1
+                        MiningAreaPanel(ID) end, 34, 14, 38, 16, colors.red, colors.lime)
+
+
+
+
+
+
 
                     Page:draw() --Draw seems to Clear term before drawing
 
                     term.setBackgroundColor(colors.black)
                     term.setTextColor(colors.white)
+                    --Coord 1
+                    term.setCursorPos(9, 4)
+                    term.write("Coord 1")
                     --Current XMin 
                     term.setCursorPos(10, 7)
                     term.write(tempx)
