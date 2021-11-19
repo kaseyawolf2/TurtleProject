@@ -96,10 +96,17 @@ Mining System
         Request more miners if needed
     Several Mining Styles
         Open Air Strip Mine
-        Y Level Bore
-        Y 255 to 0 Hole Mining (1x1 stright down)
+            Strip Split (split the mine in to 1 block strips)
+            3x3 Partion (each turtle is assigned 3x3 to y0 to mine)
+            Y 255 to 0 BoreHole Mining (1x1 stright down)
+        Y Level Excavate(tunnel to y level and tunnel)
         Water Removal
-    AR Glasses OverLay
+            if enough tutles can just sweep across
+                might need a command turtle?
+            if not enough then
+                spongeing
+                fill strip with coble then remove 
+    AR Glasses OverLay?
 
 Building System
     Ocean Circle Builder 
