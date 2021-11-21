@@ -48,7 +48,10 @@ Mainframe
     Request Reponce
         Make it a Background Program so i can send mass commands
     GUI
-        Make a Gui
+        Make list of mining areas a list and not infinite
+
+
+
     Monitor Support
         Make a GUI and tabs
             Communication Tab
@@ -96,6 +99,7 @@ Mining System
         Request more miners if needed
     Several Mining Styles
         Open Air Strip Mine
+            1 Turtle Mine
             Strip Split (split the mine in to 1 block strips)
             3x3 Partion (each turtle is assigned 3x3 to y0 to mine)
             Y 255 to 0 BoreHole Mining (1x1 stright down)
