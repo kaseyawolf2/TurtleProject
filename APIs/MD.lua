@@ -294,10 +294,11 @@ function MiningPanel()
 
             -- intialize button set on the monitor
             local Page = new(peripheral.getName(monitor))
-            local t1,t2,t3,t4 = GridMath(1,4)
+            
             --# Drawing
                 --# Init Buttons
-                    Page:add("Back", MiningAreasList, 2, 2, math.floor((MonX)-1), 4, colors.red, colors.lime)
+                    local t1,t2,t3,t4 = ListMath(1)
+                    Page:add("Back", MiningAreasList, t1,t2,t3,t4, colors.red, colors.lime)
                     --XMin
                     
                     t1,t2,t3,t4 = GridMath(1,1)
