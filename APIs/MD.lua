@@ -285,10 +285,17 @@ function MiningPanel()
         end
         function MiningAreaPanel(ID)
             Area = LoadArea(ID)
-            X1 = Area["X1"]
-            Z1 = Area["Z1"]
-            X2 = Area["X2"]
-            Z2 = Area["Z2"]
+            if Area ~= nil then
+                X1 = Area["X1"]
+                Z1 = Area["Z1"]
+                X2 = Area["X2"]
+                Z2 = Area["Z2"]
+            else
+                X1 = 0
+                Z1 = 0
+                X2 = 0
+                Z2 = 0
+            end
             Delta = 1
             
 
