@@ -73,7 +73,7 @@ function UpdatePanel()
     local t1,t2,t3,t4 = ListMath(4)
     Page:add("Sync All", nil, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(5)
-    Page:add("Download Updates", function() shell.run("/LocalGit/Installer/Installer.lua") end, t1, t2, t3, t4, colors.red, colors.lime)
+    Page:add("Download Updates", function() shell.run("/LocalGit/Installer/Installer.lua") term.write("Updating And Rebooting") end, t1, t2, t3, t4, colors.red, colors.lime)
     --# draw the buttons
     Page:draw()
     while true do 
@@ -284,6 +284,14 @@ function MiningPanel()
             end
         end
         function MiningAreaPanel(ID)
+            Area = LoadArea(ID)
+            X1 = Area["X1"]
+            Z1 = Area["Z1"]
+            X2 = Area["X2"]
+            Z2 = Area["Z2"]
+            Delta = 1
+            
+
             -- intialize button set on the monitor
             local Page = new(peripheral.getName(monitor))
             local t1,t2,t3,t4 = GridMath(1,4)
@@ -293,40 +301,40 @@ function MiningPanel()
                     --XMin
                     
                     t1,t2,t3,t4 = GridMath(1,1)
-                    Page:add("X1-", function() tempx = tempx - Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X1-", function() X1 = X1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     
                     t1,t2,t3,t4 = GridMath(3,1)
-                    Page:add("X1+", function() tempx = tempx + Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X1+", function() X1 = X1 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
 
                     --ZMin
                     t1,t2,t3,t4 = GridMath(1,2)
-                    Page:add("Z1-", function() tempz = tempz - Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z1-", function() Z1 = Z1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(3,2)
-                    Page:add("Z1+", function() tempz = tempz + Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z1+", function() Z1 = Z1 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     --XMax
                     t1,t2,t3,t4 = GridMath(5,1)
-                    Page:add("X2-", function() tempx2 = tempx2 - Deltatemp  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X2-", function() X2 = X2 - Delta  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,1)
-                    Page:add("X2+", function() tempx2 = tempx2 + Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X2+", function() X2 = X2 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     --ZMax
                     t1,t2,t3,t4 = GridMath(5,2)
-                    Page:add("Z2-", function() tempz2 = tempz2 - Deltatemp  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z2-", function() Z2 = Z2 - Delta  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,2)
-                    Page:add("Z2+", function() tempz2 = tempz2 + Deltatemp MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z2+", function() Z2 = Z2 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                         
                     --ΔChange
                     t1,t2,t3,t4 = GridMath(1,3)
-                    Page:add("-1", function() Deltatemp = Deltatemp - 1  if Deltatemp < 0 then Deltatemp = 0 end   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-1", function() Delta = Delta - 1  if Delta < 0 then Delta = 0 end   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(2,3)
-                    Page:add("-10", function() Deltatemp = Deltatemp - 10  if Deltatemp < 0 then Deltatemp = 0 end  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-10", function() Delta = Delta - 10  if Delta < 0 then Delta = 0 end  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(3,3)
-                    Page:add("-100", function() Deltatemp = Deltatemp - 100 if Deltatemp < 0 then Deltatemp = 0 end MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-100", function() Delta = Delta - 100 if Delta < 0 then Delta = 0 end MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(5,3)
-                    Page:add("+100", function() Deltatemp = Deltatemp + 100 MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+100", function() Delta = Delta + 100 MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(6,3)
-                    Page:add("+10", function() Deltatemp = Deltatemp + 10   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+10", function() Delta = Delta + 10   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,3)
-                    Page:add("+1", function() Deltatemp = Deltatemp + 1     MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+1", function() Delta = Delta + 1     MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
 
 
                     t1,t2,t3,t4 = GridMath(1,4)
@@ -353,23 +361,23 @@ function MiningPanel()
                     --Current Delta Change
                     t1,t2 = GridMath(4,3)
                     term.setCursorPos(t1, t2+1)
-                    term.write(Deltatemp)
+                    term.write(Delta)
                     --Current XMin 
                     t1,t2 = GridMath(2,1)
                     term.setCursorPos(t1, t2+1)
-                    term.write(tempx)
+                    term.write(X1)
                     --Current ZMin 
                     t1,t2 = GridMath(2,2)
                     term.setCursorPos(t1, t2+1)
-                    term.write(tempz)
+                    term.write(Z1)
                     --Current XMin 
                     t1,t2 = GridMath(6,1)
                     term.setCursorPos(t1, t2+1)
-                    term.write(tempx2)
+                    term.write(X2)
                     --Current ZMin 
                     t1,t2 = GridMath(6,2)
                     term.setCursorPos(t1, t2+1)
-                    term.write(tempz2)
+                    term.write(Z2)
                 --
             --
             while true do 
@@ -437,6 +445,27 @@ function MiningPanel()
             end
         end
     end
+end 
+function LoadArea(ID)
+    local AreaInfo = {}
+    local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
+    local LResults = FResults.readAll()
+    FResults.close()
+    local AreaInfo = textutils.unserialize(LResults)
+    return AreaInfo
+        -- Area
+            -- X1
+            -- Z1
+            -- X2
+            -- Z2
+            -- Style
+
+end
+function SaveArea(ID,AreaInfo)
+    local ReturnList = {}
+    local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
+    FResults.write(textutils.serialize(AreaInfo))
+    FResults.close()
 end
 function MD.Draw()
     if monitor.isColor() then -- Is advanced
@@ -445,13 +474,6 @@ function MD.Draw()
         --Defaults
         DefaultStyle = "Strip-1Turtle"
         DefaultMiningY = 11
-
-        --to be removed
-        tempx = 0
-        tempz = 0
-        tempx2 = 0
-        tempz2 = 0
-        Deltatemp = 1
 
 
         LandingPanel()
