@@ -1,4 +1,4 @@
-local SD = {}
+local MD = {}
 local monitor = peripheral.find("monitor")
 monitor.setTextScale(0.5)
 term.redirect(monitor)
@@ -60,7 +60,7 @@ function LandingPanel()
         end
     end
 end
-function UpdatePanel( ... )
+function UpdatePanel()
     --# intialize button set on the monitor
     local Page = new(peripheral.getName(monitor))
     --# add buttons
@@ -85,7 +85,7 @@ function UpdatePanel( ... )
         end
     end
 end
-function DronePanel( ... )
+function DronePanel()
     --# intialize button set on the monitor
     local Page = new(peripheral.getName(monitor))
     --# add buttons
@@ -110,7 +110,7 @@ function DronePanel( ... )
         end
     end
 end
-function StatsPanel( ... )
+function StatsPanel()
     --# intialize button set on the monitor
     local Page = new(peripheral.getName(monitor))
     --# add buttons
@@ -436,35 +436,35 @@ function MiningPanel()
         end
     end
 end
+function MD.Draw()
+    if monitor.isColor() then -- Is advanced
 
 
+        --Defaults
+        DefaultStyle = "Strip-1Turtle"
+        DefaultMiningY = 11
+
+        --to be removed
+        tempx = 0
+        tempz = 0
+        tempx2 = 0
+        tempz2 = 0
+        Deltatemp = 1
 
 
-if monitor.isColor() then -- Is advanced
+        LandingPanel()
+        
+    else -- Standard
+        term.native().clear()
+        term.native().setCursorPos(1, 1)
+        term.native().write("Requires Advanced Monitors for commands")
+        term.native().setCursorPos(1, 2)
+        term.native().write("Opening Stats")
+        StatsPanel()
 
 
-    --Defaults
-    DefaultStyle = "Strip-1Turtle"
-    DefaultMiningY = 11
-
-    --to be removed
-    tempx = 0
-    tempz = 0
-    tempx2 = 0
-    tempz2 = 0
-    Deltatemp = 1
-
-
-    LandingPanel()
-    
-else -- Standard
-    term.native().clear()
-    term.native().setCursorPos(1, 1)
-    term.native().write("Requires Advanced Monitors for commands")
-    term.native().setCursorPos(1, 2)
-    term.native().write("Opening Stats")
-    StatsPanel()
-
-
+    end
 end
-return SD
+
+
+return MD
