@@ -285,7 +285,7 @@ function MiningPanel()
         end
         function MiningAreaPanel(ID)
             Area = LoadArea(ID)
-            if Area ~= nil then
+            if Area ~= false then
                 X1 = Area["X1"]
                 Z1 = Area["Z1"]
                 X2 = Area["X2"]
@@ -463,12 +463,16 @@ function MiningPanel()
     end
 end 
 function LoadArea(ID)
-    local AreaInfo = {}
-    local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
-    local LResults = FResults.readAll()
-    FResults.close()
-    local AreaInfo = textutils.unserialize(LResults)
-    return AreaInfo
+    if fs.exists("/Knowledge/MineAreas/"..ID) then
+        local AreaInfo = {}
+        local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
+        local LResults = FResults.readAll()
+        FResults.close()
+        local AreaInfo = textutils.unserialize(LResults)
+        return AreaInfo
+    else
+        return false
+    end
         -- Area
             -- X1
             -- Z1
