@@ -1,8 +1,8 @@
 local GF = {}
 
 -- Make Crafting Knowledge Folder
-if not fs.isDir("/CraftingKnowledge") then
-    fs.makeDir("/CraftingKnowledge")
+if not fs.isDir("/Knowledge/Crafting") then
+    fs.makeDir("/Knowledge/Crafting")
 end
 
 function GF.FindPeripheralByMethod(Method)
@@ -70,11 +70,11 @@ end
 
 function GF.SyncKnowledge()
     local ReturnList = {}
-    FoundItems = fs.list("/CraftingKnowledge/")
+    FoundItems = fs.list("/Knowledge/Crafting/")
     print("Syncing " .. #FoundItems)
     for i = 1, #FoundItems do
         ResultItemName = string.gsub(FoundItems[i], ":","-")
-        FResults = fs.open("/CraftingKnowledge/"..FoundItems[i] , "r" )
+        FResults = fs.open("/Knowledge/Crafting/"..FoundItems[i] , "r" )
         LResults = FResults.readAll()
         FResults.close()
         LResults = textutils.unserialize(LResults)
@@ -96,7 +96,7 @@ end
 function GF.SaveKnowledge(Knowledge)
     -- Save Knowledge in the CraftingKnowledge folder
     KText = string.gsub(Knowledge["Result"]["Itemname"], ":","-")
-    KFile = fs.open("/CraftingKnowledge/" .. KText ,"w")
+    KFile = fs.open("/Knowledge/Crafting/" .. KText ,"w")
     KFile.write(textutils.serialize(Knowledge["Ingredients"]))
     KFile.close()
 end
@@ -104,7 +104,7 @@ end
 function GF.SearchKnowledge(ResultItemName)
     local ReturnList = {}
     TResultItemName = string.gsub(ResultItemName, ":","-")
-    FoundItems = fs.find("/CraftingKnowledge/" .. TResultItemName)
+    FoundItems = fs.find("/Knowledge/Crafting/" .. TResultItemName)
     if #FoundItems == 0 then
         return nil
     end
