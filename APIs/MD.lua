@@ -73,7 +73,7 @@ function UpdatePanel()
     local t1,t2,t3,t4 = ListMath(4)
     Page:add("Sync All", nil, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(5)
-    Page:add("Download Updates", function() shell.run("/LocalGit/Installer/Installer.lua"), t1, t2, t3, t4, colors.red, colors.lime)
+    Page:add("Download Updates", function() shell.run("/LocalGit/Installer/Installer.lua") end, t1, t2, t3, t4, colors.red, colors.lime)
     --# draw the buttons
     Page:draw()
     while true do 
