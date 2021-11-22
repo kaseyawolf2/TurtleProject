@@ -299,14 +299,12 @@ function MiningPanel()
                 --# Init Buttons
                     local t1,t2,t3,t4 = ListMath(1)
                     Page:add("Back", MiningAreasList, t1,t2,t3,t4, colors.red, colors.lime)
+
                     --XMin
-                    
                     t1,t2,t3,t4 = GridMath(1,1)
                     Page:add("X1-", function() X1 = X1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
-                    
                     t1,t2,t3,t4 = GridMath(3,1)
                     Page:add("X1+", function() X1 = X1 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
-
                     --ZMin
                     t1,t2,t3,t4 = GridMath(1,2)
                     Page:add("Z1-", function() Z1 = Z1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
@@ -404,13 +402,23 @@ function MiningPanel()
             Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
             t1,t2,t3,t4 = ListMath(2)
             Page:add("Up", function() MiningAreasList(PageNum-1) end, t1, t2, t3, t4, colors.red, colors.lime)
-            AvilSpace = math.floor(MonY / 4) - 3
-            for i=1,AvilSpace do
+
+            AvilSpace = math.floor(MonY / 4) - 4
+            TotalAreas = #fs.find("/Knowledge/MineAreas/*")
+            if AvilSpace <= TotalAreas then
+                AreasToPrint = AvilSpace
+            else
+                AreasToPrint = TotalAreas
+            end
+            for i=1,AreasToPrint do
                 t1,t2,t3,t4 = ListMath(i+2)
                 Page:add(tostring(i+PageNum), function() MiningAreaPanel(i+PageNum) end, t1, t2, t3, t4, colors.red, colors.lime)
             end
             t1,t2,t3,t4 = ListMath(AvilSpace+3)
             Page:add("Down", function() MiningAreasList(PageNum+1) end, t1, t2, t3, t4, colors.red, colors.lime)
+            t1,t2,t3,t4 = ListMath(AvilSpace+4)
+            Page:add("New Area", function() MiningAreaPanel(1) end, t1, t2, t3, t4, colors.red, colors.lime)
+
         --#
         -- draw the buttons
         Page:draw()
@@ -460,7 +468,6 @@ function LoadArea(ID)
             -- X2
             -- Z2
             -- Style
-
 end
 function SaveArea(ID,AreaInfo)
     local ReturnList = {}
