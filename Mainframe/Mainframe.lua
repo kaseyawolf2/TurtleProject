@@ -1,6 +1,7 @@
 -- Get the General Functions
 GF = require("/LocalGit/APIs/GF")
 MF = require("/LocalGit/APIs/MF")
+MD = require("/LocalGit/APIs/MD")
 
 os.setComputerLabel("Mainframe")
 
@@ -25,6 +26,7 @@ term.setCursorPos(1, 1)
 if term.isColor() then
     print("Advanced PC starting Responder in a new tab")
     multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
+    multishell.launch({},"/LocalGit/Mainframe/MonitorInterface.lua",MD)
 else
     print("Standard PC Starting Responder")
     shell.run("/LocalGit/Mainframe/Responder.lua")
