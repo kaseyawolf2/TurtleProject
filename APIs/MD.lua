@@ -399,6 +399,13 @@ function MiningPanel()
                     t1,t2 = GridMath(2,0)
                     term.setCursorPos(t1, t2+2)
                     term.write("Coords 1")
+                    --Current Area
+                    t1,t2 = GridMath(3,0)
+                    term.setCursorPos(t1+1, t2+1)
+                    term.write("Current Area:")
+                    t1,t2 = GridMath(4,0)
+                    term.setCursorPos(t1+1, t2+2)
+                    term.write(Area["ID"])
                     --Coord 2
                     t1,t2 = GridMath(5,0)
                     term.setCursorPos(t1, t2+2)
@@ -423,6 +430,15 @@ function MiningPanel()
                     t1,t2 = GridMath(6,2)
                     term.setCursorPos(t1, t2+1)
                     term.write(Z2)
+                    --Current Style
+                    t1,t2 = GridMath(3,4)
+                    term.setCursorPos(t1+1, t2+1)
+                    term.write("Current Style: " .. Area["Style"] )
+                    t1,t2 = GridMath(5,4)
+                    term.setCursorPos(t1, t2+2)
+                    if Area["Style"] == "Tunnel" then
+                        term.write("@ Y " .. Area["Y"])
+                    end
                 end
                 DrawText()
             --
@@ -510,11 +526,12 @@ function MiningPanel()
 end 
 function LoadArea(ID)
     local DefaultArea = {
+        --if gps connection then set x and z 
         X1 = 0,
         X2 = 0,
         Z1 = 0,
         Z2 = 0,
-        Style = "Strip-1Turtle",
+        Style = DefaultStyle,
         Y = 11
     }
     if fs.exists("/Knowledge/MineAreas/"..ID) then
@@ -525,6 +542,8 @@ function LoadArea(ID)
         local AreaInfo = textutils.unserialize(LResults)
         return AreaInfo
     else
+        DefaultArea["ID"] = #fs.find("/Knowledge/MineAreas/*")+1
+
         return DefaultArea
     end
 end
