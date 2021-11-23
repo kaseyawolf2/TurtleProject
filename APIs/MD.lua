@@ -1,14 +1,8 @@
 local MD = {}
-local monitor = peripheral.find("monitor")
-monitor.setTextScale(0.5)
-term.redirect(monitor)
 
 --# load the touchpoint API
 touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 
-MonX, MonY = monitor.getSize()
-FourPanX = math.floor((MonX/2)-1)
-FourPanY = math.floor((MonY/2)-1)
 
 function GridMath(X,Y)
     local ButtonX = 6
@@ -139,7 +133,14 @@ function StatsPanel()
 end
 function MiningPanel()
     function MiningAreasList(PageNum)
-        function MiningStylesPanel()
+        function MiningStylesPanel(ID)
+            if ID == nil then
+               Style = DefaultStyle
+            else
+                Area = LoadArea(ID)
+                Style = Area["Style"]
+            end
+
             function StripmineType()
                 local Page = new(peripheral.getName(monitor))
                 local t1,t2,t3,t4 = ListMath(1)
@@ -159,13 +160,20 @@ function MiningPanel()
                     if event == "button_click" then
                         
                         if p1 == "Single Turtle" then
-                            DefaultStyle = "Strip-1Turtle"
+                            Style = "Strip-1Turtle"
                         elseif p1 == "Strip Split" then
-                            DefaultStyle = "Strip-Split"
+                            Style = "Strip-Split"
                         elseif p1 == "3x3 Holes" then
-                            DefaultStyle = "Strip-3x3"
+                            Style = "Strip-3x3"
                         elseif p1 == "Bore Holes" then
-                            DefaultStyle = "Strip-Bore"
+                            Style = "Strip-Bore"
+                        end
+                        if ID == nil then
+                            DefaultStyle = Style
+                        else
+                            Area = LoadArea(ID)
+                            Area["Style"] = Style
+                            SaveArea(ID,Area)
                         end
                         if Page.buttonList[p1].func ~= nil then
                             Page.buttonList[p1].func()
@@ -174,6 +182,12 @@ function MiningPanel()
                 end
             end
             function TunnelMineType()
+                if ID ~= nil then
+                    local Area = LoadArea(ID)
+                    TempMiningY = Area["Y"]
+                else
+                    TempMiningY = DefaultMiningY
+                end
                 --Add Buttons
                 local Page = new(peripheral.getName(monitor))
                 local t1,t2,t3,t4 = ListMath(1)
@@ -187,7 +201,6 @@ function MiningPanel()
                 --
                 Page:draw()
                 -- Draw Text
-                    TempMiningY = DefaultMiningY
                     term.setBackgroundColor(colors.black)
                     term.setTextColor(colors.white)
                     local t1,t2 = GridMath(3,2)
@@ -201,7 +214,14 @@ function MiningPanel()
                     local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
                     if event == "button_click" then
                         if p1 == "Save" then
-                            DefaultMiningY = TempMiningY
+                            if ID == nil then
+                                DefaultStyle = "Tunnel"
+                                DefaultMiningY = TempMiningY
+                            else
+                                Area["Style"] = "Tunnel"
+                                Area["Y"] = TempMiningY
+                                SaveArea(ID,Area)
+                            end
                         elseif p1 == "Y+" then
                             TempMiningY = TempMiningY + 1
                             local t1,t2 = GridMath(4,3)
@@ -239,11 +259,17 @@ function MiningPanel()
                     local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
                     if event == "button_click" then
                         if p1 == "Block Remove" then
-                            DefaultStyle = "Water-Block"
+                            Style = "Water-Block"
                         elseif p1 == "Turtle Mover" then
-                            DefaultStyle = "Water-Mover"
+                            Style = "Water-Mover"
                         elseif p1 == "Sponge Remove" then
-                            DefaultStyle = "Water-Sponge"
+                            Style = "Water-Sponge"
+                        end
+                        if ID == nil then
+                            DefaultStyle = Style
+                        else
+                            Area = LoadArea(ID)
+                            Area["Style"] = Style
                         end
                         if Page.buttonList[p1].func ~= nil then
                             Page.buttonList[p1].func()
@@ -270,8 +296,11 @@ function MiningPanel()
             term.setTextColor(colors.white)
             local t1,t2 = ListMath(2)
             term.setCursorPos(t1+1, t2+1)
-            term.write("Default Style: " .. DefaultStyle)
-
+            if ID == nil  then
+                term.write("Default Style: " .. Style)
+            else 
+                term.write("Current Style: " .. Style)
+            end
             while true do 
                 local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
                 if event == "button_click" then
@@ -297,7 +326,17 @@ function MiningPanel()
                 Z2 = 0
             end
             Delta = 1
-            
+            function Save()
+                NewArea = {}
+                if Area ~= false then
+                    NewArea = Area
+                end
+                NewArea["X1"] = X1
+                NewArea["Z1"] = Z1
+                NewArea["X2"] = X2
+                NewArea["Z2"] = Z2
+                SaveArea(ID,NewArea)
+            end
 
             -- intialize button set on the monitor
             local Page = new(peripheral.getName(monitor))
@@ -309,51 +348,51 @@ function MiningPanel()
 
                     --XMin
                     t1,t2,t3,t4 = GridMath(1,1)
-                    Page:add("X1-", function() X1 = X1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X1-", function() X1 = X1 - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(3,1)
-                    Page:add("X1+", function() X1 = X1 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X1+", function() X1 = X1 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     --ZMin
                     t1,t2,t3,t4 = GridMath(1,2)
-                    Page:add("Z1-", function() Z1 = Z1 - Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z1-", function() Z1 = Z1 - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(3,2)
-                    Page:add("Z1+", function() Z1 = Z1 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z1+", function() Z1 = Z1 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     --XMax
                     t1,t2,t3,t4 = GridMath(5,1)
-                    Page:add("X2-", function() X2 = X2 - Delta  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X2-", function() X2 = X2 - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,1)
-                    Page:add("X2+", function() X2 = X2 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("X2+", function() X2 = X2 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     --ZMax
                     t1,t2,t3,t4 = GridMath(5,2)
-                    Page:add("Z2-", function() Z2 = Z2 - Delta  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z2-", function() Z2 = Z2 - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,2)
-                    Page:add("Z2+", function() Z2 = Z2 + Delta MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Z2+", function() Z2 = Z2 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
                         
                     --ΔChange
                     t1,t2,t3,t4 = GridMath(1,3)
-                    Page:add("-1", function() Delta = Delta - 1  if Delta < 0 then Delta = 0 end   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-1", function() Delta = Delta - 1  if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(2,3)
-                    Page:add("-10", function() Delta = Delta - 10  if Delta < 0 then Delta = 0 end  MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-10", function() Delta = Delta - 10  if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(3,3)
-                    Page:add("-100", function() Delta = Delta - 100 if Delta < 0 then Delta = 0 end MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("-100", function() Delta = Delta - 100 if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(5,3)
-                    Page:add("+100", function() Delta = Delta + 100 MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+100", function() Delta = Delta + 100 end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(6,3)
-                    Page:add("+10", function() Delta = Delta + 10   MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+10", function() Delta = Delta + 10 end, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(7,3)
-                    Page:add("+1", function() Delta = Delta + 1     MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("+1", function() Delta = Delta + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
 
 
                     t1,t2,t3,t4 = GridMath(1,4)
-                    Page:add("Save", nil, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Save", Save, t1, t2, t3, t4, colors.red, colors.lime)
                     t1,t2,t3,t4 = GridMath(2,4)
                     Page:add("Reset", nil, t1, t2, t3, t4, colors.red, colors.lime)
 
                     
                     t1,t2,t3,t4 = GridMath(7,4)
-                    Page:add("Style", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+                    Page:add("Style", function() MiningStylesPanel(ID) end , t1, t2, t3, t4, colors.red, colors.lime)
                 --                 
                 Page:draw() --Draw seems to Clear term before drawing
-                --# Draw Text 
+                function DrawText()
                     term.setBackgroundColor(colors.black)
                     term.setTextColor(colors.white)
                     --Coord 1
@@ -384,11 +423,14 @@ function MiningPanel()
                     t1,t2 = GridMath(6,2)
                     term.setCursorPos(t1, t2+1)
                     term.write(Z2)
-                --
+                end
+                DrawText()
             --
             while true do 
+                DrawText()
                 local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
                 if event == "button_click" then
+                    
                     
                     
                     if Page.buttonList[p1].func ~= nil then
@@ -398,9 +440,11 @@ function MiningPanel()
             end
             
         end
-        
+        AvilSpace = math.floor(MonY / 4) - 4
+        TotalAreas = #fs.find("/Knowledge/MineAreas/*")
         if PageNum == nil then PageNum = 0 end 
         if PageNum < 0 then PageNum = 0 end 
+        if PageNum >= TotalAreas then PageNum = TotalAreas -1  end
         
         -- intialize button set on the monitor
         local Page = new(peripheral.getName(monitor))
@@ -410,8 +454,8 @@ function MiningPanel()
             t1,t2,t3,t4 = ListMath(2)
             Page:add("Up", function() MiningAreasList(PageNum-1) end, t1, t2, t3, t4, colors.red, colors.lime)
 
-            AvilSpace = math.floor(MonY / 4) - 4
-            TotalAreas = #fs.find("/Knowledge/MineAreas/*")
+            
+            
             if AvilSpace <= TotalAreas then
                 AreasToPrint = AvilSpace
             else
@@ -419,12 +463,14 @@ function MiningPanel()
             end
             for i=1,AreasToPrint do
                 t1,t2,t3,t4 = ListMath(i+2)
-                Page:add(tostring(i+PageNum), function() MiningAreaPanel(i+PageNum) end, t1, t2, t3, t4, colors.red, colors.lime)
+                if i+PageNum <= TotalAreas then
+                    Page:add(tostring(i+PageNum), function() MiningAreaPanel(i+PageNum) end, t1, t2, t3, t4, colors.red, colors.lime)
+                end
             end
             t1,t2,t3,t4 = ListMath(AvilSpace+3)
             Page:add("Down", function() MiningAreasList(PageNum+1) end, t1, t2, t3, t4, colors.red, colors.lime)
             t1,t2,t3,t4 = ListMath(AvilSpace+4)
-            Page:add("New Area", function() MiningAreaPanel(1) end, t1, t2, t3, t4, colors.red, colors.lime)
+            Page:add("New Area", function() MiningAreaPanel(TotalAreas+1) end, t1, t2, t3, t4, colors.red, colors.lime)
 
         --#
         -- draw the buttons
@@ -463,6 +509,14 @@ function MiningPanel()
     end
 end 
 function LoadArea(ID)
+    local DefaultArea = {
+        X1 = 0,
+        X2 = 0,
+        Z1 = 0,
+        Z2 = 0,
+        Style = "Strip-1Turtle",
+        Y = 11
+    }
     if fs.exists("/Knowledge/MineAreas/"..ID) then
         local AreaInfo = {}
         local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
@@ -471,22 +525,23 @@ function LoadArea(ID)
         local AreaInfo = textutils.unserialize(LResults)
         return AreaInfo
     else
-        return false
+        return DefaultArea
     end
-        -- Area
-            -- X1
-            -- Z1
-            -- X2
-            -- Z2
-            -- Style
 end
 function SaveArea(ID,AreaInfo)
-    local ReturnList = {}
     local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
     FResults.write(textutils.serialize(AreaInfo))
     FResults.close()
 end
 function MD.Draw()
+    monitor = peripheral.find("monitor")
+    monitor.setTextScale(0.5)
+    term.redirect(monitor)
+    
+    MonX, MonY = monitor.getSize()
+    FourPanX = math.floor((MonX/2)-1)
+    FourPanY = math.floor((MonY/2)-1)
+
     if monitor.isColor() then -- Is advanced
 
 
@@ -494,7 +549,7 @@ function MD.Draw()
         DefaultStyle = "Strip-1Turtle"
         DefaultMiningY = 11
 
-
+        
         LandingPanel()
         
     else -- Standard
