@@ -1,8 +1,9 @@
 https://pastebin.com/wPbHNfDM
 
-To Start using 
+To Start
+
 place any PC down 
-and  a turtle
+and a turtle
 run the installer on both
 
 run
@@ -29,9 +30,17 @@ Installer
 Mainframe
     Can Have Multiple PC as Mainframes
         Backups Listen For a failed Responce then they start up and take over command
-    Houses Crafting Knowledge
-        Saves New Knowledge
-        Can Search for a Requested Recipe and transmit it to the requester
+    Houses Knowledge
+        Mining Area Knowledge
+            Where to Mine
+            How To mine 
+        Crafting Knowledge
+            Saves New Knowledge
+            Can Search for a Requested Recipe and transmit it to the requester
+    GUI
+        Update
+        Mining Controls
+        
 
 
 To Do List
