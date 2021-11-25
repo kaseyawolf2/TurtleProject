@@ -24,6 +24,12 @@ fs.delete("Installer")
 shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
 ]]
 
+if periphemu then
+    StartUp = StartUp .. [[
+periphemu.create("top","monitor")
+]]
+end
+
 if not turtle then -- check if a turtle or PC
     StartUp = StartUp .. [[
 shell.setAlias("Mainframe", "/LocalGit/Mainframe/Mainframe.lua")
