@@ -27,6 +27,7 @@ shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
 if periphemu then
     StartUp = StartUp .. [[
 periphemu.create("top","monitor")
+shell.run("/LocalGit/Mainframe/MonitorInterface")  
 ]]
 end
 
