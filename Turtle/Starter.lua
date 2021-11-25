@@ -17,7 +17,7 @@ while not HasWireless do
             HasWireless = true
         end
     else
-        if not TF.Equip("Modem") then
+        if not TF.Equip("modem") then
             error("Please Attach a Wireless Modem")
         end
     end
