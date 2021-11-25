@@ -1,7 +1,31 @@
 GF = require("/LocalGit/APIs/GF")
 TF = require("/LocalGit/APIs/TF")
 
-while gpsConnection == false do
+
+term.clear()
+print("Turtle Starter")
+
+print("Connecting to Modem")
+--Find Wireless Modem
+HasWireless = false
+while not HasWireless do
+    term.clear()
+    term.setCursorPos(1, 1)
+    local ModList = peripheral.find("modem")
+    if ModList ~= nil then
+        if ModList.isWireless() then
+            HasWireless = true
+        end
+    else
+        if not TF.Equip("Modem") then
+            error("Please Attach a Wireless Modem")
+        end
+    end
+end
+
+print("Attempting to Connect to GPS System")
+gpsConnection = false
+while not gpsConnection do
     if gps.locate(5) ~= nil then
         gpsConnection = true
     else
