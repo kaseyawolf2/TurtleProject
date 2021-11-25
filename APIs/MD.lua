@@ -132,186 +132,187 @@ function StatsPanel()
     end
 end
 function MiningPanel()
-    function MiningAreasList(PageNum)
-        function MiningStylesPanel(ID)
-            if ID == nil then
-               Style = DefaultStyle
-            else
-                Area = LoadArea(ID)
-                Style = Area["Style"]
-            end
+    function MiningStylesPanel(ID)
+        if ID == nil then
+           Style = DefaultStyle
+        else
+            Area = LoadArea(ID)
+            Style = Area["Style"]
+        end
 
-            function StripmineType()
-                local Page = new(peripheral.getName(monitor))
-                local t1,t2,t3,t4 = ListMath(1)
-                Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(2)
-                Page:add("Single Turtle", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(3)
-                Page:add("Strip Split", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(4)
-                Page:add("3x3 Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(5)
-                Page:add("Bore Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-
-                Page:draw()
-                while true do 
-                    local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-                    if event == "button_click" then
-                        
-                        if p1 == "Single Turtle" then
-                            Style = "Strip-1Turtle"
-                        elseif p1 == "Strip Split" then
-                            Style = "Strip-Split"
-                        elseif p1 == "3x3 Holes" then
-                            Style = "Strip-3x3"
-                        elseif p1 == "Bore Holes" then
-                            Style = "Strip-Bore"
-                        end
-                        if ID == nil then
-                            DefaultStyle = Style
-                        else
-                            Area = LoadArea(ID)
-                            Area["Style"] = Style
-                            SaveArea(ID,Area)
-                        end
-                        if Page.buttonList[p1].func ~= nil then
-                            Page.buttonList[p1].func()
-                        end
-                    end
-                end
-            end
-            function TunnelMineType()
-                if ID ~= nil then
-                    local Area = LoadArea(ID)
-                    TempMiningY = Area["Y"]
-                else
-                    TempMiningY = DefaultMiningY
-                end
-                --Add Buttons
-                local Page = new(peripheral.getName(monitor))
-                local t1,t2,t3,t4 = ListMath(1)
-                Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(2)
-                Page:add("Save", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = GridMath(3,3)
-                Page:add("Y+", nil, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = GridMath(5,3)
-                Page:add("Y-", nil, t1, t2, t3, t4, colors.red, colors.lime)
-                --
-                Page:draw()
-                -- Draw Text
-                    term.setBackgroundColor(colors.black)
-                    term.setTextColor(colors.white)
-                    local t1,t2 = GridMath(3,2)
-                    term.setCursorPos(t1+2, t2+2)
-                    term.write("Default Mining Level")
-                    local t1,t2 = GridMath(4,3)
-                    term.setCursorPos(t1+2, t2+1)
-                    term.write(TempMiningY)
-                --
-                while true do 
-                    local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-                    if event == "button_click" then
-                        if p1 == "Save" then
-                            if ID == nil then
-                                DefaultStyle = "Tunnel"
-                                DefaultMiningY = TempMiningY
-                            else
-                                Area["Style"] = "Tunnel"
-                                Area["Y"] = TempMiningY
-                                SaveArea(ID,Area)
-                            end
-                        elseif p1 == "Y+" then
-                            TempMiningY = TempMiningY + 1
-                            local t1,t2 = GridMath(4,3)
-                            term.setCursorPos(t1, t2+1)
-                            term.write("    ") -- Localized Clear()
-                            term.setCursorPos(t1+2, t2+1)
-                            term.write(TempMiningY)
-                        elseif p1 == "Y-" then
-                            TempMiningY = TempMiningY - 1
-                            local t1,t2 = GridMath(4,3)
-                            term.setCursorPos(t1, t2+1)
-                            term.write("    ") -- Localized Clear()
-                            term.setCursorPos(t1+2, t2+1)
-                            term.write(TempMiningY)
-                        end
-                        if Page.buttonList[p1].func ~= nil then
-                            Page.buttonList[p1].func()
-                        end
-                    end
-                end
-            end
-            function WaterType()
-                local Page = new(peripheral.getName(monitor))
-                local t1,t2,t3,t4 = ListMath(1) 
-                Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(2)
-                Page:add("Block Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(3)
-                Page:add("Turtle Mover", nil, t1, t2, t3, t4, colors.red, colors.lime)
-                local t1,t2,t3,t4 = ListMath(4)
-                Page:add("Sponge Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
-
-                Page:draw()
-                while true do 
-                    local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-                    if event == "button_click" then
-                        if p1 == "Block Remove" then
-                            Style = "Water-Block"
-                        elseif p1 == "Turtle Mover" then
-                            Style = "Water-Mover"
-                        elseif p1 == "Sponge Remove" then
-                            Style = "Water-Sponge"
-                        end
-                        if ID == nil then
-                            DefaultStyle = Style
-                        else
-                            Area = LoadArea(ID)
-                            Area["Style"] = Style
-                        end
-                        if Page.buttonList[p1].func ~= nil then
-                            Page.buttonList[p1].func()
-                        end
-                    end
-                end
-            end
-
-            --# intialize button set on the monitor
+        function StripmineType()
             local Page = new(peripheral.getName(monitor))
-            --# add buttons
             local t1,t2,t3,t4 = ListMath(1)
-            Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+            Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = ListMath(2)
+            Page:add("Single Turtle", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
             local t1,t2,t3,t4 = ListMath(3)
-            Page:add("Strip Mine", StripmineType, t1, t2, t3, t4, colors.red, colors.lime)
+            Page:add("Strip Split", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
             local t1,t2,t3,t4 = ListMath(4)
-            Page:add("Tunnel Mine", TunnelMineType, t1, t2, t3, t4, colors.red, colors.lime)
+            Page:add("3x3 Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
             local t1,t2,t3,t4 = ListMath(5)
-            Page:add("Water Removal", WaterType, t1, t2, t3, t4, colors.red, colors.lime)
-            --# draw the buttons
-            Page:draw()
+            Page:add("Bore Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
 
-            term.setBackgroundColor(colors.black)
-            term.setTextColor(colors.white)
-            local t1,t2 = ListMath(2)
-            term.setCursorPos(t1+1, t2+1)
-            if ID == nil  then
-                term.write("Default Style: " .. Style)
-            else 
-                term.write("Current Style: " .. Style)
-            end
+            Page:draw()
             while true do 
                 local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
                 if event == "button_click" then
                     
-                    
+                    if p1 == "Single Turtle" then
+                        Style = "Strip-1Turtle"
+                    elseif p1 == "Strip Split" then
+                        Style = "Strip-Split"
+                    elseif p1 == "3x3 Holes" then
+                        Style = "Strip-3x3"
+                    elseif p1 == "Bore Holes" then
+                        Style = "Strip-Bore"
+                    end
+                    if ID == nil then
+                        DefaultStyle = Style
+                    else
+                        Area = LoadArea(ID)
+                        Area["Style"] = Style
+                        SaveArea(ID,Area)
+                    end
                     if Page.buttonList[p1].func ~= nil then
                         Page.buttonList[p1].func()
                     end
                 end
             end
         end
+        function TunnelMineType()
+            if ID ~= nil then
+                local Area = LoadArea(ID)
+                TempMiningY = Area["Y"]
+            else
+                TempMiningY = DefaultMiningY
+            end
+            --Add Buttons
+            local Page = new(peripheral.getName(monitor))
+            local t1,t2,t3,t4 = ListMath(1)
+            Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = ListMath(2)
+            Page:add("Save", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = GridMath(3,3)
+            Page:add("Y+", nil, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = GridMath(5,3)
+            Page:add("Y-", nil, t1, t2, t3, t4, colors.red, colors.lime)
+            --
+            Page:draw()
+            -- Draw Text
+                term.setBackgroundColor(colors.black)
+                term.setTextColor(colors.white)
+                local t1,t2 = GridMath(3,2)
+                term.setCursorPos(t1+2, t2+2)
+                term.write("Default Mining Level")
+                local t1,t2 = GridMath(4,3)
+                term.setCursorPos(t1+2, t2+1)
+                term.write(TempMiningY)
+            --
+            while true do 
+                local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+                if event == "button_click" then
+                    if p1 == "Save" then
+                        if ID == nil then
+                            DefaultStyle = "Tunnel"
+                            DefaultMiningY = TempMiningY
+                        else
+                            Area["Style"] = "Tunnel"
+                            Area["Y"] = TempMiningY
+                            SaveArea(ID,Area)
+                        end
+                    elseif p1 == "Y+" then
+                        TempMiningY = TempMiningY + 1
+                        local t1,t2 = GridMath(4,3)
+                        term.setCursorPos(t1, t2+1)
+                        term.write("    ") -- Localized Clear()
+                        term.setCursorPos(t1+2, t2+1)
+                        term.write(TempMiningY)
+                    elseif p1 == "Y-" then
+                        TempMiningY = TempMiningY - 1
+                        local t1,t2 = GridMath(4,3)
+                        term.setCursorPos(t1, t2+1)
+                        term.write("    ") -- Localized Clear()
+                        term.setCursorPos(t1+2, t2+1)
+                        term.write(TempMiningY)
+                    end
+                    if Page.buttonList[p1].func ~= nil then
+                        Page.buttonList[p1].func()
+                    end
+                end
+            end
+        end
+        function WaterType()
+            local Page = new(peripheral.getName(monitor))
+            local t1,t2,t3,t4 = ListMath(1) 
+            Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = ListMath(2)
+            Page:add("Block Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = ListMath(3)
+            Page:add("Turtle Mover", nil, t1, t2, t3, t4, colors.red, colors.lime)
+            local t1,t2,t3,t4 = ListMath(4)
+            Page:add("Sponge Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
+
+            Page:draw()
+            while true do 
+                local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+                if event == "button_click" then
+                    if p1 == "Block Remove" then
+                        Style = "Water-Block"
+                    elseif p1 == "Turtle Mover" then
+                        Style = "Water-Mover"
+                    elseif p1 == "Sponge Remove" then
+                        Style = "Water-Sponge"
+                    end
+                    if ID == nil then
+                        DefaultStyle = Style
+                    else
+                        Area = LoadArea(ID)
+                        Area["Style"] = Style
+                    end
+                    if Page.buttonList[p1].func ~= nil then
+                        Page.buttonList[p1].func()
+                    end
+                end
+            end
+        end
+
+        --# intialize button set on the monitor
+        local Page = new(peripheral.getName(monitor))
+        --# add buttons
+        local t1,t2,t3,t4 = ListMath(1)
+        Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(3)
+        Page:add("Strip Mine", StripmineType, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(4)
+        Page:add("Tunnel Mine", TunnelMineType, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(5)
+        Page:add("Water Removal", WaterType, t1, t2, t3, t4, colors.red, colors.lime)
+        --# draw the buttons
+        Page:draw()
+
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.white)
+        local t1,t2 = ListMath(2)
+        term.setCursorPos(t1+1, t2+1)
+        if ID == nil  then
+            term.write("Default Style: " .. Style)
+        else 
+            term.write("Current Style: " .. Style)
+        end
+        while true do 
+            local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+            if event == "button_click" then
+                
+                
+                if Page.buttonList[p1].func ~= nil then
+                    Page.buttonList[p1].func()
+                end
+            end
+        end
+    end
+    function MiningAreasList(PageNum)
+        
         function MiningAreaPanel(ID)
             Area = LoadArea(ID)
             if Area ~= false then
