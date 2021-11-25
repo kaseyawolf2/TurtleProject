@@ -281,7 +281,11 @@ function MiningPanel()
         local Page = new(peripheral.getName(monitor))
         --# add buttons
         local t1,t2,t3,t4 = ListMath(1)
-        Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        if ID == nil then
+            Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        else
+            Page:add("Back", function() MiningAreaPanel(ID) end, t1, t2, t3, t4, colors.red, colors.lime)
+        end
         local t1,t2,t3,t4 = ListMath(3)
         Page:add("Strip Mine", StripmineType, t1, t2, t3, t4, colors.red, colors.lime)
         local t1,t2,t3,t4 = ListMath(4)
