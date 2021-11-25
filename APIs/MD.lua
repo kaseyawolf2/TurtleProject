@@ -215,9 +215,12 @@ function MiningPanel()
                         if ID == nil then
                             DefaultStyle = "Tunnel"
                             DefaultMiningY = TempMiningY
+                            DefaultHeight = TempHeight
+                            --DefaultVeinMine = TempVeinMine
                         else
                             Area["Style"] = "Tunnel"
                             Area["Y"] = TempMiningY
+                            Area["TunnelHeight"] = TempHeight
                             SaveArea(ID,Area)
                         end
                     elseif p1 == "Y+" then
@@ -535,7 +538,8 @@ function LoadArea(ID)
         Z1 = 0,
         Z2 = 0,
         Style = DefaultStyle,
-        Y = 11
+        Y = DefaultMiningY,
+        TunnelHeight = DefaultHeight
     }
     if fs.exists("/Knowledge/MineAreas/"..ID) then
         local AreaInfo = {}
@@ -570,6 +574,7 @@ function MD.Draw()
         --Defaults
         DefaultStyle = "Strip-1Turtle"
         DefaultMiningY = 11
+        DefaultHeight = 2
 
         
         LandingPanel()
