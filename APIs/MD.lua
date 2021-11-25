@@ -2,7 +2,6 @@ local MD = {}
 
 --# load the touchpoint API
 touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
-term.native().clear()	
 
 function GridMath(X,Y)
     local ButtonX = 6
@@ -15,10 +14,7 @@ function GridMath(X,Y)
 
     local Rxe= (X*ButtonX)+((X-1)*2)+GridStartX
     local Rye= (Y*ButtonY)+((Y-1)*2)+GridStartY 
-    
-    term.native().setCursorPos(1,1)
-    term.native().scroll(-1)	
-    term.native().write(Rx.." "..Ry.." "..Rxe.." "..Rye)
+
     return Rx, Ry, Rxe, Rye
 end
 function ListMath(Y)
