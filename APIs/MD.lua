@@ -568,6 +568,15 @@ function StripmineType()
             elseif p1 == "Bore Holes" then
                 Style = "Strip-Bore"
             end
+            if ID == nil then
+                DefaultStyle = Style
+            else
+                Area = LoadArea(ID)
+                Area["Style"] = Style
+            end
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
         end
     end
     
@@ -627,9 +636,6 @@ function TunnelMineType()
                 term.write("    ") -- Localized Clear()
                 term.setCursorPos(t1+2, t2+1)
                 term.write(TempMiningY)
-            end
-            if Page.buttonList[p1].func ~= nil then
-                Page.buttonList[p1].func()
             end
             if ID == nil then
                 DefaultStyle = Style
