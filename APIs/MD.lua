@@ -2,8 +2,11 @@ local MD = {}
 
 --# load the touchpoint API
 touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
+--Defaults
+DefaultStyle = "Strip-1Turtle"
+DefaultMiningY = 11
 
-
+--Local Functions
 function GridMath(X,Y)
     local ButtonX = 6
     local ButtonY = 2
@@ -215,10 +218,10 @@ function MiningPanel()
                     if event == "button_click" then
                         if p1 == "Save" then
                             if ID == nil then
-                                DefaultStyle = "Tunnel"
+                                DefaultStyle = "Tunnel-Standard"
                                 DefaultMiningY = TempMiningY
                             else
-                                Area["Style"] = "Tunnel"
+                                Area["Style"] = "Tunnel-Standard"
                                 Area["Y"] = TempMiningY
                                 SaveArea(ID,Area)
                             end
@@ -436,7 +439,7 @@ function MiningPanel()
                     term.write("Current Style: " .. Area["Style"] )
                     t1,t2 = GridMath(5,4)
                     term.setCursorPos(t1, t2+2)
-                    if Area["Style"] == "Tunnel" then
+                    if Area["Style"] == "Tunnel-Standard" then
                         term.write("@ Y " .. Area["Y"])
                     end
                 end
@@ -532,7 +535,8 @@ function LoadArea(ID)
         Z1 = 0,
         Z2 = 0,
         Style = DefaultStyle,
-        Y = 11
+        Y = 11,
+        Slices = {}
     }
     if fs.exists("/Knowledge/MineAreas/"..ID) then
         local AreaInfo = {}
@@ -548,10 +552,94 @@ function LoadArea(ID)
     end
 end
 function SaveArea(ID,AreaInfo)
+    --X1/Z1 should always be the smaller number
+    if AreaInfo["X1"] > AreaInfo["X2"] then
+        local Tx1 = AreaInfo["X2"]
+        local Tx2 = AreaInfo["X1"]
+        AreaInfo["X1"] = Tx1
+        AreaInfo["X2"] = Tx2
+    end
+    if AreaInfo["Z1"] > AreaInfo["Z2"] then
+        local Tz1 = AreaInfo["Z2"]
+        local Tz2 = AreaInfo["Z1"]
+        AreaInfo["Z1"] = Tz1
+        AreaInfo["Z2"] = Tz2
+    end
     local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
     FResults.write(textutils.serialize(AreaInfo))
     FResults.close()
+    SliceArea(AreaInfo)
 end
+function SliceArea(AreaInfo)
+    local SlicedArea = AreaInfo
+    Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
+
+    local BoundX1 = AreaInfo["X1"]
+    local BoundX2 = AreaInfo["X2"]
+    local BoundZ1 = AreaInfo["Z1"]
+    local BoundZ2 = AreaInfo["Z2"]
+    --Get the Chunks affected
+    XChunk1 = math.floor(BoundX1/16) -- Block/16 = chunk + where in the chunk
+    XChunk2 = math.floor(BoundX2/16) -- floor it to get only the chunk
+    ZChunk1 = math.floor(BoundZ1/16)
+    ZChunk2 = math.floor(BoundZ2/16)
+
+    local Slices = {}
+    if Format == "Strip" then
+        if Type == "1Turtle" then
+            for Xc = XChunk1, XChunk2 do --once per x chunk strip
+                for Zc = ZChunk1, ZChunk2 do--once per z chunk
+                    local Slice = {X1 = nil, X2 = nil, Z1 = nil,Z2 = nil}
+                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The X Bounds then use chunk bound
+                        Slice["X1"] = Xc*16
+                    else
+                        Slice["X1"] = BoundX1
+                    end
+                    if (Xc*16)+15 <= BoundX2 then -- if The Chunk Max is Smaller or equal to The X Bounds then use chunk bound
+                        Slice["X2"] = (Xc*16)+15
+                    else
+                        Slice["X2"] = BoundX2
+                    end
+                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The Z Bounds then use chunk bound
+                        Slice["Z1"] = Zc*16
+                    else
+                        Slice["Z1"] = BoundZ1
+                    end
+                    if (Zc*16)+15 >= BoundZ2 then -- if The Chunk Max is Smaller or equal to The Z Bounds then use chunk bound
+                        Slice["Z2"] = (Zc*16)+15
+                    else
+                        Slice["Z2"] = BoundZ1
+                    end
+                    Slices[#Slices+1]= Slice
+                end
+            end
+        elseif Type == "Split" then
+        elseif Type == "3x3" then
+        elseif Type == "Bore" then
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    elseif Format == "Tunnel" then
+        if Type == "Standard" then
+
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    elseif Format == "Water" then
+        if Type == "Block" then
+        elseif Type == "Mover" then
+        elseif Type == "Sponge" then
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    else
+        error("Unknown Style : ".. Format.. " "..Type)
+    end
+    SlicedArea["Slices"] = Slices
+    return SlicedArea
+end
+
+--API Functions
 function MD.Draw()
     monitor = peripheral.find("monitor")
     monitor.setTextScale(0.5)
@@ -562,15 +650,7 @@ function MD.Draw()
     FourPanY = math.floor((MonY/2)-1)
 
     if monitor.isColor() then -- Is advanced
-
-
-        --Defaults
-        DefaultStyle = "Strip-1Turtle"
-        DefaultMiningY = 11
-
-        
         LandingPanel()
-        
     else -- Standard
         term.native().clear()
         term.native().setCursorPos(1, 1)
@@ -578,8 +658,6 @@ function MD.Draw()
         term.native().setCursorPos(1, 2)
         term.native().write("Opening Stats")
         StatsPanel()
-
-
     end
 end
 
