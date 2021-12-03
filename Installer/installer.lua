@@ -19,23 +19,30 @@ fs.delete("bbpack")
 fs.delete(".bbpack.cfg")
 -- Make the Mainframe run on Startup
 fs.delete("/Startup.lua")
-file = fs.open("/Startup.lua","w")
-if not turtle then -- check if a turtle or PC
-    file.write([[
+StartUp = [[
 fs.delete("Installer")
-shell.setAlias("Mainframe", "/LocalGit/Mainframe/Mainframe.lua")
 shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
-shell.run("Mainframe")        
-]])
-    file.close()
-else-- if a turtle
-    file.write([[
-fs.delete("/Installer")
-shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
-shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
-shell.run("Starter")
-]])
-    file.close()
-end 
+]]
 
+if periphemu then
+    StartUp = StartUp .. [[
+periphemu.create("top","monitor")
+shell.run("/LocalGit/Mainframe/MonitorInterface")  
+]]
+end
+
+if not turtle then -- check if a turtle or PC
+    StartUp = StartUp .. [[
+shell.setAlias("Mainframe", "/LocalGit/Mainframe/Mainframe.lua")
+shell.run("Mainframe")        
+]]
+else-- if a turtle
+    StartUp = StartUp .. [[
+shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
+shell.run("Starter")
+]]
+end 
+file = fs.open("/Startup.lua","w")
+file.write(StartUp)
+file.close()
 os.reboot()

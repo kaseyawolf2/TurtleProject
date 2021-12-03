@@ -1,8 +1,9 @@
 https://pastebin.com/wPbHNfDM
 
-To Start using 
+To Start
+
 place any PC down 
-and  a turtle
+and a turtle
 run the installer on both
 
 run
@@ -29,9 +30,17 @@ Installer
 Mainframe
     Can Have Multiple PC as Mainframes
         Backups Listen For a failed Responce then they start up and take over command
-    Houses Crafting Knowledge
-        Saves New Knowledge
-        Can Search for a Requested Recipe and transmit it to the requester
+    Houses Knowledge
+        Mining Area Knowledge
+            Where to Mine
+            How To mine 
+        Crafting Knowledge
+            Saves New Knowledge
+            Can Search for a Requested Recipe and transmit it to the requester
+    GUI
+        Update
+        Mining Controls
+        
 
 
 To Do List
@@ -54,7 +63,18 @@ Mainframe
         Make it a Background Program so i can send mass commands
     GUI
         Make list of mining areas a list and not infinite
-
+    At a Glace Numbers
+        Number of Bots
+        Number of Requested Bots
+        Number of Mining Sites
+    Storage System Info
+        Only for Chest Style 
+        Current Resources
+    Bot Override Screen
+        Recall all to storage
+        Update All Bots via Rednet (that way paste bin doesnt get hit with 100+ bots updateing) https://computercraft.info/wiki/Fs_(API) https://computercraft.info/wiki/Rednet_(API)
+        Stop Dispaching Bots
+        Dispach All bots (To upgrade)
 
 
     Monitor Support
@@ -75,20 +95,6 @@ Starter System
     Builds  -- make it smarter/ http://computercraft.info/wiki/Turtle_GPS_self-tracker_expansion_(tutorial)
 
 Command System
-    NEEDs to be able to have multiple Command PCs / be hotswapable
-    Start Screen
-        At a Glace Numbers
-            Number of Bots
-            Number of Requested Bots
-            Number of Mining Sites
-        Storage System Info
-            Only for Chest Style 
-            Current Resources
-        Bot Override Screen
-            Recall all to storage
-            Update All Bots via Rednet (that way paste bin doesnt get hit with 100+ bots updateing) https://computercraft.info/wiki/Fs_(API) https://computercraft.info/wiki/Rednet_(API)
-            Stop Dispaching Bots
-            Dispach All bots (To upgrade)
     Handheld PC View
     AR View
 
@@ -101,6 +107,11 @@ Storage System
             
 Mining System
     Save Mined Out area
+    Split Mining area Up based off of Style
+        Save turtle Id whos working on
+        
+        Remove From list when turtle completes
+    Provide Chucky Turtle Support if advanced perfierals are a thing
     Get mining zone
         split zone by number of miners assigned
         Assigned Turtles
@@ -114,12 +125,13 @@ Mining System
             Request more miners if needed
     Several Mining Styles
         Open Air Strip Mine
-            1 Turtle Mine
-            Strip Split (split the mine in to 1 block strips)
+            1 Turtle Mine(1 Chunk at a time) if multichunk can request more bots
+            Strip Split (split the mine in to 1 block x 1 chunk strips)
             3x3 Partion (each turtle is assigned 3x3 to y0 to mine)
             Y 255 to 0 BoreHole Mining (1x1 stright down)
         Y Level Excavate(tunnel to y level and tunnel)
-            add entry hole locator
+            Toggle if Vein Mines
+            Y height of Tunnel
         Water Removal
             if enough tutles can just sweep across
                 might need a command turtle?
