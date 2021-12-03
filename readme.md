@@ -35,6 +35,11 @@ Mainframe
 
 
 To Do List
+
+Add Ownership
+
+
+
 Installer
 
 TF
@@ -62,6 +67,7 @@ Mainframe
                     RTB
 
 Starter System
+
     Connect to GPS
         if No GPS
             Await Resources to build one
@@ -94,9 +100,18 @@ Storage System
             Refined Storage
             
 Mining System
+    Save Mined Out area
     Get mining zone
         split zone by number of miners assigned
-        Request more miners if needed
+        Assigned Turtles
+            - X + Of ChunkLoaders
+                Min of 1
+                Max of num of chunks
+            - X + Of miners
+                Min of 1
+                Max of num of slices*Loadable Chunks
+            Recommended Default
+            Request more miners if needed
     Several Mining Styles
         Open Air Strip Mine
             1 Turtle Mine
@@ -104,6 +119,7 @@ Mining System
             3x3 Partion (each turtle is assigned 3x3 to y0 to mine)
             Y 255 to 0 BoreHole Mining (1x1 stright down)
         Y Level Excavate(tunnel to y level and tunnel)
+            add entry hole locator
         Water Removal
             if enough tutles can just sweep across
                 might need a command turtle?
@@ -111,6 +127,11 @@ Mining System
                 spongeing
                 fill strip with coble then remove 
     AR Glasses OverLay?
+
+Turtle Transport(TM)
+    Chunky turtle
+        Holding Shulkers
+        
 
 Building System
     Ocean Circle Builder 
