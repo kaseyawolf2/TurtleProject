@@ -36,6 +36,148 @@ function ListMath(Y)
 
     return Rx, Ry, Rxe, Rye
 end
+function LoadArea(ID)
+    local DefaultArea = {
+        --if gps connection then set x and z 
+        ID = 0,
+        X1 = 0,
+        X2 = 0,
+        Z1 = 0,
+        Z2 = 0,
+        Style = DefaultStyle,
+        Y = DefaultMiningY,
+        TunnelHeight = DefaultHeight,
+        Slices = {}
+    }
+    if fs.exists("/Knowledge/MineAreas/"..ID) then
+        local AreaInfo = {}
+        local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
+        local LResults = FResults.readAll()
+        FResults.close()
+        local AreaInfo = textutils.unserialize(LResults)
+        return AreaInfo
+    else
+        DefaultArea["ID"] = #fs.find("/Knowledge/MineAreas/*")+1
+
+        return DefaultArea
+    end
+end
+function SaveArea(ID,AreaInfo)
+    --X1/Z1 should always be the smaller number
+    if AreaInfo["X1"] > AreaInfo["X2"] then
+        local Tx1 = AreaInfo["X2"]
+        local Tx2 = AreaInfo["X1"]
+        AreaInfo["X1"] = Tx1
+        AreaInfo["X2"] = Tx2
+    end
+    if AreaInfo["Z1"] > AreaInfo["Z2"] then
+        local Tz1 = AreaInfo["Z2"]
+        local Tz2 = AreaInfo["Z1"]
+        AreaInfo["Z1"] = Tz1
+        AreaInfo["Z2"] = Tz2
+    end
+    local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
+    FResults.write(textutils.serialize(AreaInfo))
+    FResults.close()
+    SliceArea(AreaInfo)
+end
+function SliceArea(AreaInfo)
+    local SlicedArea = AreaInfo
+    Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
+
+    local BoundX1 = AreaInfo["X1"]
+    local BoundX2 = AreaInfo["X2"]
+    local BoundZ1 = AreaInfo["Z1"]
+    local BoundZ2 = AreaInfo["Z2"]
+    --Get the Chunks affected
+    XChunk1 = math.floor(BoundX1/16) -- Block/16 = chunk + where in the chunk
+    XChunk2 = math.floor(BoundX2/16) -- floor it to get only the chunk
+    ZChunk1 = math.floor(BoundZ1/16)
+    ZChunk2 = math.floor(BoundZ2/16)
+
+    local Slices = {}
+    if Format == "Strip" then
+        if Type == "1Turtle" then
+            for Xc = XChunk1, XChunk2 do --once per x chunk strip
+                for Zc = ZChunk1, ZChunk2 do--once per z chunk
+                    local Slice = {X1 = nil, X2 = nil, Z1 = nil,Z2 = nil}
+                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The X Bounds then use chunk bound
+                        Slice["X1"] = Xc*16
+                    else
+                        Slice["X1"] = BoundX1
+                    end
+                    if (Xc*16)+15 <= BoundX2 then -- if The Chunk Max is Smaller or equal to The X Bounds then use chunk bound
+                        Slice["X2"] = (Xc*16)+15
+                    else
+                        Slice["X2"] = BoundX2
+                    end
+                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The Z Bounds then use chunk bound
+                        Slice["Z1"] = Zc*16
+                    else
+                        Slice["Z1"] = BoundZ1
+                    end
+                    if (Zc*16)+15 <= BoundZ2 then -- if The Chunk Max is Smaller or equal to The Z Bounds then use chunk bound
+                        Slice["Z2"] = (Zc*16)+15
+                    else
+                        Slice["Z2"] = BoundZ2
+                    end
+                    Slices[#Slices+1]= Slice
+                end
+            end
+        elseif Type == "Split" then
+            for Xc = XChunk1, XChunk2 do --once per x chunk strip
+                for Zc = ZChunk1, ZChunk2 do--once per z chunk
+                    local Slice = {X1 = nil, X2 = nil, Z1 = nil,Z2 = nil}
+                    for Zb = 0, 15 do 
+                        if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The X Bounds then use chunk bound
+                            Slice["X1"] = Xc*16
+                        else
+                            Slice["X1"] = BoundX1
+                        end
+                        if (Xc*16)+15 <= BoundX2 then -- if The Chunk Max is Smaller or equal to The X Bounds then use chunk bound
+                            Slice["X2"] = (Xc*16)+15
+                        else
+                            Slice["X2"] = BoundX2
+                        end
+                        if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The Z Bounds then use chunk bound
+                            Slice["Z1"] = Zc*16
+                        else
+                            Slice["Z1"] = BoundZ1
+                        end
+                        if (Zc*16)+Zb <= BoundZ2 then -- if The Chunk Max is Smaller or equal to The Z Bounds then use chunk bound
+                            Slice["Z2"] = (Zc*16)+Zb
+                        else
+                            Slice["Z2"] = BoundZ2
+                        end
+                        Slices[#Slices+1]= Slice
+                    end
+                end
+            end
+        elseif Type == "3x3" then
+        elseif Type == "Bore" then
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    elseif Format == "Tunnel" then
+        if Type == "Standard" then
+
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    elseif Format == "Water" then
+        if Type == "Block" then
+        elseif Type == "Mover" then
+        elseif Type == "Sponge" then
+        else
+            error("Unknown "..Format.." Type :" .. Type)
+        end
+    else
+        error("Unknown Style : ".. Format.. " "..Type)
+    end
+    SlicedArea["Slices"] = Slices
+end
+
+--Start Page
 function LandingPanel()
     --# intialize button set on the monitor
     local Page = new(peripheral.getName(monitor))
@@ -57,6 +199,8 @@ function LandingPanel()
         end
     end
 end
+
+--Base Panels
 function UpdatePanel()
     --# intialize button set on the monitor
     local Page = new(peripheral.getName(monitor))
@@ -134,143 +278,29 @@ function StatsPanel()
         end
     end
 end
-function StripmineType()
+function MiningPanel()
+    -- intialize a new button set on the monitor
     local Page = new(peripheral.getName(monitor))
-    local t1,t2,t3,t4 = ListMath(1)
-    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(2)
-    Page:add("Single Turtle", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(3)
-    Page:add("Strip Split", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(4)
-    Page:add("3x3 Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(5)
-    Page:add("Bore Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    --# add buttons
+        local t1,t2,t3,t4 = ListMath(1)
+        Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(2)
+        Page:add("Default Mining Style", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(3)
+        Page:add("Mining Areas", MiningAreasList, t1, t2, t3, t4, colors.red, colors.lime)
+    -- draw the buttons
+    Page:draw()
+    while true do 
+        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+        if event == "button_click" then
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
+        end
+    end
+end
 
-    Page:draw()
-    while true do 
-        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-        if event == "button_click" then
-            
-            if p1 == "Single Turtle" then
-                Style = "Strip-1Turtle"
-            elseif p1 == "Strip Split" then
-                Style = "Strip-Split"
-            elseif p1 == "3x3 Holes" then
-                Style = "Strip-3x3"
-            elseif p1 == "Bore Holes" then
-                Style = "Strip-Bore"
-            end
-        end
-    end
-    
-end
-function TunnelMineType()
-    if ID ~= nil then
-        local Area = LoadArea(ID)
-        TempMiningY = Area["Y"]
-    else
-        TempMiningY = DefaultMiningY
-    end
-    --Add Buttons
-    local Page = new(peripheral.getName(monitor))
-    local t1,t2,t3,t4 = ListMath(1)
-    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(2)
-    Page:add("Save", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = GridMath(3,3)
-    Page:add("Y+", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = GridMath(5,3)
-    Page:add("Y-", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    --
-    Page:draw()
-    -- Draw Text
-        term.setBackgroundColor(colors.black)
-        term.setTextColor(colors.white)
-        local t1,t2 = GridMath(3,2)
-        term.setCursorPos(t1+2, t2+2)
-        term.write("Default Mining Level")
-        local t1,t2 = GridMath(4,3)
-        term.setCursorPos(t1+2, t2+1)
-        term.write(TempMiningY)
-    --
-    while true do 
-        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-        if event == "button_click" then
-            if p1 == "Save" then
-                if ID == nil then
-                    DefaultStyle = "Tunnel-Standard"
-                    DefaultMiningY = TempMiningY
-                else
-                    Area["Style"] = "Tunnel-Standard"
-                    Area["Y"] = TempMiningY
-                    SaveArea(ID,Area)
-                end
-            elseif p1 == "Y+" then
-                TempMiningY = TempMiningY + 1
-                local t1,t2 = GridMath(4,3)
-                term.setCursorPos(t1, t2+1)
-                term.write("    ") -- Localized Clear()
-                term.setCursorPos(t1+2, t2+1)
-                term.write(TempMiningY)
-            elseif p1 == "Y-" then
-                TempMiningY = TempMiningY - 1
-                local t1,t2 = GridMath(4,3)
-                term.setCursorPos(t1, t2+1)
-                term.write("    ") -- Localized Clear()
-                term.setCursorPos(t1+2, t2+1)
-                term.write(TempMiningY)
-            end
-            if Page.buttonList[p1].func ~= nil then
-                Page.buttonList[p1].func()
-            end
-            if ID == nil then
-                DefaultStyle = Style
-            else
-                Area = LoadArea(ID)
-                Area["Style"] = Style
-                SaveArea(ID,Area)
-            end
-            if Page.buttonList[p1].func ~= nil then
-                Page.buttonList[p1].func()
-            end
-        end
-    end
-end
-function WaterType()
-    local Page = new(peripheral.getName(monitor))
-    local t1,t2,t3,t4 = ListMath(1) 
-    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(2)
-    Page:add("Block Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(3)
-    Page:add("Turtle Mover", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(4)
-    Page:add("Sponge Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
-
-    Page:draw()
-    while true do 
-        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
-        if event == "button_click" then
-            if p1 == "Block Remove" then
-                Style = "Water-Block"
-            elseif p1 == "Turtle Mover" then
-                Style = "Water-Mover"
-            elseif p1 == "Sponge Remove" then
-                Style = "Water-Sponge"
-            end
-            if ID == nil then
-                DefaultStyle = Style
-            else
-                Area = LoadArea(ID)
-                Area["Style"] = Style
-            end
-            if Page.buttonList[p1].func ~= nil then
-                Page.buttonList[p1].func()
-            end
-        end
-    end
-end
+--Mining Panel 
 function MiningStylesPanel(ID)
     if ID == nil then
        Style = DefaultStyle
@@ -509,139 +539,148 @@ function MiningAreasList(PageNum)
     end
     
 end
-function MiningPanel()
-    -- intialize a new button set on the monitor
+
+--Mining Styles
+function StripmineType()
     local Page = new(peripheral.getName(monitor))
-    --# add buttons
-        local t1,t2,t3,t4 = ListMath(1)
-        Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-        local t1,t2,t3,t4 = ListMath(2)
-        Page:add("Default Mining Style", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
-        local t1,t2,t3,t4 = ListMath(3)
-        Page:add("Mining Areas", MiningAreasList, t1, t2, t3, t4, colors.red, colors.lime)
-    -- draw the buttons
+    local t1,t2,t3,t4 = ListMath(1)
+    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(2)
+    Page:add("Single Turtle", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(3)
+    Page:add("Strip Split", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(4)
+    Page:add("3x3 Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(5)
+    Page:add("Bore Holes", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+
     Page:draw()
     while true do 
         local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
         if event == "button_click" then
+            
+            if p1 == "Single Turtle" then
+                Style = "Strip-1Turtle"
+            elseif p1 == "Strip Split" then
+                Style = "Strip-Split"
+            elseif p1 == "3x3 Holes" then
+                Style = "Strip-3x3"
+            elseif p1 == "Bore Holes" then
+                Style = "Strip-Bore"
+            end
+        end
+    end
+    
+end
+function TunnelMineType()
+    if ID ~= nil then
+        local Area = LoadArea(ID)
+        TempMiningY = Area["Y"]
+    else
+        TempMiningY = DefaultMiningY
+    end
+    --Add Buttons
+    local Page = new(peripheral.getName(monitor))
+    local t1,t2,t3,t4 = ListMath(1)
+    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(2)
+    Page:add("Save", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = GridMath(3,3)
+    Page:add("Y+", nil, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = GridMath(5,3)
+    Page:add("Y-", nil, t1, t2, t3, t4, colors.red, colors.lime)
+    --
+    Page:draw()
+    -- Draw Text
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.white)
+        local t1,t2 = GridMath(3,2)
+        term.setCursorPos(t1+2, t2+2)
+        term.write("Default Mining Level")
+        local t1,t2 = GridMath(4,3)
+        term.setCursorPos(t1+2, t2+1)
+        term.write(TempMiningY)
+    --
+    while true do 
+        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+        if event == "button_click" then
+            if p1 == "Save" then
+                if ID == nil then
+                    DefaultStyle = "Tunnel-Standard"
+                    DefaultMiningY = TempMiningY
+                else
+                    Area["Style"] = "Tunnel-Standard"
+                    Area["Y"] = TempMiningY
+                    SaveArea(ID,Area)
+                end
+            elseif p1 == "Y+" then
+                TempMiningY = TempMiningY + 1
+                local t1,t2 = GridMath(4,3)
+                term.setCursorPos(t1, t2+1)
+                term.write("    ") -- Localized Clear()
+                term.setCursorPos(t1+2, t2+1)
+                term.write(TempMiningY)
+            elseif p1 == "Y-" then
+                TempMiningY = TempMiningY - 1
+                local t1,t2 = GridMath(4,3)
+                term.setCursorPos(t1, t2+1)
+                term.write("    ") -- Localized Clear()
+                term.setCursorPos(t1+2, t2+1)
+                term.write(TempMiningY)
+            end
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
+            if ID == nil then
+                DefaultStyle = Style
+            else
+                Area = LoadArea(ID)
+                Area["Style"] = Style
+                SaveArea(ID,Area)
+            end
             if Page.buttonList[p1].func ~= nil then
                 Page.buttonList[p1].func()
             end
         end
     end
-end 
-function LoadArea(ID)
-    local DefaultArea = {
-        --if gps connection then set x and z 
-        X1 = 0,
-        X2 = 0,
-        Z1 = 0,
-        Z2 = 0,
-        Style = DefaultStyle,
-        Y = DefaultMiningY,
-        TunnelHeight = DefaultHeight,
-        Slices = {}
-    }
-    if fs.exists("/Knowledge/MineAreas/"..ID) then
-        local AreaInfo = {}
-        local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
-        local LResults = FResults.readAll()
-        FResults.close()
-        local AreaInfo = textutils.unserialize(LResults)
-        return AreaInfo
-    else
-        DefaultArea["ID"] = #fs.find("/Knowledge/MineAreas/*")+1
-
-        return DefaultArea
-    end
 end
-function SaveArea(ID,AreaInfo)
-    --X1/Z1 should always be the smaller number
-    if AreaInfo["X1"] > AreaInfo["X2"] then
-        local Tx1 = AreaInfo["X2"]
-        local Tx2 = AreaInfo["X1"]
-        AreaInfo["X1"] = Tx1
-        AreaInfo["X2"] = Tx2
-    end
-    if AreaInfo["Z1"] > AreaInfo["Z2"] then
-        local Tz1 = AreaInfo["Z2"]
-        local Tz2 = AreaInfo["Z1"]
-        AreaInfo["Z1"] = Tz1
-        AreaInfo["Z2"] = Tz2
-    end
-    local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
-    FResults.write(textutils.serialize(AreaInfo))
-    FResults.close()
-    SliceArea(AreaInfo)
-end
-function SliceArea(AreaInfo)
-    local SlicedArea = AreaInfo
-    Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
+function WaterType()
+    local Page = new(peripheral.getName(monitor))
+    local t1,t2,t3,t4 = ListMath(1) 
+    Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(2)
+    Page:add("Block Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(3)
+    Page:add("Turtle Mover", nil, t1, t2, t3, t4, colors.red, colors.lime)
+    local t1,t2,t3,t4 = ListMath(4)
+    Page:add("Sponge Remove", nil, t1, t2, t3, t4, colors.red, colors.lime)
 
-    local BoundX1 = AreaInfo["X1"]
-    local BoundX2 = AreaInfo["X2"]
-    local BoundZ1 = AreaInfo["Z1"]
-    local BoundZ2 = AreaInfo["Z2"]
-    --Get the Chunks affected
-    XChunk1 = math.floor(BoundX1/16) -- Block/16 = chunk + where in the chunk
-    XChunk2 = math.floor(BoundX2/16) -- floor it to get only the chunk
-    ZChunk1 = math.floor(BoundZ1/16)
-    ZChunk2 = math.floor(BoundZ2/16)
-
-    local Slices = {}
-    if Format == "Strip" then
-        if Type == "1Turtle" then
-            for Xc = XChunk1, XChunk2 do --once per x chunk strip
-                for Zc = ZChunk1, ZChunk2 do--once per z chunk
-                    local Slice = {X1 = nil, X2 = nil, Z1 = nil,Z2 = nil}
-                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The X Bounds then use chunk bound
-                        Slice["X1"] = Xc*16
-                    else
-                        Slice["X1"] = BoundX1
-                    end
-                    if (Xc*16)+15 <= BoundX2 then -- if The Chunk Max is Smaller or equal to The X Bounds then use chunk bound
-                        Slice["X2"] = (Xc*16)+15
-                    else
-                        Slice["X2"] = BoundX2
-                    end
-                    if Xc*16 >= BoundX1 then -- if The Chunk Minimum is bigger or equal to The Z Bounds then use chunk bound
-                        Slice["Z1"] = Zc*16
-                    else
-                        Slice["Z1"] = BoundZ1
-                    end
-                    if (Zc*16)+15 >= BoundZ2 then -- if The Chunk Max is Smaller or equal to The Z Bounds then use chunk bound
-                        Slice["Z2"] = (Zc*16)+15
-                    else
-                        Slice["Z2"] = BoundZ1
-                    end
-                    Slices[#Slices+1]= Slice
-                end
+    Page:draw()
+    while true do 
+        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+        if event == "button_click" then
+            if p1 == "Block Remove" then
+                Style = "Water-Block"
+            elseif p1 == "Turtle Mover" then
+                Style = "Water-Mover"
+            elseif p1 == "Sponge Remove" then
+                Style = "Water-Sponge"
             end
-        -- elseif Type == "Split" then
-        -- elseif Type == "3x3" then
-        -- elseif Type == "Bore" then
-        else
-            error("Unknown "..Format.." Type :" .. Type)
+            if ID == nil then
+                DefaultStyle = Style
+            else
+                Area = LoadArea(ID)
+                Area["Style"] = Style
+            end
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
         end
-    -- elseif Format == "Tunnel" then
-    --     if Type == "Standard" then
-
-    --     else
-    --         error("Unknown "..Format.." Type :" .. Type)
-    --     end
-    -- elseif Format == "Water" then
-    --     if Type == "Block" then
-    --     elseif Type == "Mover" then
-    --     elseif Type == "Sponge" then
-    --     else
-    --         error("Unknown "..Format.." Type :" .. Type)
-    --     end
-    else
-        error("Unknown Style : ".. Format.. " "..Type)
     end
-    SlicedArea["Slices"] = Slices
-    return SlicedArea
 end
+
+ 
+
 
 --API Functions
 function MD.Draw()
