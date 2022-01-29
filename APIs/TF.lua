@@ -10,7 +10,7 @@ PeriWireless = "computercraft:wireless_modem_normal"
 PeriStorage = "forge:storage" -- any Storage 
 PeriTurtle = "computercraft:turtle_normal"
 
-
+-- Inventory Managment
 function TF.SearchInvByID(IdName,InvToSearch)
     local ReturnList = {}
     if InvToSearch == nil or InvToSearch == "Internal" then
@@ -213,6 +213,7 @@ function TF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
     return true
 end
 
+-- Interactions
 function TF.Equip(Item)
     if Item == "modem" then -- only equipment that can go to the left
         EQ = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
@@ -263,23 +264,6 @@ function TF.Equip(Item)
     return true
 end
 
-function TF.RunClass(ClassName)
-    if TF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
-        if ClassName == "Student" or ClassName == "student" then
-            --qzt7K4sd
-            if fs.exists("/LocalGit/Turtle/Student.lua") then
-                shell.run("Student")
-            else
-                shell.run("pastebin", "get", PasteStudent,"Student.lua")
-                shell.run("Student")
-            end
-        else
-            print("Unknown Class Name")
-            print(ClassName)
-        end
-    end
-end
-
 function TF.PlaceItemByID(IdName,PlaceDir,InvToSearch)
     --Find Item
     Items = TF.SearchInvByID(IdName,InvToSearch)
@@ -292,6 +276,42 @@ function TF.PlaceItemByTag(TagName,PlaceDir,InvToSearch)
     return TF.PlaceBlockByList(Items,PlaceDir)
 end
 
+function TF.PlaceTurtleByClass(TurtleClass)
+    while Drive == nil do
+        print("Please Give Me a Disk Drive")
+        os.pullEvent("turtle_inventory")
+        Drive = TF.PlaceItemByID(PeriDiskDrive,"Internal")
+    end
+    while Disk == nil do
+        print("Please Give Me a Floppy Disk")
+        os.pullEvent("turtle_inventory")
+        Disk = TF.PlaceItemByID(PeriFloppyDisk,"Internal")
+    end
+    while Turtle == nil do
+        print("Please Give Me a Turtle")
+        os.pullEvent("turtle_inventory")
+        Turtle = TF.PlaceItemByID(PeriTurtle,"Internal")
+    end
+    while TurtleModem == nil do
+        print("Please Give Me a Modem")
+        os.pullEvent("turtle_inventory")
+        TurtleModem = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
+        if TurtleModem == nil then
+            TurtleModem = TF.SearchInvByID(PeriWireless,"Internal") -- then for standard
+        end
+    end
+
+    --Place DiskDrive
+    --insert Floppy
+    --Write a program in the start up of the floppy
+    --  Equips the Modem and connects to the mainframe 
+    --  downloads the class selected
+    --  runs class
+    --Place turtle and start it
+
+end 
+
+-- Misc
 function TF.CanSwitchClass(TurtleClass)
     if TurtleClass == "Crafter" or TurtleClass == "crafter" then
         if not peripheral.find("workbench") then -- if no Crafting table equiped
@@ -335,39 +355,21 @@ function TF.CanSwitchClass(TurtleClass)
     return true
 end
 
-function TF.PlaceTurtleByClass(TurtleClass)
-    while Drive == nil do
-        print("Please Give Me a Disk Drive")
-        os.pullEvent("turtle_inventory")
-        Drive = TF.PlaceItemByID(PeriDiskDrive,"Internal")
-    end
-    while Disk == nil do
-        print("Please Give Me a Floppy Disk")
-        os.pullEvent("turtle_inventory")
-        Disk = TF.PlaceItemByID(PeriFloppyDisk,"Internal")
-    end
-    while Turtle == nil do
-        print("Please Give Me a Turtle")
-        os.pullEvent("turtle_inventory")
-        Turtle = TF.PlaceItemByID(PeriTurtle,"Internal")
-    end
-    while TurtleModem == nil do
-        print("Please Give Me a Modem")
-        os.pullEvent("turtle_inventory")
-        TurtleModem = TF.SearchInvByID(PeriWirelessAdvanced,"Internal") -- look for advanced modems first
-        if TurtleModem == nil then
-            TurtleModem = TF.SearchInvByID(PeriWireless,"Internal") -- then for standard
+function TF.RunClass(ClassName)
+    if TF.CanSwitchClass(ClassName) then --if you can switch then go download or Run the Class
+        if ClassName == "Student" or ClassName == "student" then
+            --qzt7K4sd
+            if fs.exists("/LocalGit/Turtle/Student.lua") then
+                shell.run("Student")
+            else
+                shell.run("pastebin", "get", PasteStudent,"Student.lua")
+                shell.run("Student")
+            end
+        else
+            print("Unknown Class Name")
+            print(ClassName)
         end
     end
-
-    --Place DiskDrive
-    --insert Floppy
-    --Write a program in the start up of the floppy
-    --  Equips the Modem and connects to the mainframe 
-    --  downloads the class selected
-    --  runs class
-    --Place turtle and start it
-
-end 
+end
 
 return TF
