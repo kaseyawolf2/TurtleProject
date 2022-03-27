@@ -36,6 +36,18 @@ function ListMath(Y)
 
     return Rx, Ry, Rxe, Rye
 end
+function AddButton(Style,Text,Xpos,Ypos,Link)
+    if Style == "List" then
+        local t1,t2,t3,t4 = ListMath(Ypos)
+    end
+    if Style == "Grid" then
+        local t1,t2,t3,t4 = GridMath(3,3)
+    end
+        
+    Page:add(Text, Link, t1, t2, t3, t4, colors.red, colors.lime)
+end
+
+
 --Area Functions
 function LoadArea(ID)
     local DefaultArea = {
@@ -260,12 +272,8 @@ function StatsPanel()
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(2)
-    Page:add("1", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(3)
-    Page:add("2", nil, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = ListMath(4)
-    Page:add("3", nil, t1, t2, t3, t4, colors.red, colors.lime)
+    AddButton("List","Back",2,,LandingPanel)
+
     --# draw the buttons
     Page:draw()
     while true do 
