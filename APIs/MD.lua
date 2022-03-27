@@ -36,6 +36,7 @@ function ListMath(Y)
 
     return Rx, Ry, Rxe, Rye
 end
+--Area Functions
 function LoadArea(ID)
     local DefaultArea = {
         --if gps connection then set x and z 
@@ -259,7 +260,7 @@ function StatsPanel()
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    local t1,t2,t3,t4 = GridMath(2)
+    local t1,t2,t3,t4 = ListMath(2)
     Page:add("1", nil, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(3)
     Page:add("2", nil, t1, t2, t3, t4, colors.red, colors.lime)
