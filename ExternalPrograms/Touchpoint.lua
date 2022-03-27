@@ -165,7 +165,7 @@ local Button = {
 	end,
 }
 
-function new(monSide)
+function newPage(monSide)
 	local buttonInstance = {
 		side = monSide or "term",
 		mon = monSide and peripheral.wrap(monSide) or term.current(),

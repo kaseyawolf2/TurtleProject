@@ -198,7 +198,7 @@ end
 --Start Page
 function LandingPanel()
     --# intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
     Page:add("Update Panel", UpdatePanel, 2, 2, FourPanX, FourPanY, colors.red, colors.lime)
     Page:add("Drone Controls", DronePanel, FourPanX+2, 2, MonX-1, FourPanY, colors.red, colors.lime)
@@ -221,7 +221,7 @@ end
 --Base Panels
 function UpdatePanel()
     --# intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
@@ -248,7 +248,7 @@ function UpdatePanel()
 end
 function DronePanel()
     --# intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
@@ -273,7 +273,7 @@ function DronePanel()
 end
 function StatsPanel()
     --# intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
@@ -294,7 +294,7 @@ function StatsPanel()
 end
 function MiningPanel()
     -- intialize a new button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
         local t1,t2,t3,t4 = ListMath(1)
         Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
@@ -326,7 +326,7 @@ function MiningStylesPanel(ID)
     
 
     --# intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     if ID == nil then
@@ -391,7 +391,7 @@ function MiningAreasList(PageNum)
         end
 
         -- intialize button set on the monitor
-        local Page = new(peripheral.getName(monitor))
+        local Page = newPage(peripheral.getName(monitor))
         
         --# Drawing
             --# Init Buttons
@@ -515,7 +515,7 @@ function MiningAreasList(PageNum)
     if PageNum >= TotalAreas then PageNum = TotalAreas -1  end
     
     -- intialize button set on the monitor
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     --# add buttons
         local t1,t2,t3,t4 = ListMath(1)
         Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
@@ -556,7 +556,7 @@ end
 
 --Mining Styles
 function StripmineType()
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(2)
@@ -603,7 +603,7 @@ function TunnelMineType()
         TempMiningY = DefaultMiningY
     end
     --Add Buttons
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(2)
@@ -665,7 +665,7 @@ function TunnelMineType()
     end
 end
 function WaterType()
-    local Page = new(peripheral.getName(monitor))
+    local Page = newPage(peripheral.getName(monitor))
     local t1,t2,t3,t4 = ListMath(1) 
     Page:add("Back", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
     local t1,t2,t3,t4 = ListMath(2)
