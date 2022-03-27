@@ -36,15 +36,22 @@ function ListMath(Y)
 
     return Rx, Ry, Rxe, Rye
 end
-function AddButton(Style,Text,Xpos,Ypos,Link)
+function AddButton(Style,Label,Xpos,Ypos,Link)
+    Label = Label or "Missing Label"
+    Xpos = Xpos or 0
+    Ypos = Ypos or 0
+    Link = Link or nil
+
     if Style == "List" then
         local t1,t2,t3,t4 = ListMath(Ypos)
     end
     if Style == "Grid" then
         local t1,t2,t3,t4 = GridMath(3,3)
     end
-        
-    Page:add(Text, Link, t1, t2, t3, t4, colors.red, colors.lime)
+    
+    local Page = new(peripheral.getName(monitor))    
+    Page:add(Label, Link, t1, t2, t3, t4, colors.red, colors.lime)
+    Page:draw()
 end
 
 
