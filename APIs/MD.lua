@@ -272,7 +272,7 @@ function StatsPanel()
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    AddButton("List","Back",2,,LandingPanel)
+    AddButton("List","Back",2,nil,LandingPanel)
 
     --# draw the buttons
     Page:draw()
