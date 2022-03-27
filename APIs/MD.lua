@@ -36,7 +36,7 @@ function ListMath(Y)
 
     return Rx, Ry, Rxe, Rye
 end
-function AddButton(Style,Label,Xpos,Ypos,Link)
+function AddButton(Page,tyle,Label,Xpos,Ypos,Link)
     Label = Label or "Missing Label"
     Xpos = Xpos or 0
     Ypos = Ypos or 0
@@ -48,10 +48,8 @@ function AddButton(Style,Label,Xpos,Ypos,Link)
     if Style == "Grid" then
         local t1,t2,t3,t4 = GridMath(3,3)
     end
-    
-    local Page = new(peripheral.getName(monitor))    
+       
     Page:add(Label, Link, t1, t2, t3, t4, colors.red, colors.lime)
-    Page:draw()
 end
 
 
@@ -279,7 +277,7 @@ function StatsPanel()
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    AddButton("List","Back",2,nil,LandingPanel)
+    AddButton(Page,"List","Back",2,nil,LandingPanel)
 
     --# draw the buttons
     Page:draw()
