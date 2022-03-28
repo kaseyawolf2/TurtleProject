@@ -11,14 +11,28 @@ local DGPS_UpdateFeq = 50
 local DGPS_TimeSinceUpdate = 0
 local DGPS_Travelheight = 100
 
+function DGPS.Start() -- get gps using other computers
+    if gps.locate(5) == nil then
+        -- Ask for current Cords
+        -- Ask for Current Heading
+        print("No GPS")
+    else
+        print("Connecting to GPS")
+        GPSConnect()
+        Update()
+        print("Finding Direction Faced")
+        FindFaceDir()
+    end
 
 
-function DGPS.GPSConnect() -- get gps using other computers
+end
+
+function GPSConnect() -- get gps using other computers
     DGPS_xPos, DGPS_yPos, DGPS_zPos = gps.locate()
     DGPS_GPSConn = true
 end
 
-function DGPS.Update()
+function Update()
     if DGPS_GPSConn then 
         DGPS_TimeSinceUpdate = DGPS_TimeSinceUpdate + 1
         if DGPS_TimeSinceUpdate > DGPS_UpdateFeq then
@@ -45,24 +59,13 @@ function DGPS.getLocation() -- return the location
     end
 end
 
-function DGPS.turnLeft() -- turn left
-    if turtle.turnLeft() then
-        if DGPS_face == 0 then
-            DGPS_face = 1
-        elseif DGPS_face == 1 then
-            DGPS_face = 2
-        elseif DGPS_face == 2 then
-            DGPS_face = 3
-        elseif DGPS_face == 3 then
-            DGPS_face = 0
-        end
-    else
-        return false
-    end
+function PrintLocation() -- return the location
+    print("X:" .. DGPS_xPos .. " | Z:" .. DGPS_zPos .. " | Y:" .. DGPS_yPos)
 end
 
-function DGPS.turnRight() -- turn right
-    if turtle.turnRight() then
+
+function DGPS.turnLeft() -- turn left
+    if turtle.turnLeft() then
         if DGPS_face == 0 then
             DGPS_face = 3
         elseif DGPS_face == 1 then
@@ -72,6 +75,23 @@ function DGPS.turnRight() -- turn right
         elseif DGPS_face == 3 then
             DGPS_face = 2
         end 
+        
+    else
+        return false
+    end
+end
+
+function DGPS.turnRight() -- turn right
+    if turtle.turnRight() then
+        if DGPS_face == 0 then
+            DGPS_face = 1
+        elseif DGPS_face == 1 then
+            DGPS_face = 2
+        elseif DGPS_face == 2 then
+            DGPS_face = 3
+        elseif DGPS_face == 3 then
+            DGPS_face = 0
+        end
     else
         return false
     end
@@ -79,16 +99,16 @@ end
 
 function DGPS.forward() -- go DGPS.forward
     if turtle.forward() then
-        if DGPS_face == 0 then
-            DGPS_zPos = DGPS_zPos - 1
-        elseif DGPS_face == 1 then
+        if DGPS_face == 0 then --north
             DGPS_xPos = DGPS_xPos - 1
+        elseif DGPS_face == 1 then
+            DGPS_zPos = DGPS_zPos - 1
         elseif DGPS_face == 2 then
-            DGPS_zPos = DGPS_zPos + 1
-        elseif DGPS_face == 3 then
             DGPS_xPos = DGPS_xPos + 1
+        elseif DGPS_face == 3 then
+            DGPS_zPos = DGPS_zPos + 1
         end
-        DGPS.Update()
+        Update()
     else
         return false
     end
@@ -96,16 +116,16 @@ end
 
 function DGPS.back() -- go DGPS.back
     if turtle.back() then
-        if DGPS_face == 0 then
-            DGPS_zPos = DGPS_zPos + 1
-        elseif DGPS_face == 1 then
+        if DGPS_face == 0 then --north
             DGPS_xPos = DGPS_xPos + 1
-        elseif DGPS_face == 2 then
-            DGPS_zPos = DGPS_zPos - 1
+        elseif DGPS_face == 1 then
+            DGPS_zPos = DGPS_zPos + 1
         elseif DGPS_face == 2 then
             DGPS_xPos = DGPS_xPos - 1
+        elseif DGPS_face == 3 then
+            DGPS_zPos = DGPS_zPos - 1
         end
-        DGPS.Update()
+        Update()
     else
         return false
     end
@@ -114,7 +134,7 @@ end
 function DGPS.up() -- go up
     if turtle.up() then
         DGPS_yPos = DGPS_yPos + 1
-        DGPS.Update()
+        Update()
     else
         return false
     end
@@ -123,28 +143,61 @@ end
 function DGPS.down() -- go down
     if turtle.down() then
         DGPS_yPos = DGPS_yPos - 1
-        DGPS.Update()
+        Update()
     else
         return false
     end
 end
 
-function DGPS.FindFaceDir()
-    firstpos = gps.locate()
-    if DGPS.forward() then
-        secondpos = gps.locate()
-    elseif DGPS.back() then
-        secondpos = gps.locate()
-    elseif DGPS.turnLeft() then
-        return DGPS.FindFaceDir()
+function PrintDir()
+    if DGPS_face == 0 then
+        print("North")
+    elseif DGPS_face == 1 then
+        print("East")
+    elseif DGPS_face == 2 then
+        print("South")
+    elseif DGPS_face == 3 then
+        print("West")
+    else 
+        print("Unknown dir : " .. DGPS_face)
+    end
+end
+
+function FindFaceDir()
+    x1,y1,z1 = gps.locate()
+    if turtle.forward() then
+        x2,y2,z2 = gps.locate()
+        turtle.back()
+    elseif turtle.turnLeft() then
+        return FindFaceDir()
     else
         print("Cant move or turn")
         return nil
     end
-    Dpos = firstpos - secondpos
-
+    Dx = x1 - x2
+    Dz = z1 - z2
+    print(Dx .. " : " .. Dz)
+    if Dx ~= 0 then
+        if Dx == 1 then
+            DGPS_face = 3
+        elseif Dx == -1 then
+            DGPS_face = 1
+        else
+            print("More then 1 block movement")
+        end
+    elseif Dz ~= 0 then
+        if Dz == 1 then
+            DGPS_face = 0
+        elseif Dz == -1 then
+            DGPS_face = 2
+        else
+            print("More then 1 block movement")
+        end
+    else
+        print("No gps Change???")
+    end
+    PrintDir()
     return 
-
 end
 
 function DGPS.Goto(x,y,z,Travelheight)
@@ -154,12 +207,13 @@ function DGPS.Goto(x,y,z,Travelheight)
             Dx = x - DGPS_xPos 
             Dy = y - DGPS_yPos 
             Dz = z - DGPS_zPos 
+            print("Movement Delta :"..Dx..":"..Dy..":"..Dz )
         else
             Dx = x 
             Dy = y 
             Dz = z
+            print("Moving :"..Dx..":"..Dy..":"..Dz )
         end
-        print("Movement Delta :"..Dx..":"..Dy..":"..Dz )
         -- move to travel height (default 100)
         if Travelheight == nil then -- if travel height was given travel there
             Travelheight = DGPS_Travelheight
@@ -172,6 +226,11 @@ function DGPS.Goto(x,y,z,Travelheight)
             end
         end
 
+        --Move X
+
+        --Move Z
+
+        --Move Y
 
 end
 
