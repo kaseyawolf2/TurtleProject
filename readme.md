@@ -48,18 +48,19 @@ Bug List
     Responder starts up in backup mode
     responder keeps Restarting
 
-
+* = Done
+- = Works but with requirements
 
 Minium Viable Product
     Turtle
-        DGPS
-            Entry point
-                Get the turtle setup for use
+        - DGPS- 
+            - Entry point - Works but needs refinement for non perfect start
+                * Get the turtle setup for use * 
                 GPS Detection of settings
                 if no GPS get user input
-            Goto
-                XYZ Movement
-                Travel Height
+            * Goto *
+                * XYZ Movement *
+                * Travel Height *
         Mine
             Recieve Area To Mine
             Deposit Ores at Set Site
@@ -101,6 +102,9 @@ Refinements
     Turtles
         Optimize Turning to Dir
             Right now it turns left till its face the correct dir even if 1 right would do the same
+    Mainframe
+        Encripted messages
+        Custom Message Channels to keep spam down
 
 
 
