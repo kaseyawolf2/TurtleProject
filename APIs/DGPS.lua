@@ -260,7 +260,7 @@ function DGPS.Goto(x,y,z,Travelheight)
         --Move X
         if Dx > 0 then
             FaceDir("East")
-            for i = 1, Dz do -- go down the difference
+            for i = 1, Dx do -- go down the difference
                 DGPS.forward() 
             end 
         elseif Dx < 0 then
