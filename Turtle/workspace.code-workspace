@@ -4,10 +4,13 @@
 			"path": ".."
 		},
 		{
-			"path": "..\\..\\..\\Enigmatica 6 - E6 - 1.16.5\\saves\\Test World\\computercraft"
+			"path": "c:\\Users\\kasey\\AppData\\Roaming\\CraftOS-PC\\computer"
 		},
 		{
-			"path": "c:\\Users\\kasey\\AppData\\Roaming\\CraftOS-PC\\computer"
+			"path": "..\\..\\..\\Enigmatica 6 - E6 - 1.16.5\\saves\\Turtle World 3\\computercraft"
+		},
+		{
+			"path": "..\\..\\..\\Enigmatica 6 - E6 - 1.16.5\\saves\\Test World\\computercraft"
 		}
 	],
 	"settings": {}
