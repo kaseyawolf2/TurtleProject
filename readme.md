@@ -97,6 +97,14 @@ Milestone 3
 
 
 
+Refinements
+    Turtles
+        Optimize Turning to Dir
+            Right now it turns left till its face the correct dir even if 1 right would do the same
+
+
+
+
 
 
 Wish List
