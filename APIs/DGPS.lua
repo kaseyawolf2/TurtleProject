@@ -36,7 +36,7 @@ function Update()
     if DGPS_GPSConn then 
         DGPS_TimeSinceUpdate = DGPS_TimeSinceUpdate + 1
         if DGPS_TimeSinceUpdate > DGPS_UpdateFeq then
-            DGPS.GPSConnect()
+            GPSConnect()
         end
     end
 end
@@ -163,6 +163,26 @@ function PrintDir()
     end
 end
 
+function FaceDir(Dir)
+    if Dir == "North" then
+        while DGPS_face ~= 0 do 
+            DGPS.turnLeft()
+        end
+    elseif Dir == "East" then
+        while DGPS_face ~= 1 do 
+            DGPS.turnLeft()
+        end
+    elseif Dir == "South" then
+        while DGPS_face ~= 2 do 
+            DGPS.turnLeft()
+        end
+    elseif Dir == "West" then
+        while DGPS_face ~= 3 do 
+            DGPS.turnLeft()
+        end
+    end
+end
+
 function FindFaceDir()
     x1,y1,z1 = gps.locate()
     if turtle.forward() then
@@ -207,30 +227,77 @@ function DGPS.Goto(x,y,z,Travelheight)
             Dx = x - DGPS_xPos 
             Dy = y - DGPS_yPos 
             Dz = z - DGPS_zPos 
-            print("Movement Delta :"..Dx..":"..Dy..":"..Dz )
+            print("Movement Delta X:"..Dx.." | Y:"..Dy.." | Z:"..Dz )
         else
             Dx = x 
             Dy = y 
             Dz = z
-            print("Moving :"..Dx..":"..Dy..":"..Dz )
+            print("Moving X:"..Dx.." | Y:"..Dy.." | Z:"..Dz )
         end
-        -- move to travel height (default 100)
+        -- Set Default travel height (default 100)
         if Travelheight == nil then -- if travel height was given travel there
             Travelheight = DGPS_Travelheight
         end
         print("traveling at y:".. Travelheight)
+
+        -- Get to Travel height
         if DGPS_yPos < Travelheight then -- is the turtle below the travel height
             Dth = Travelheight - DGPS_yPos  -- subtract the current height 
-            for i = 0, Dth do -- go up the difference
-                DGPS.up() 
+            for i = 1, Dth do -- go up the difference
+                DGPS.up()
+                Dy = Dy - 1
             end
+        elseif DGPS_yPos > Travelheight then
+            Dth = DGPS_yPos - Travelheight
+            for i = 1, Dth do -- go down the difference
+                DGPS.down() 
+                Dy = Dy + 1
+            end 
         end
 
+
+
         --Move X
+        if Dx > 0 then
+            FaceDir("East")
+            for i = 1, Dz do -- go down the difference
+                DGPS.forward() 
+            end 
+        elseif Dx < 0 then
+            FaceDir("West")
+            Dx = Dx * -1
+            for i = 1, Dx do -- go down the difference
+                DGPS.forward()
+            end 
+        end
 
         --Move Z
+        if Dz > 0 then
+            FaceDir("South")
+            for i = 1, Dz do -- go down the difference
+                DGPS.forward() 
+            end 
+        elseif Dz < 0 then
+            FaceDir("North")
+            Dz = Dz * -1
+            for i = 1, Dx do -- go down the difference
+                DGPS.forward()
+            end 
+        end
+
+        
 
         --Move Y
+        if Dy > 0 then
+            for i = 1, Dy do -- go down the difference
+                DGPS.up() 
+            end 
+        elseif Dy < 0 then
+            Dy = Dy * -1
+            for i = 1, Dy do -- go down the difference
+                DGPS.down() 
+            end 
+        end
 
 end
 
