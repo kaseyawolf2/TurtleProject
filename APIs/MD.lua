@@ -6,6 +6,7 @@ touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 DefaultStyle = "Strip-1Turtle"
 DefaultMiningY = 11
 
+
 --Local Functions
 function GridMath(X,Y)
     local ButtonX = 6
@@ -35,21 +36,6 @@ function ListMath(Y)
     local Rye= (Y*ButtonY)+((Y-1)*2)+StartY 
 
     return Rx, Ry, Rxe, Rye
-end
-function AddButton(Page,tyle,Label,Xpos,Ypos,Link)
-    Label = Label or "Missing Label"
-    Xpos = Xpos or 0
-    Ypos = Ypos or 0
-    Link = Link or nil
-
-    if Style == "List" then
-        local t1,t2,t3,t4 = ListMath(Ypos)
-    end
-    if Style == "Grid" then
-        local t1,t2,t3,t4 = GridMath(3,3)
-    end
-       
-    Page:add(Label, Link, t1, t2, t3, t4, colors.red, colors.lime)
 end
 
 
@@ -277,7 +263,6 @@ function StatsPanel()
     --# add buttons
     local t1,t2,t3,t4 = ListMath(1)
     Page:add("Back", LandingPanel, t1, t2, t3, t4, colors.red, colors.lime)
-    AddButton(Page,"List","Back",2,nil,LandingPanel)
 
     --# draw the buttons
     Page:draw()
