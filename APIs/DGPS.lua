@@ -285,8 +285,6 @@ function DGPS.Goto(x,y,z,Travelheight)
             end 
         end
 
-        
-
         --Move Y
         if Dy > 0 then
             for i = 1, Dy do -- go down the difference

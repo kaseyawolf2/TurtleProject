@@ -40,7 +40,7 @@ while not gpsConnection do
 end
 
 DGPS.Start()
-DGPS.Goto(-1918,65,1531,67)
+DGPS.Goto(-1918,68,1531,67)
 
 --Connect to GPS System
     --If no GPS Download GPS Builder and build One
