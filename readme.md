@@ -50,8 +50,51 @@ Bug List
 
 
 
-Priority Additions 
-    Mining Styles
+Minium Viable Product
+    Turtle
+        DGPS
+            Entry point
+                Get the turtle setup for use
+                GPS Detection of settings
+                if no GPS get user input
+            Goto
+                XYZ Movement
+                Travel Height
+        Mine
+            Recieve Area To Mine
+            Deposit Ores at Set Site
+    Mainframe
+        Areas
+            Stripmine
+                Even Distubion between Turtles
+        Ore Deposit Site
+
+Milestone 1
+    Mainframe
+        Send out Update Commands
+        Mining Styles
+        Stats
+            Connected Turtles
+    Turtles
+        Listen for Update Commands
+        Courier Turtles
+            Transfer from dig site to Main Storage
+
+Milestone 2
+    Mainframe
+        Download Turtle updates and send it out over rednet 
+        Multi Mainframes/Backups
+    Turtles
+        Return to Home 
+        GPS deploying
+
+Milestone 3
+    Turtles
+        Crafting
+            Self Replication
+        Starter Turtle
+            Build 1 and have it mine till its able to craft a gps system and mainframe
+
 
 
 
