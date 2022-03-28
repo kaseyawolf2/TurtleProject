@@ -29,6 +29,7 @@ gpsConnection = false
 while not gpsConnection do
     if gps.locate(5) ~= nil then
         gpsConnection = true
+        print("GPS Detected")
     else
         --No GPS Connection Detected
         print("No GPS Detected")
@@ -38,7 +39,8 @@ while not gpsConnection do
     
 end
 
-
+DGPS.Start()
+DGPS.Goto(-1918,65,1531,67)
 
 --Connect to GPS System
     --If no GPS Download GPS Builder and build One
