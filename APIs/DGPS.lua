@@ -280,7 +280,7 @@ function DGPS.Goto(x,y,z,Travelheight)
         elseif Dz < 0 then
             FaceDir("North")
             Dz = Dz * -1
-            for i = 1, Dx do -- go down the difference
+            for i = 1, Dz do -- go down the difference
                 DGPS.forward()
             end 
         end
