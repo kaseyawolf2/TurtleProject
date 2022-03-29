@@ -118,8 +118,8 @@ end
 
 
 --General Functions
-function MF.SendMessage()
-    -- body
+function MF.SendMessage(Message,Protocol)
+    rednet.broadcast(Message , Protocol)
 end
 
 --Turtle Functions

@@ -63,6 +63,9 @@ function PrintLocation() -- return the location
     print("X:" .. DGPS_xPos .. " | Z:" .. DGPS_zPos .. " | Y:" .. DGPS_yPos)
 end
 
+function CheckFuel()
+    
+end
 
 function DGPS.turnLeft() -- turn left
     if turtle.turnLeft() then
@@ -185,10 +188,10 @@ end
 
 function FindFaceDir()
     x1,y1,z1 = gps.locate()
-    if turtle.forward() then
+    if DGPS.forward() then
         x2,y2,z2 = gps.locate()
-        turtle.back()
-    elseif turtle.turnLeft() then
+        DGPS.back()
+    elseif DGPS.turnLeft() then
         return FindFaceDir()
     else
         print("Cant move or turn")
@@ -297,6 +300,39 @@ function DGPS.Goto(x,y,z,Travelheight)
             end 
         end
 
+end
+
+
+-- Mining
+function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
+    --Make sure that starts are smaller then the end
+    if StartX > EndX then
+        local temp = EndX
+        EndX = StartX
+        StartX = temp
+        temp = nil
+    end
+    if StartZ > EndZ then
+        local temp = EndZ
+        EndZ = StartZ
+        StartZ = temp
+        temp = nil
+    end
+    if StartY < EndY then
+        local temp = EndY
+        EndY = StartY
+        StartY = temp
+        temp = nil
+    end
+    DGPS.Goto(StartX,StartY,StartZ)
+    for curY=StartY,EndY do
+        for curX=StartX,EndX do
+            for curZ=StartZ,EndZ, -1 do
+                DGPS.Goto(curX,curY,curZ)
+                turtle.digDown()
+            end
+        end
+    end
 end
 
 return DGPS
