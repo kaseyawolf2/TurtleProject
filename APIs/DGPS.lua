@@ -82,6 +82,7 @@ function DGPS.turnLeft() -- turn left
     else
         return false
     end
+    --PrintDir()
 end
 
 function DGPS.turnRight() -- turn right
@@ -103,13 +104,13 @@ end
 function DGPS.forward() -- go DGPS.forward
     if turtle.forward() then
         if DGPS_face == 0 then --north
-            DGPS_xPos = DGPS_xPos - 1
-        elseif DGPS_face == 1 then
             DGPS_zPos = DGPS_zPos - 1
-        elseif DGPS_face == 2 then
+        elseif DGPS_face == 1 then
             DGPS_xPos = DGPS_xPos + 1
-        elseif DGPS_face == 3 then
+        elseif DGPS_face == 2 then
             DGPS_zPos = DGPS_zPos + 1
+        elseif DGPS_face == 3 then
+            DGPS_xPos = DGPS_xPos - 1
         end
         Update()
     else
@@ -120,13 +121,13 @@ end
 function DGPS.back() -- go DGPS.back
     if turtle.back() then
         if DGPS_face == 0 then --north
-            DGPS_xPos = DGPS_xPos + 1
-        elseif DGPS_face == 1 then
             DGPS_zPos = DGPS_zPos + 1
-        elseif DGPS_face == 2 then
+        elseif DGPS_face == 1 then
             DGPS_xPos = DGPS_xPos - 1
-        elseif DGPS_face == 3 then
+        elseif DGPS_face == 2 then
             DGPS_zPos = DGPS_zPos - 1
+        elseif DGPS_face == 3 then
+            DGPS_xPos = DGPS_xPos + 1
         end
         Update()
     else
@@ -166,32 +167,43 @@ function PrintDir()
     end
 end
 
-function FaceDir(Dir)
+function DGPS.FaceDir(Dir)
+    NumDir = Dir
     if Dir == "North" then
-        while DGPS_face ~= 0 do 
-            DGPS.turnLeft()
-        end
+        NumDir = 0
     elseif Dir == "East" then
-        while DGPS_face ~= 1 do 
-            DGPS.turnLeft()
-        end
+        NumDir = 1
     elseif Dir == "South" then
-        while DGPS_face ~= 2 do 
+        NumDir = 2
+    elseif Dir == "West" then
+        NumDir = 3
+    end
+    TurnNum = DGPS_face - NumDir
+    if TurnNum == 3 or TurnNum == -3 then
+        TurnNum = TurnNum/-3
+    end
+    print(TurnNum)
+    
+    if TurnNum > 0 then
+        for i=1,TurnNum do
             DGPS.turnLeft()
         end
-    elseif Dir == "West" then
-        while DGPS_face ~= 3 do 
-            DGPS.turnLeft()
+    elseif TurnNum < 0 then
+        TurnNum = TurnNum * -1
+        for i=1,TurnNum do
+            DGPS.turnRight()
         end
     end
+
+    PrintDir()
 end
 
 function FindFaceDir()
     x1,y1,z1 = gps.locate()
-    if DGPS.forward() then
+    if turtle.forward() then
         x2,y2,z2 = gps.locate()
-        DGPS.back()
-    elseif DGPS.turnLeft() then
+        turtle.back()
+    elseif turtle.turnLeft() then
         return FindFaceDir()
     else
         print("Cant move or turn")
@@ -262,12 +274,12 @@ function DGPS.Goto(x,y,z,Travelheight)
 
         --Move X
         if Dx > 0 then
-            FaceDir("East")
+            DGPS.FaceDir("East")
             for i = 1, Dx do -- go down the difference
                 DGPS.forward() 
             end 
         elseif Dx < 0 then
-            FaceDir("West")
+            DGPS.FaceDir("West")
             Dx = Dx * -1
             for i = 1, Dx do -- go down the difference
                 DGPS.forward()
@@ -276,12 +288,12 @@ function DGPS.Goto(x,y,z,Travelheight)
 
         --Move Z
         if Dz > 0 then
-            FaceDir("South")
+            DGPS.FaceDir("South")
             for i = 1, Dz do -- go down the difference
                 DGPS.forward() 
             end 
         elseif Dz < 0 then
-            FaceDir("North")
+            DGPS.FaceDir("North")
             Dz = Dz * -1
             for i = 1, Dz do -- go down the difference
                 DGPS.forward()
@@ -301,8 +313,7 @@ function DGPS.Goto(x,y,z,Travelheight)
         end
 
 end
-
-
+ 
 -- Mining
 function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
     --Make sure that starts are smaller then the end
@@ -324,11 +335,15 @@ function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
         StartY = temp
         temp = nil
     end
-    DGPS.Goto(StartX,StartY,StartZ)
-    for curY=StartY,EndY do
+    DGPS.Goto(StartX,StartY,StartZ,70)
+    print("Arrived at Quarry")
+    for curY=StartY,EndY, -1 do
+        print("Layer " .. curY .." Of " .. EndY)
         for curX=StartX,EndX do
-            for curZ=StartZ,EndZ, -1 do
-                DGPS.Goto(curX,curY,curZ)
+            print("Row " .. curX .." Of " .. EndX)
+            for curZ=StartZ,EndZ do
+                print("Col " .. curZ .." Of " .. EndZ)
+                DGPS.Goto(curX,curY,curZ,curY)
                 turtle.digDown()
             end
         end
