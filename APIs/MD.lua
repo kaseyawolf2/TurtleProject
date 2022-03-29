@@ -38,11 +38,9 @@ function ListMath(Y)
     return Rx, Ry, Rxe, Rye
 end
 
-
 --Area Functions
 function LoadArea(ID)
     local DefaultArea = {
-        --if gps connection then set x and z 
         ID = 0,
         X1 = 0,
         X2 = 0,
@@ -53,6 +51,16 @@ function LoadArea(ID)
         TunnelHeight = DefaultHeight,
         Slices = {}
     }
+    --if gps connection then set x and z         
+    if gps.locate(5) ~= nil then
+        X,Y,Z = gps.locate(5)
+        DefaultArea["X1"] = X
+        DefaultArea["X2"] = X
+        DefaultArea["Z1"] = Z
+        DefaultArea["Z2"] = Z
+    end
+
+
     if fs.exists("/Knowledge/MineAreas/"..ID) then
         local AreaInfo = {}
         local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
@@ -287,6 +295,8 @@ function MiningPanel()
         Page:add("Default Mining Style", MiningStylesPanel, t1, t2, t3, t4, colors.red, colors.lime)
         local t1,t2,t3,t4 = ListMath(3)
         Page:add("Mining Areas", MiningAreasList, t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(4)
+        Page:add("Assignments", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
     -- draw the buttons
     Page:draw()
     while true do 
@@ -419,6 +429,7 @@ function MiningAreasList(PageNum)
                 Page:add("+1", function() Delta = Delta + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
 
 
+
                 t1,t2,t3,t4 = GridMath(1,6)
                 Page:add("Save", Save, t1, t2, t3, t4, colors.red, colors.lime)
                 t1,t2,t3,t4 = GridMath(2,6)
@@ -537,6 +548,81 @@ function MiningAreasList(PageNum)
         end
     end
     
+end
+function MiningAssignment(PageNum)
+    function AssignmentPanel(ID)
+        --# intialize button set on the monitor
+        local Page = newPage(peripheral.getName(monitor))
+        --# add buttons
+        local t1,t2,t3,t4 = ListMath(1)
+        Page:add("Back", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
+
+        t1,t2,t3,t4 = GridMath(3,3)
+        Page:add("All", function() X1 = X1 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+
+        t1,t2,t3,t4 = GridMath(4,3)
+        Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+        t1,t2,t3,t4 = GridMath(6,3)
+        Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+
+        t1,t2 = GridMath(5,3)
+        term.setCursorPos(t1, t2+1)
+        term.write(X1)
+
+        --# draw the buttons
+        Page:draw()
+        while true do 
+            local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+            if event == "button_click" then
+                
+                
+                if Page.buttonList[p1].func ~= nil then
+                    Page.buttonList[p1].func()
+                end
+            end
+        end
+    end
+    AvilSpace = math.floor(MonY / 4) - 3
+    TotalAreas = #fs.find("/Knowledge/MineAreas/*")
+    if PageNum == nil then PageNum = 0 end 
+    if PageNum < 0 then PageNum = 0 end 
+    if PageNum >= TotalAreas then PageNum = TotalAreas -1  end
+    
+    local Page = newPage(peripheral.getName(monitor))
+    --# add buttons
+    local t1,t2,t3,t4 = ListMath(1)
+    Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+    t1,t2,t3,t4 = ListMath(2)
+    Page:add("Up", function() MiningAssignment(PageNum-1) end, t1, t2, t3, t4, colors.red, colors.lime)
+
+    
+    
+    if AvilSpace <= TotalAreas then
+        AreasToPrint = AvilSpace
+    else
+        AreasToPrint = TotalAreas
+    end
+    for i=1,AreasToPrint do
+        t1,t2,t3,t4 = ListMath(i+2)
+        if i+PageNum <= TotalAreas then
+            Page:add(tostring(i+PageNum), function() AssignmentPanel(i+PageNum) end, t1, t2, t3, t4, colors.red, colors.lime)
+        end
+    end
+
+    t1,t2,t3,t4 = ListMath(AvilSpace+3)
+    Page:add("Down", function() MiningAssignment(PageNum+1) end, t1, t2, t3, t4, colors.red, colors.lime)
+
+    --#
+    -- draw the buttons
+    Page:draw()
+    while true do 
+        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+        if event == "button_click" then
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
+        end
+    end
 end
 
 --Mining Styles
