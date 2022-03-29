@@ -1,5 +1,6 @@
 local MF = {}
 
+--Mainframes Functions
 function MF.BackupMode()
     local function ListenForFailure()
         while true do 
@@ -113,6 +114,31 @@ function MF.ListenRespond()
         term.clearLine()
         term.scroll(-1)
     end
+end
+
+
+--General Functions
+function MF.SendMessage()
+    -- body
+end
+
+--Turtle Functions
+function MF.OrderListen()
+    print("Mainframe Online")
+    local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
+    if Protocol == "MineOrder" then
+        print("Mine Order from " .. Sender .. " for " .. tostring(Message))
+
+    else
+        print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
+        term.setCursorPos(1, 1)
+        term.clearLine()
+        term.scroll(-1)
+        MF.OrderListen()        
+    end
+    -- term.setCursorPos(1, 1)
+    -- term.clearLine()
+    -- term.scroll(-1)
 end
 
 return MF
