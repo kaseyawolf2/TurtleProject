@@ -373,8 +373,7 @@ function TF.RunClass(ClassName)
 end
 
 --Mining Functions
-function OrderListen()
-    
+function OrderListen()   
     term.clear()
     term.setCursorPos(1, 1)
     
@@ -384,19 +383,7 @@ function OrderListen()
         local DGPS = require("/LocalGit/APIs/DGPS")
 
         print(Message["X1"])
-        DGPS.StripMine(Message["X1"],Message["Z1"],67           ,Message["X1"],Message["Z2"],1)
-    ----DGPS.StripMine(StartX       ,StartZ       ,StartY       ,EndX         ,EndZ         ,EndY)
-
-        -- ID = 0,
-        -- X1 = 0,
-        -- X2 = 0,
-        -- Z1 = 0,
-        -- Z2 = 0,
-        -- Style = DefaultStyle,
-        -- Y = DefaultMiningY,
-        -- TunnelHeight = DefaultHeight,
-        -- Slices = {}
-
+        DGPS.StripMine(Message["X1"],Message["Z1"],67,Message["X1"],Message["Z2"],1)
 
         return
     end

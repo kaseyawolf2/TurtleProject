@@ -51,6 +51,13 @@ function LoadArea(ID)
         TunnelHeight = DefaultHeight,
         Slices = {}
     }
+    local DefaultSlice = {
+        X1 = 0,
+        X2 = 0,
+        Z1 = 0,
+        Z2 = 0,
+        Style = DefaultStyle
+    }
     --if gps connection then set x and z         
     if gps.locate(5) ~= nil then
         X,Y,Z = gps.locate(5)
@@ -557,17 +564,30 @@ function MiningAssignment(PageNum)
         local t1,t2,t3,t4 = ListMath(1)
         Page:add("Back", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
 
+
+        Area = LoadArea(ID)
+        AreaSlices = Area["Slices"]
+
+        
+        local Count = 0
+        t1,t2,t3,t4 = GridMath(4,3)
+        Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+        t1,t2,t3,t4 = GridMath(6,3)
+        Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+
+        t1,t2 = GridMath(5,3)
+        term.setCursorPos(t1, t2+1)
+        term.write(Count)
+
+
+
         t1,t2,t3,t4 = GridMath(3,3)
-        Page:add("All", function() rednet.broadcast(LoadArea(ID),"TestingOrder") end, t1, t2, t3, t4, colors.red, colors.lime)
+        Page:add("Send", function() rednet.broadcast(,"TestingOrder") end, t1, t2, t3, t4, colors.red, colors.lime)
 
-        -- t1,t2,t3,t4 = GridMath(4,3)
-        -- Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
-        -- t1,t2,t3,t4 = GridMath(6,3)
-        -- Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
 
-        -- t1,t2 = GridMath(5,3)
-        -- term.setCursorPos(t1, t2+1)
-        -- term.write(X1)
+
+
+
 
         --# draw the buttons
         Page:draw()

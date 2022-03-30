@@ -62,11 +62,11 @@ Minium Viable Product
                 * XYZ Movement *
                 * Travel Height *
         Mine
-            Recieve Area To Mine
+            -Recieve Area To Mine-
             Deposit Ores at Set Site
     Mainframe
         Areas
-            Stripmine
+            -Stripmine-
                 Even Distubion between Turtles
         Ore Deposit Site
 
