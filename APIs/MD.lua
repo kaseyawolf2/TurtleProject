@@ -580,25 +580,39 @@ function MiningAssignment(PageNum)
             XSpan = Area["X2"] - Area["X1"]            
             ZSpan = Area["Z2"] - Area["Z1"] 
 
-            SliceX = XSpan / Count
-            SliceZ = ZSpan / Count
+            SliceX = math.floor(XSpan / Count)
+            SliceZ = math.floor(ZSpan / Count)
 
             LSliceX1 = Area["X1"]
             LSliceZ1 = Area["Z1"]
-            for i=1,Count do
+            Area["Slices"] = {}
+            for X=1,Count do
                 LSliceX1 = LSliceX1
-                LSliceZ1 = LSliceZ1
-                LSliceX2 = LSliceX1 + SliceX
-                LSliceZ2 = LSliceZ1 + SliceZ
-                local CurSlice = {
-                    X1 = LSliceX1
-                    Z1 = LSliceZ1
-                    X2 = LSliceX2
-                    Z2 = LSliceZ2
-                }
-                table.insert(Area["Slices"], CurSlice)
-                LSliceX1 = LSliceX2 + 1
-                LSliceZ1 = LSliceZ2 + 1
+                if i ~= Count then
+                    LSliceX2 = LSliceX1 + SliceX
+                else
+                    LSliceX2 = Area["X2"]
+                end
+                for Z=1,Count do
+                    term.setCursorPos(1, 1)
+
+                    LSliceZ1 = LSliceZ1
+                    if i ~= Count then
+                        LSliceZ2 = LSliceZ1 + SliceZ
+                    else
+                        LSliceZ2 = Area["Z2"]
+                    end
+                    local CurSlice = {
+                        X1 = LSliceX1,
+                        Z1 = LSliceZ1,
+                        X2 = LSliceX2,
+                        Z2 = LSliceZ2
+                    }
+                    table.insert(Area["Slices"], CurSlice)
+                    print(#Area["Slices"])
+                    LSliceX1 = LSliceX2 + 1
+                    LSliceZ1 = LSliceZ2 + 1
+                end
             end
         end
 
