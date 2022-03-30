@@ -122,23 +122,4 @@ function MF.SendMessage(Message,Protocol)
     rednet.broadcast(Message , Protocol)
 end
 
---Turtle Functions
-function MF.OrderListen()
-    print("Mainframe Online")
-    local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
-    if Protocol == "MineOrder" then
-        print("Mine Order from " .. Sender .. " for " .. tostring(Message))
-
-    else
-        print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
-        term.setCursorPos(1, 1)
-        term.clearLine()
-        term.scroll(-1)
-        MF.OrderListen()        
-    end
-    -- term.setCursorPos(1, 1)
-    -- term.clearLine()
-    -- term.scroll(-1)
-end
-
 return MF

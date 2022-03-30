@@ -558,16 +558,16 @@ function MiningAssignment(PageNum)
         Page:add("Back", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
 
         t1,t2,t3,t4 = GridMath(3,3)
-        Page:add("All", function() X1 = X1 + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+        Page:add("All", function() rednet.broadcast(LoadArea(ID),"TestingOrder") end, t1, t2, t3, t4, colors.red, colors.lime)
 
-        t1,t2,t3,t4 = GridMath(4,3)
-        Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
-        t1,t2,t3,t4 = GridMath(6,3)
-        Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+        -- t1,t2,t3,t4 = GridMath(4,3)
+        -- Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+        -- t1,t2,t3,t4 = GridMath(6,3)
+        -- Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
 
-        t1,t2 = GridMath(5,3)
-        term.setCursorPos(t1, t2+1)
-        term.write(X1)
+        -- t1,t2 = GridMath(5,3)
+        -- term.setCursorPos(t1, t2+1)
+        -- term.write(X1)
 
         --# draw the buttons
         Page:draw()
