@@ -566,32 +566,61 @@ function MiningAssignment(PageNum)
 
 
         Area = LoadArea(ID)
-        AreaSlices = Area["Slices"]
 
         
-        local Count = 0
+        local Count = 1
         t1,t2,t3,t4 = GridMath(4,3)
         Page:add("Num-", function() Count = Count - 1 end, t1, t2, t3, t4, colors.red, colors.lime)
         t1,t2,t3,t4 = GridMath(6,3)
         Page:add("Num+", function() Count = Count + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+        if Count < 1 then Count = 1 end
+        
 
-        t1,t2 = GridMath(5,3)
-        term.setCursorPos(t1, t2+1)
-        term.write(Count)
+        function Slice(Count)
+            XSpan = Area["X2"] - Area["X1"]            
+            ZSpan = Area["Z2"] - Area["Z1"] 
 
+            SliceX = XSpan / Count
+            SliceZ = ZSpan / Count
 
+            LSliceX1 = Area["X1"]
+            LSliceZ1 = Area["Z1"]
+            for i=1,Count do
+                LSliceX1 = LSliceX1
+                LSliceZ1 = LSliceZ1
+                LSliceX2 = LSliceX1 + SliceX
+                LSliceZ2 = LSliceZ1 + SliceZ
+                local CurSlice = {
+                    X1 = LSliceX1
+                    Z1 = LSliceZ1
+                    X2 = LSliceX2
+                    Z2 = LSliceZ2
+                }
+                table.insert(Area["Slices"], CurSlice)
+                LSliceX1 = LSliceX2 + 1
+                LSliceZ1 = LSliceZ2 + 1
+            end
+        end
 
         t1,t2,t3,t4 = GridMath(3,3)
-        Page:add("Send", function() rednet.broadcast(,"TestingOrder") end, t1, t2, t3, t4, colors.red, colors.lime)
-
-
-
-
-
+        Page:add("Send", function() Slice(Count) end, t1, t2, t3, t4, colors.red, colors.lime)
 
         --# draw the buttons
         Page:draw()
+        
+        function DrawText()
+            term.setBackgroundColor(colors.black)
+            term.setTextColor(colors.white)
+            
+            t1,t2 = GridMath(5,3)
+            term.setCursorPos(t1, t2+1)
+            term.write("     ") -- removes the left over numbers
+            term.setCursorPos(t1, t2+1)
+            term.write(tostring(Count))
+        end
+
         while true do 
+            DrawText()
             local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
             if event == "button_click" then
                 
@@ -600,6 +629,7 @@ function MiningAssignment(PageNum)
                     Page.buttonList[p1].func()
                 end
             end
+            if Count < 1 then Count = 1 end
         end
     end
     AvilSpace = math.floor(MonY / 4) - 3

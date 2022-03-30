@@ -66,7 +66,7 @@ Minium Viable Product
             Deposit Ores at Set Site
     Mainframe
         Areas
-            -Stripmine-
+            - Stripmine - 
                 Even Distubion between Turtles
         Ore Deposit Site
 
