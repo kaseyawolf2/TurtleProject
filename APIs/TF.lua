@@ -389,7 +389,6 @@ function TF.OrderListen()
     if Protocol == "TestingOrder" then
         print("Orders Recived")
         local DGPS = require("/LocalGit/APIs/DGPS")
-
         --DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
         DGPS.StripMine(Message,1)
         return

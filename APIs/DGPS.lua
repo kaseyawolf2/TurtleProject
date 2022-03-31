@@ -317,16 +317,18 @@ end
 -- Mining
 --function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
 function DGPS.StripMine(Area,Slice)
-    --Make sure that starts are smaller then the end
-
+    term.clear()
+    print(Area)
+    
     StartX = Area["Slices"][Slice]["X1"] 
     StartZ = Area["Slices"][Slice]["Z1"]
     StartY = 67
     EndX = Area["Slices"][Slice]["X2"]
     EndZ = Area["Slices"][Slice]["Z2"]
     EndY = 1
-
-
+    
+    
+    --Make sure that starts are smaller then the end
     if StartX > EndX then
         local temp = EndX
         EndX = StartX
