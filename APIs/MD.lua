@@ -614,6 +614,7 @@ function MiningAssignment(PageNum)
                     LSliceZ1 = LSliceZ2 + 1
                 end
             end
+            rednet.broadcast(Area, "TestingOrder")
         end
 
         t1,t2,t3,t4 = GridMath(3,3)
