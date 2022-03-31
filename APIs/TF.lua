@@ -373,19 +373,22 @@ function TF.RunClass(ClassName)
 end
 
 --Mining Functions
-function OrderListen()   
+function TF.OrderListen()   
     term.clear()
     term.setCursorPos(1, 1)
+    print("Awaiting Orders")
     
     local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
     
     if Protocol == "TestingOrder" then
+        print("Orders Recived")
         local DGPS = require("/LocalGit/APIs/DGPS")
 
-        print(Message["X1"])
-        DGPS.StripMine(Message["X1"],Message["Z1"],67,Message["X1"],Message["Z2"],1)
+        DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
 
         return
+    else
+        TF.OrderListen() 
     end
 end
 
