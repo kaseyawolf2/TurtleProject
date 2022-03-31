@@ -319,11 +319,11 @@ end
 function DGPS.StripMine(Area,Slice)
     --Make sure that starts are smaller then the end
 
-    StartX = Message["Slices"][Slice]["X1"] 
-    StartZ = Message["Slices"][Slice]["Z1"]
+    StartX = Area["Slices"][Slice]["X1"] 
+    StartZ = Area["Slices"][Slice]["Z1"]
     StartY = 67
-    EndX = Message["Slices"][Slice]["X2"]
-    EndZ = Message["Slices"][Slice]["Z2"]
+    EndX = Area["Slices"][Slice]["X2"]
+    EndZ = Area["Slices"][Slice]["Z2"]
     EndY = 1
 
 
@@ -346,7 +346,7 @@ function DGPS.StripMine(Area,Slice)
         temp = nil
     end
      
-    DGPS.Goto(Message["Deposits"]["X"],Message["Deposits"]["Y"]+1,Message["Deposits"]["Z"],70)
+    DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
     for i=1,16 do
         turtle.select(i)
         turtle.dropDown()
