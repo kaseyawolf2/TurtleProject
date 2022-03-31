@@ -49,7 +49,8 @@ function LoadArea(ID)
         Style = DefaultStyle,
         Y = DefaultMiningY,
         TunnelHeight = DefaultHeight,
-        Slices = {}
+        Slices = {},
+        Deposits={}
     }
     local DefaultSlice = {
         X1 = 0,
@@ -303,6 +304,8 @@ function MiningPanel()
         local t1,t2,t3,t4 = ListMath(3)
         Page:add("Mining Areas", MiningAreasList, t1, t2, t3, t4, colors.red, colors.lime)
         local t1,t2,t3,t4 = ListMath(4)
+        Page:add("Ore Dropoff", MiningDepositList , t1, t2, t3, t4, colors.red, colors.lime)
+        local t1,t2,t3,t4 = ListMath(5)
         Page:add("Assignments", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
     -- draw the buttons
     Page:draw()
@@ -555,6 +558,169 @@ function MiningAreasList(PageNum)
         end
     end
     
+end
+function MiningDepositList(PageNum)
+    function MiningDepositPanel(ID)
+        Area = LoadArea(ID)
+        function LoadToVars()
+            -- body
+            if Area["Deposits"] == {} then
+                X,Y,Z = gps.locate(5)
+            end
+            X = Area["Deposits"]["X"]
+            Z = Area["Deposits"]["Z"]
+            Y = Area["Deposits"]["Y"]
+            
+            Delta = 1
+        end
+        
+        function Save()
+            Area["Deposits"]["X"] = X
+            Area["Deposits"]["Z"] = Z
+            Area["Deposits"]["Y"] = Y
+            SaveArea(ID,Area)
+        end
+
+        LoadToVars()
+        -- intialize button set on the monitor
+        local Page = newPage(peripheral.getName(monitor))
+        
+        --# Drawing
+            --# Init Buttons
+                local t1,t2,t3,t4 = ListMath(1)
+                Page:add("Back", MiningAreasList, t1,t2,t3,t4, colors.red, colors.lime)
+
+                --XMin
+                t1,t2,t3,t4 = GridMath(1,3)
+                Page:add("X-", function() X = X - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(3,3)
+                Page:add("X+", function() X = X + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                --ZMin
+                t1,t2,t3,t4 = GridMath(1,4)
+                Page:add("Z-", function() Z = Z - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(3,4)
+                Page:add("Z+", function() Z = Z + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                --XMax
+                t1,t2,t3,t4 = GridMath(5,3)
+                Page:add("Y-", function() Y = Y - Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(7,3)
+                Page:add("Y+", function() Y = Y + Delta end, t1, t2, t3, t4, colors.red, colors.lime)
+                    
+                --ΔChange
+                t1,t2,t3,t4 = GridMath(1,5)
+                Page:add("-1", function() Delta = Delta - 1  if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(2,5)
+                Page:add("-10", function() Delta = Delta - 10  if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(3,5)
+                Page:add("-100", function() Delta = Delta - 100 if Delta < 0 then Delta = 0 end end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(5,5)
+                Page:add("+100", function() Delta = Delta + 100 end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(6,5)
+                Page:add("+10", function() Delta = Delta + 10 end, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(7,5)
+                Page:add("+1", function() Delta = Delta + 1 end, t1, t2, t3, t4, colors.red, colors.lime)
+
+
+
+                t1,t2,t3,t4 = GridMath(1,6)
+                Page:add("Save", Save, t1, t2, t3, t4, colors.red, colors.lime)
+                t1,t2,t3,t4 = GridMath(2,6)
+                Page:add("Reset", LoadToVars, t1, t2, t3, t4, colors.red, colors.lime)
+
+            --                 
+            Page:draw() --Draw seems to Clear term before drawing
+            function DrawText()
+                term.setBackgroundColor(colors.black)
+                term.setTextColor(colors.white)
+                --Coord 1
+                t1,t2 = GridMath(2,2)
+                term.setCursorPos(t1, t2+2)
+                term.write("Coords 1")
+                --Current Area
+                t1,t2 = GridMath(3,2)
+                term.setCursorPos(t1+1, t2+1)
+                term.write("Current Area:")
+                t1,t2 = GridMath(4,2)
+                term.setCursorPos(t1+1, t2+2)
+                term.write(Area["ID"])
+                --Coord 2
+                t1,t2 = GridMath(5,2)
+                term.setCursorPos(t1, t2+2)
+                term.write("Coords 2")
+                --Current Delta Change
+                t1,t2 = GridMath(4,5)
+                term.setCursorPos(t1, t2+1)
+                term.write(Delta)
+                --Current XMin 
+                t1,t2 = GridMath(2,3)
+                term.setCursorPos(t1, t2+1)
+                term.write(X)
+                --Current ZMin 
+                t1,t2 = GridMath(2,4)
+                term.setCursorPos(t1, t2+1)
+                term.write(Z)
+                --Current XMin 
+                t1,t2 = GridMath(6,3)
+                term.setCursorPos(t1, t2+1)
+                term.write(Y)
+            end
+            DrawText()
+        --
+        while true do 
+            DrawText()
+            local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+            if event == "button_click" then
+                
+                
+                
+                if Page.buttonList[p1].func ~= nil then
+                    Page.buttonList[p1].func()
+                end
+            end
+        end
+        
+    end
+
+    AvilSpace = math.floor(MonY / 4) - 4
+    TotalAreas = #fs.find("/Knowledge/MineAreas/*")
+    if PageNum == nil then PageNum = 0 end 
+    if PageNum < 0 then PageNum = 0 end 
+    if PageNum >= TotalAreas then PageNum = TotalAreas -1  end
+    
+    -- intialize button set on the monitor
+    local Page = newPage(peripheral.getName(monitor))
+    --# add buttons
+        local t1,t2,t3,t4 = ListMath(1)
+        Page:add("Back", MiningPanel, t1, t2, t3, t4, colors.red, colors.lime)
+        t1,t2,t3,t4 = ListMath(2)
+        Page:add("Up", function() MiningDepositList(PageNum-1) end, t1, t2, t3, t4, colors.red, colors.lime)
+        if AvilSpace <= TotalAreas then
+            AreasToPrint = AvilSpace
+        else
+            AreasToPrint = TotalAreas
+        end
+        for i=1,AreasToPrint do
+            t1,t2,t3,t4 = ListMath(i+2)
+            if i+PageNum <= TotalAreas then
+                Page:add(tostring(i+PageNum), function() MiningDepositPanel(i+PageNum) end, t1, t2, t3, t4, colors.red, colors.lime)
+            end
+        end
+        t1,t2,t3,t4 = ListMath(AvilSpace+3)
+        Page:add("Down", function() MiningDepositList(PageNum+1) end, t1, t2, t3, t4, colors.red, colors.lime)
+        t1,t2,t3,t4 = ListMath(AvilSpace+4)
+        Page:add("New Deposit", function() MiningDepositPanel(TotalAreas+1) end, t1, t2, t3, t4, colors.red, colors.lime)
+
+    --#
+    -- draw the buttons
+    Page:draw()
+    while true do 
+        local event, p1 = Page:handleEvents(os.pullEvent())   ---button_click, name
+        if event == "button_click" then
+            if Page.buttonList[p1].func ~= nil then
+                Page.buttonList[p1].func()
+            end
+        end
+    end
 end
 function MiningAssignment(PageNum)
     function AssignmentPanel(ID)
