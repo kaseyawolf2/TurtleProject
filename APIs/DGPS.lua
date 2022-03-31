@@ -315,8 +315,18 @@ function DGPS.Goto(x,y,z,Travelheight)
 end
  
 -- Mining
-function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
+--function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
+function DGPS.StripMine(Area,Slice)
     --Make sure that starts are smaller then the end
+
+    StartX = Message["Slices"][Slice]["X1"] 
+    StartZ = Message["Slices"][Slice]["Z1"]
+    StartY = 67
+    EndX = Message["Slices"][Slice]["X2"]
+    EndZ = Message["Slices"][Slice]["Z2"]
+    EndY = 1
+
+
     if StartX > EndX then
         local temp = EndX
         EndX = StartX
@@ -335,6 +345,14 @@ function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
         StartY = temp
         temp = nil
     end
+     
+    DGPS.Goto(Message["Deposits"]["X"],Message["Deposits"]["Y"]+1,Message["Deposits"]["Z"],70)
+    for i=1,16 do
+        turtle.select(i)
+        turtle.dropDown()
+    end
+
+
     DGPS.Goto(StartX,StartY,StartZ,70)
     print("Arrived at Quarry")
     for curY=StartY,EndY, -1 do

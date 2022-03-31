@@ -213,6 +213,12 @@ function TF.PullItemToSelf(FromInv, FromSlot, Number, ToSlot)
     return true
 end
 
+function TF.GetInvCount()
+    for i=1,16 do
+        
+    end
+end
+
 -- Interactions
 function TF.Equip(Item)
     if Item == "modem" then -- only equipment that can go to the left
@@ -384,8 +390,8 @@ function TF.OrderListen()
         print("Orders Recived")
         local DGPS = require("/LocalGit/APIs/DGPS")
 
-        DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
-
+        --DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
+        DGPS.StripMine(Message,1)
         return
     else
         TF.OrderListen() 
