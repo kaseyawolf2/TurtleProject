@@ -392,7 +392,7 @@ function TF.OrderListen()
         --DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
 
         --ask for a split to mine
-        rednet.send(Sender, Message["ID"] ,"MineSlotRequest")
+        rednet.send(Sender, Message ,"MineSlotRequest")
 
         local ResponceSender, ResponceMessage, ResponceProtocol = rednet.receive("MineSlotAssignment")
 
