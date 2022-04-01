@@ -20,7 +20,8 @@ if GF ~= nil and MF ~= nil then -- APIs are required
     MasterMainframeID = nil
     MyID = os.getComputerID()
     while true do
-        MF.ListenRespond()
+        parallel.waitForAll(MF.Listen, MF.Respond)
+        
     end
     read()
     -- while true do

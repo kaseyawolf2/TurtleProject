@@ -39,6 +39,9 @@ while not gpsConnection do
     
 end
 
+rednet.close()
+rednet.open(peripheral.getName(peripheral.find("modem")))
+
 DGPS.Start()
 --DGPS.Goto(-1918,68,1531,67)
 --DGPS.StripMine(-1935,1540,67,-1925,1550,1)

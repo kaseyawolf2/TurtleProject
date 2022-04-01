@@ -1,5 +1,7 @@
 local MF = {}
 
+
+MessageQueue = {}
 --Mainframes Functions
 function MF.BackupMode()
     local function ListenForFailure()
@@ -69,59 +71,129 @@ function MF.BootMainframe()
     term.clear()
 end
 
+function MF.Listen()
+    --while true do
+        --term.setCursorPos(1, 1)
+        print("Mainframe Online")
+        --Listen
+        local Event1, Sender1, Message1, Protocol1 = os.pullEvent("rednet_message")
+        print("Message from " .. Sender1)
+        local MessagePackage = {Event = Event1,Sender = Sender1,Message = Message1, Protocol = Protocol1}
+        table.insert(MessageQueue,MessagePackage)
+        print("Message Queue now : " .. #MessageQueue)
+    --end
+end
+
+function MF.Respond()
+    --while true do
+        if #MessageQueue > 0 then
+
+            local MessagePackage = table.remove(MessageQueue,1)
+            local Event =   MessagePackage["Event"]
+            local Sender =  MessagePackage["Sender"]
+            local Message = MessagePackage["Message"]
+            local Protocol =MessagePackage["Protocol"]
+
+
+            if Protocol == "MineSlotRequest" then
+                local MD = require("/LocalGit/APIs/MD")
+                local Area = MD.LoadArea(Message)
+                CurAssigned = Area["SlicesAssigned"]
+                AssignNum = 1 + CurAssigned
+                Area["SlicesAssigned"] = AssignNum
+                print("Assigning " .. AssignNum ..  " To " .. Sender)
+                rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+
+                MD.SaveArea(Area["ID"],Area)
+            else
+                print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
+            end
+        else 
+            print("Message Queue now : " .. #MessageQueue)
+
+        end
+    --end
+end
+
+
 function MF.ListenRespond()
     while true do
         term.setCursorPos(1, 1)
         print("Mainframe Online")
-        local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
-        if Protocol == "KnowledgeRequest" then
-            print("Knowledge Request from " .. Sender .. " for " .. tostring(Message))
-
-            
-
-        elseif Protocol == "KnowledgeUpload" then
-            SaveKnowledge(Message)
-            print("Knowledge from " .. Sender .. " for " .. tostring(Message["Result"]["Itemname"]))
-
-
-
-
-        elseif Protocol == "KnowledgeSync" then
-            
-
-
-        elseif Protocol == "MainframeRequest" then
-            print("Mainframe Request from " .. Sender)
-            rednet.send(Sender, "Im The Mainframe" ,"MainframeResponce")
-
-
-
-        elseif Protocol == "MainframeOnline" then
-            print("Mainframe Online from " .. Sender)
-            rednet.send(Sender, "Im The Mainframe" ,"MainframeOnline")
-
-
-
-        elseif Protocol == "MainframeFail" then
-            print("Mainframe Failure Detected")                
-
-
-        elseif Protocol == "MineSlotRequest" then
-            local MD = require("/LocalGit/APIs/MD")
-
-            AssignNum = 1 + Message["SlicesAssigned"]
-            Message["SlicesAssigned"] = 1 + Message["SlicesAssigned"]
-
-            rednet.send(Sender, AssignNum ,"MineSlotAssignment")
-
-            MD.SaveArea(Message["ID"],Message)
-        else
-            print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
-        end
+        --Listen
+        local Event1, Sender1, Message1, Protocol1 = os.pullEvent("rednet_message")
         term.setCursorPos(1, 1)
         term.clearLine()
         term.scroll(-1)
+        print("Message from " .. Sender1)
+        local MessagePackage = {Event = Event1,Sender = Sender1,Message = Message1, Protocol = Protocol1}
+        table.insert(MessageQueue,MessagePackage)
+
+
     end
+
+
+    --     --Respond 
+        
+
+
+
+    --     --local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
+    --     MessagePackage = table.remove(MessageQueue,1)
+    --     local Event = MessagePackage["Event"]
+    --     local Sender =MessagePackage["Sender"]
+    --     local Message =MessagePackage["Message"]
+    --     local Protocol = MessagePackage["Protocol"]
+
+    --     if Protocol == "KnowledgeRequest" then
+    --         print("Knowledge Request from " .. Sender .. " for " .. tostring(Message))
+
+            
+
+    --     elseif Protocol == "KnowledgeUpload" then
+    --         SaveKnowledge(Message)
+    --         print("Knowledge from " .. Sender .. " for " .. tostring(Message["Result"]["Itemname"]))
+
+
+
+
+    --     elseif Protocol == "KnowledgeSync" then
+            
+
+
+    --     elseif Protocol == "MainframeRequest" then
+    --         print("Mainframe Request from " .. Sender)
+    --         rednet.send(Sender, "Im The Mainframe" ,"MainframeResponce")
+
+
+
+    --     elseif Protocol == "MainframeOnline" then
+    --         print("Mainframe Online from " .. Sender)
+    --         rednet.send(Sender, "Im The Mainframe" ,"MainframeOnline")
+
+
+
+    --     elseif Protocol == "MainframeFail" then
+    --         print("Mainframe Failure Detected")                
+
+
+    --     elseif Protocol == "MineSlotRequest" then
+    --         local MD = require("/LocalGit/APIs/MD")
+
+    --         AssignNum = 1 + Message["SlicesAssigned"]
+    --         Message["SlicesAssigned"] = 1 + Message["SlicesAssigned"]
+
+    --         print("Assigning " .. AssignNum ..  " To " .. Sender)
+    --         rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+
+    --         MD.SaveArea(Message["ID"],Message)
+    --     else
+    --         print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
+    --     end
+    --     term.setCursorPos(1, 1)
+    --     term.clearLine()
+    --     term.scroll(-1)
+    -- end
 end
 
 

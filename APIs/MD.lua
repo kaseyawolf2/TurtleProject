@@ -39,7 +39,7 @@ function ListMath(Y)
 end
 
 --Area Functions
-function LoadArea(ID)
+function MD.LoadArea(ID)
     local DefaultArea = {
         ID = 0,
         X1 = 0,
@@ -93,7 +93,7 @@ function LoadArea(ID)
         return DefaultArea
     end
 end
-function SaveArea(ID,AreaInfo)
+function MD.SaveArea(ID,AreaInfo)
     --X1/Z1 should always be the smaller number
     if AreaInfo["X1"] > AreaInfo["X2"] then
         local Tx1 = AreaInfo["X2"]
@@ -110,7 +110,7 @@ function SaveArea(ID,AreaInfo)
     local FResults = fs.open("/Knowledge/MineAreas/"..ID , "w" )
     FResults.write(textutils.serialize(AreaInfo))
     FResults.close()
-    SliceArea(AreaInfo)
+    --SliceArea(AreaInfo)
 end
 function SliceArea(AreaInfo)
     local SlicedArea = AreaInfo
@@ -335,7 +335,7 @@ function MiningStylesPanel(ID)
     if ID == nil then
        Style = DefaultStyle
     else
-        Area = LoadArea(ID)
+        Area = MD.LoadArea(ID)
         Style = Area["Style"]
     end
 
@@ -381,7 +381,7 @@ function MiningStylesPanel(ID)
 end
 function MiningAreasList(PageNum)
     function MiningAreaPanel(ID)
-        Area = LoadArea(ID)
+        Area = MD.LoadArea(ID)
         if Area ~= false then
             X1 = Area["X1"]
             Z1 = Area["Z1"]
@@ -403,7 +403,7 @@ function MiningAreasList(PageNum)
             NewArea["Z1"] = Z1
             NewArea["X2"] = X2
             NewArea["Z2"] = Z2
-            SaveArea(ID,NewArea)
+            MD.SaveArea(ID,NewArea)
         end
 
         -- intialize button set on the monitor
@@ -572,7 +572,7 @@ function MiningAreasList(PageNum)
 end
 function MiningDepositList(PageNum)
     function MiningDepositPanel(ID)
-        Area = LoadArea(ID)
+        Area = MD.LoadArea(ID)
         function LoadToVars()
             -- body
             if Area["Deposits"] == {} then
@@ -589,7 +589,7 @@ function MiningDepositList(PageNum)
             Area["Deposits"]["X"] = X
             Area["Deposits"]["Z"] = Z
             Area["Deposits"]["Y"] = Y
-            SaveArea(ID,Area)
+            MD.SaveArea(ID,Area)
         end
 
         LoadToVars()
@@ -742,7 +742,7 @@ function MiningAssignment(PageNum)
         Page:add("Back", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
 
 
-        Area = LoadArea(ID)
+        Area = MD.LoadArea(ID)
 
         
         local Count = 1
@@ -801,7 +801,7 @@ function MiningAssignment(PageNum)
                 LSliceX1 = LSliceX2 + 1
             end
             rednet.broadcast(Area, "TestingOrder")
-            SaveArea(ID,Area)
+            MD.SaveArea(ID,Area)
         end
 
         t1,t2,t3,t4 = GridMath(3,3)
@@ -908,7 +908,7 @@ function StripmineType()
             if ID == nil then
                 DefaultStyle = Style
             else
-                Area = LoadArea(ID)
+                Area = MD.LoadArea(ID)
                 Area["Style"] = Style
             end
             if Page.buttonList[p1].func ~= nil then
@@ -920,7 +920,7 @@ function StripmineType()
 end
 function TunnelMineType()
     if ID ~= nil then
-        local Area = LoadArea(ID)
+        local Area = MD.LoadArea(ID)
         TempMiningY = Area["Y"]
     else
         TempMiningY = DefaultMiningY
@@ -957,7 +957,7 @@ function TunnelMineType()
                 else
                     Area["Style"] = "Tunnel-Standard"
                     Area["Y"] = TempMiningY
-                    SaveArea(ID,Area)
+                    MD.SaveArea(ID,Area)
                 end
             elseif p1 == "Y+" then
                 TempMiningY = TempMiningY + 1
@@ -977,9 +977,9 @@ function TunnelMineType()
             if ID == nil then
                 DefaultStyle = Style
             else
-                Area = LoadArea(ID)
+                Area = MD.LoadArea(ID)
                 Area["Style"] = Style
-                SaveArea(ID,Area)
+                MD.SaveArea(ID,Area)
             end
             if Page.buttonList[p1].func ~= nil then
                 Page.buttonList[p1].func()
@@ -1012,7 +1012,7 @@ function WaterType()
             if ID == nil then
                 DefaultStyle = Style
             else
-                Area = LoadArea(ID)
+                Area = MD.LoadArea(ID)
                 Area["Style"] = Style
             end
             if Page.buttonList[p1].func ~= nil then
