@@ -50,6 +50,7 @@ function LoadArea(ID)
         Y = DefaultMiningY,
         TunnelHeight = DefaultHeight,
         Slices = {},
+        SlicesAssigned = 0,
         Deposits={}
     }
     local DefaultSlice = {

@@ -106,6 +106,17 @@ function MF.ListenRespond()
             print("Mainframe Failure Detected")                
 
 
+        elseif Protocol == "MineSlotRequest" then
+
+            local MD = require("/LocalGit/APIs/MD")
+
+            local Area = MD.LoadArea(ID)
+
+            AssignNum = 1 + Area["SlicesAssigned"]
+            Area["SlicesAssigned"] = 1 + Area["SlicesAssigned"]
+
+            rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+
 
         else
             print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))

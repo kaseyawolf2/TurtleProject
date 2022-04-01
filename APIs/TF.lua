@@ -390,8 +390,13 @@ function TF.OrderListen()
         print("Orders Recived")
         local DGPS = require("/LocalGit/APIs/DGPS")
         --DGPS.StripMine(Message["Slices"][1]["X1"],Message["Slices"][1]["Z1"],67,Message["Slices"][1]["X2"],Message["Slices"][1]["Z2"],1)
-        DGPS.StripMine(Message,1)
-        return
+
+        --ask for a split to mine
+        rednet.send(Sender, Message["ID"] ,"MineSlotRequest")
+
+        local ResponceSender, ResponceMessage, ResponceProtocol = rednet.receive("MineSlotAssignment")
+
+        DGPS.StripMine(Message,ResponceMessage)
     else
         TF.OrderListen() 
     end
