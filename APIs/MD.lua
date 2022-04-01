@@ -51,7 +51,11 @@ function LoadArea(ID)
         TunnelHeight = DefaultHeight,
         Slices = {},
         SlicesAssigned = 0,
-        Deposits={}
+        Deposits = {
+            X = 0,
+            Y = 0,
+            Z = 0
+        }
     }
     local DefaultSlice = {
         X1 = 0,
@@ -62,11 +66,17 @@ function LoadArea(ID)
     }
     --if gps connection then set x and z         
     if gps.locate(5) ~= nil then
-        X,Y,Z = gps.locate(5)
+        local X
+        local Y
+        local Z
+        X, Y, Z = gps.locate(5)
         DefaultArea["X1"] = X
         DefaultArea["X2"] = X
         DefaultArea["Z1"] = Z
         DefaultArea["Z2"] = Z
+        DefaultArea["Deposits"]["X"] = X
+        DefaultArea["Deposits"]["Y"] = Y
+        DefaultArea["Deposits"]["Z"] = Z
     end
 
 
@@ -589,7 +599,7 @@ function MiningDepositList(PageNum)
         --# Drawing
             --# Init Buttons
                 local t1,t2,t3,t4 = ListMath(1)
-                Page:add("Back", MiningAreasList, t1,t2,t3,t4, colors.red, colors.lime)
+                Page:add("Back", MiningDepositList, t1,t2,t3,t4, colors.red, colors.lime)
 
                 --XMin
                 t1,t2,t3,t4 = GridMath(1,3)
