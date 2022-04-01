@@ -10,6 +10,7 @@ local DGPS_GPSConn = false
 local DGPS_UpdateFeq = 50
 local DGPS_TimeSinceUpdate = 0
 local DGPS_Travelheight = 100
+local DGPS_DEBUG_LOGGING = False
 
 function DGPS.Start() -- get gps using other computers
     if gps.locate(5) == nil then
@@ -182,7 +183,7 @@ function DGPS.FaceDir(Dir)
     if TurnNum == 3 or TurnNum == -3 then
         TurnNum = TurnNum/-3
     end
-    print(TurnNum)
+    --print(TurnNum)
     
     if TurnNum > 0 then
         for i=1,TurnNum do
@@ -195,7 +196,7 @@ function DGPS.FaceDir(Dir)
         end
     end
 
-    PrintDir()
+    --PrintDir()
 end
 
 function FindFaceDir()
@@ -236,88 +237,100 @@ function FindFaceDir()
 end
 
 function DGPS.Goto(x,y,z,Travelheight)
-        -- if not connected to GPS then wiil be relative to the turtle
-        -- get the Delta Change
-        if DGPS_GPSConn then
-            Dx = x - DGPS_xPos 
-            Dy = y - DGPS_yPos 
-            Dz = z - DGPS_zPos 
+    if DGPS_DEBUG_LOGGING then 
+        term.clear()
+        term.setCursorPos(1,1)
+    end
+    if DGPS_DEBUG_LOGGING then 
+    
+    end
+    -- if not connected to GPS then wiil be relative to the turtle
+    -- get the Delta Change
+    if DGPS_GPSConn then
+        Dx = x - DGPS_xPos 
+        Dy = y - DGPS_yPos 
+        Dz = z - DGPS_zPos 
+        if DGPS_DEBUG_LOGGING then 
             print("Movement Delta X:"..Dx.." | Y:"..Dy.." | Z:"..Dz )
-        else
-            Dx = x 
-            Dy = y 
-            Dz = z
+        end
+    else
+        Dx = x 
+        Dy = y 
+        Dz = z
+        if DGPS_DEBUG_LOGGING then
             print("Moving X:"..Dx.." | Y:"..Dy.." | Z:"..Dz )
         end
-        -- Set Default travel height (default 100)
-        if Travelheight == nil then -- if travel height was given travel there
-            Travelheight = DGPS_Travelheight
-        end
+    end
+    -- Set Default travel height (default 100)
+    if Travelheight == nil then -- if travel height was given travel there
+        Travelheight = DGPS_Travelheight
+    end
+    if DGPS_DEBUG_LOGGING then 
         print("traveling at y:".. Travelheight)
-
-        -- Get to Travel height
-        if DGPS_yPos < Travelheight then -- is the turtle below the travel height
-            Dth = Travelheight - DGPS_yPos  -- subtract the current height 
-            for i = 1, Dth do -- go up the difference
-                DGPS.up()
-                Dy = Dy - 1
-            end
-        elseif DGPS_yPos > Travelheight then
-            Dth = DGPS_yPos - Travelheight
-            for i = 1, Dth do -- go down the difference
-                DGPS.down() 
-                Dy = Dy + 1
-            end 
+    end
+    -- Get to Travel height
+    if DGPS_yPos < Travelheight then -- is the turtle below the travel height
+        Dth = Travelheight - DGPS_yPos  -- subtract the current height 
+        for i = 1, Dth do -- go up the difference
+            DGPS.up()
+            Dy = Dy - 1
         end
+    elseif DGPS_yPos > Travelheight then
+        Dth = DGPS_yPos - Travelheight
+        for i = 1, Dth do -- go down the difference
+            DGPS.down() 
+            Dy = Dy + 1
+        end 
+    end
 
 
 
-        --Move X
-        if Dx > 0 then
-            DGPS.FaceDir("East")
-            for i = 1, Dx do -- go down the difference
-                DGPS.forward() 
-            end 
-        elseif Dx < 0 then
-            DGPS.FaceDir("West")
-            Dx = Dx * -1
-            for i = 1, Dx do -- go down the difference
-                DGPS.forward()
-            end 
-        end
+    --Move X
+    if Dx > 0 then
+        DGPS.FaceDir("East")
+        for i = 1, Dx do -- go down the difference
+            DGPS.forward() 
+        end 
+    elseif Dx < 0 then
+        DGPS.FaceDir("West")
+        Dx = Dx * -1
+        for i = 1, Dx do -- go down the difference
+            DGPS.forward()
+        end 
+    end
 
-        --Move Z
-        if Dz > 0 then
-            DGPS.FaceDir("South")
-            for i = 1, Dz do -- go down the difference
-                DGPS.forward() 
-            end 
-        elseif Dz < 0 then
-            DGPS.FaceDir("North")
-            Dz = Dz * -1
-            for i = 1, Dz do -- go down the difference
-                DGPS.forward()
-            end 
-        end
+    --Move Z
+    if Dz > 0 then
+        DGPS.FaceDir("South")
+        for i = 1, Dz do -- go down the difference
+            DGPS.forward() 
+        end 
+    elseif Dz < 0 then
+        DGPS.FaceDir("North")
+        Dz = Dz * -1
+        for i = 1, Dz do -- go down the difference
+            DGPS.forward()
+        end 
+    end
 
-        --Move Y
-        if Dy > 0 then
-            for i = 1, Dy do -- go down the difference
-                DGPS.up() 
-            end 
-        elseif Dy < 0 then
-            Dy = Dy * -1
-            for i = 1, Dy do -- go down the difference
-                DGPS.down() 
-            end 
-        end
-
+    --Move Y
+    if Dy > 0 then
+        for i = 1, Dy do -- go down the difference
+            DGPS.up() 
+        end 
+    elseif Dy < 0 then
+        Dy = Dy * -1
+        for i = 1, Dy do -- go down the difference
+            DGPS.down() 
+        end 
+    end
 end
  
 -- Mining
 --function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
 function DGPS.StripMine(Area,Slice)
     term.clear()
+    term.setCursorPos(1,1)
     print(Area)
     
     StartX = Area["Slices"][Slice]["X1"] 
@@ -347,21 +360,32 @@ function DGPS.StripMine(Area,Slice)
         StartY = temp
         temp = nil
     end
-     
-    DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
+    CT = 0
     for i=1,16 do
-        turtle.select(i)
-        turtle.dropDown()
+        CT = CT + turtle.getItemCount(i)
+    end
+    if CT ~= 0 then
+        DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
+        for i=1,16 do
+            turtle.select(i)
+            turtle.dropDown()
+        end
     end
 
 
     DGPS.Goto(StartX,StartY,StartZ,70)
     print("Arrived at Quarry")
+    term.clear()
+    term.setCursorPos(1,1)
     for curY=StartY,EndY, -1 do
+        term.clear()
+        term.setCursorPos(1,1)
         print("Layer " .. curY .." Of " .. EndY)
         for curX=StartX,EndX do
+            term.setCursorPos(1,2)
             print("Row " .. curX .." Of " .. EndX)
             for curZ=StartZ,EndZ do
+                term.setCursorPos(1,3)
                 print("Col " .. curZ .." Of " .. EndZ)
                 DGPS.Goto(curX,curY,curZ,curY)
                 turtle.digDown()
