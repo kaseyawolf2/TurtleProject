@@ -753,21 +753,30 @@ function MiningAssignment(PageNum)
             LSliceZ1 = Area["Z1"]
             Area["Slices"] = {}
             for X=1,Count do
-                LSliceX1 = LSliceX1
-                if i ~= Count then
-                    LSliceX2 = LSliceX1 + SliceX
-                else
+
+                if X == 1 then 
+                    LSliceX1 = Area["X1"]
+                end
+
+                LSliceX2 = LSliceX1 + SliceX
+                
+                if X == Count then 
                     LSliceX2 = Area["X2"]
                 end
+                    
                 for Z=1,Count do
                     term.setCursorPos(1, 1)
 
-                    LSliceZ1 = LSliceZ1
-                    if i ~= Count then
-                        LSliceZ2 = LSliceZ1 + SliceZ
-                    else
+                    if Z == 1 then 
+                        LSliceZ1 = Area["Z1"]
+                    end
+
+                    LSliceZ2 = LSliceZ1 + SliceZ
+
+                    if Z == Count then 
                         LSliceZ2 = Area["Z2"]
                     end
+
                     local CurSlice = {
                         X1 = LSliceX1,
                         Z1 = LSliceZ1,
@@ -776,10 +785,11 @@ function MiningAssignment(PageNum)
                     }
                     table.insert(Area["Slices"], CurSlice)
                     print(#Area["Slices"])
-                    LSliceX1 = LSliceX2 + 1
                     LSliceZ1 = LSliceZ2 + 1
                 end
+                LSliceX1 = LSliceX2 + 1
             end
+            SaveArea(ID,Area)
             rednet.broadcast(Area, "TestingOrder")
         end
 
