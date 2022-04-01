@@ -331,7 +331,6 @@ end
 function DGPS.StripMine(Area,Slice)
     term.clear()
     term.setCursorPos(1,1)
-    print(Area)
     
     StartX = Area["Slices"][Slice]["X1"] 
     StartZ = Area["Slices"][Slice]["Z1"]
@@ -360,10 +359,13 @@ function DGPS.StripMine(Area,Slice)
         StartY = temp
         temp = nil
     end
+
+
     CT = 0
     for i=1,16 do
         CT = CT + turtle.getItemCount(i)
     end
+
     if CT ~= 0 then
         DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
         for i=1,16 do
