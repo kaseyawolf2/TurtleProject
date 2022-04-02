@@ -53,6 +53,7 @@ Bug List
 - = Partially Impemented
 
 Minimum Viable Product
+```
     Turtle
         - DGPS- 
             - Entry point - Works but needs refinement for non perfect start
@@ -70,6 +71,7 @@ Minimum Viable Product
             - Stripmine - 
                 * Even Distubion between Turtles * --Each slice is assigned 1 turtle
         - Ore Deposit Site -
+```
 
 Milestone 0
 
@@ -77,6 +79,7 @@ Milestone 0
 
 
 Milestone 1
+```
     Mainframe
         Send out Update Commands
         More Mining Styles
@@ -86,38 +89,44 @@ Milestone 1
         Listen for Update Commands
         Courier Turtles
             Transfer from dig site to Main Storage
+```
 
 Milestone 2
+```
     Mainframe
         Download Turtle updates and send it out over rednet 
         Multi Mainframes/Backups
     Turtles
         Return to Home 
         GPS deploying
+```
 
 Milestone 3
+```
     Turtles
         Crafting
             Self Replication
         Starter Turtle
             Build 1 and have it mine till its able to craft a gps system and mainframe
-
+```
 
 
 Refinements
+```
     Turtles
         Optimize Turning to Dir
             Right now it turns left till its face the correct dir even if 1 right would do the same
     Mainframe
         Encripted messages
         Custom Message Channels to keep spam down
-
+```
 
 
 
 
 
 Wish List
+```
     Add Ownership
 
     Installer
@@ -232,4 +241,4 @@ Wish List
         Send Commands to turtles
         Revoke old Commands / Edit them 
 
-
+```
