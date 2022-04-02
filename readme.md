@@ -73,14 +73,10 @@ Minimum Viable Product
         - Ore Deposit Site -
 ```
 
-Milestone 0
-
-
-
-
 Milestone 1
 ```
     Mainframe
+        
         Send out Update Commands
         More Mining Styles
         Stats

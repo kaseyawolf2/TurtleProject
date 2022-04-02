@@ -105,6 +105,26 @@ function MF.Respond()
                 rednet.send(Sender, AssignNum ,"MineSlotAssignment")
 
                 MD.SaveArea(Area["ID"],Area)
+
+
+            elseif Protocol == "MineRequest" then
+                local MD = require("/LocalGit/APIs/MD")
+
+                -- 
+                local Area = MD.LoadArea(1)
+
+                
+                CurAssigned = Area["SlicesAssigned"]
+
+
+                AssignNum = 1 + CurAssigned
+                Area["SlicesAssigned"] = AssignNum
+                print("Assigning " .. AssignNum ..  " To " .. Sender)
+                rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+
+                MD.SaveArea(Area["ID"],Area)
+
+                
             else
                 print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
             end
