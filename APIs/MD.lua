@@ -112,7 +112,7 @@ function MD.SaveArea(ID,AreaInfo)
     FResults.close()
     --SliceArea(AreaInfo)
 end
-function SliceArea(AreaInfo)
+function SliceAreaOld(AreaInfo)
     local SlicedArea = AreaInfo
     Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
 
@@ -206,6 +206,62 @@ function SliceArea(AreaInfo)
         error("Unknown Style : ".. Format.. " "..Type)
     end
     SlicedArea["Slices"] = Slices
+end
+
+function SliceArea(ID,Count)
+    Area = MD.LoadArea(ID)
+    
+
+    if Area["Style"] == "EvenSplit" then
+        XSpan = Area["X2"] - Area["X1"]            
+        ZSpan = Area["Z2"] - Area["Z1"] 
+
+        SliceX = math.floor(XSpan / Count)
+        SliceZ = math.floor(ZSpan / Count)
+
+        LSliceX1 = Area["X1"]
+        LSliceZ1 = Area["Z1"]
+        Area["Slices"] = {}
+        for X=1,Count do
+
+            if X == 1 then 
+                LSliceX1 = Area["X1"]
+            end
+
+            LSliceX2 = LSliceX1 + SliceX
+            
+            if X == Count then 
+                LSliceX2 = Area["X2"]
+            end
+                
+            for Z=1,Count do
+                term.setCursorPos(1, 1)
+
+                if Z == 1 then 
+                    LSliceZ1 = Area["Z1"]
+                end
+
+                LSliceZ2 = LSliceZ1 + SliceZ
+
+                if Z == Count then 
+                    LSliceZ2 = Area["Z2"]
+                end
+
+                local CurSlice = {
+                    X1 = LSliceX1,
+                    Z1 = LSliceZ1,
+                    X2 = LSliceX2,
+                    Z2 = LSliceZ2
+                }
+                table.insert(Area["Slices"], CurSlice)
+                print(#Area["Slices"])
+                LSliceZ1 = LSliceZ2 + 1
+            end
+            LSliceX1 = LSliceX2 + 1
+        end
+    end
+    rednet.broadcast(Area, "TestingOrder")
+    MD.SaveArea(ID,Area)
 end
 
 --Start Page
@@ -742,7 +798,7 @@ function MiningAssignment(PageNum)
         Page:add("Back", MiningAssignment, t1, t2, t3, t4, colors.red, colors.lime)
 
 
-        Area = MD.LoadArea(ID)
+        -- Area = MD.LoadArea(ID)
 
         
         local Count = 1
@@ -753,59 +809,59 @@ function MiningAssignment(PageNum)
         if Count < 1 then Count = 1 end
         
 
-        function Slice(Count)
-            XSpan = Area["X2"] - Area["X1"]            
-            ZSpan = Area["Z2"] - Area["Z1"] 
+        -- function Slice(Count)
+        --     XSpan = Area["X2"] - Area["X1"]            
+        --     ZSpan = Area["Z2"] - Area["Z1"] 
 
-            SliceX = math.floor(XSpan / Count)
-            SliceZ = math.floor(ZSpan / Count)
+        --     SliceX = math.floor(XSpan / Count)
+        --     SliceZ = math.floor(ZSpan / Count)
 
-            LSliceX1 = Area["X1"]
-            LSliceZ1 = Area["Z1"]
-            Area["Slices"] = {}
-            for X=1,Count do
+        --     LSliceX1 = Area["X1"]
+        --     LSliceZ1 = Area["Z1"]
+        --     Area["Slices"] = {}
+        --     for X=1,Count do
 
-                if X == 1 then 
-                    LSliceX1 = Area["X1"]
-                end
+        --         if X == 1 then 
+        --             LSliceX1 = Area["X1"]
+        --         end
 
-                LSliceX2 = LSliceX1 + SliceX
+        --         LSliceX2 = LSliceX1 + SliceX
                 
-                if X == Count then 
-                    LSliceX2 = Area["X2"]
-                end
+        --         if X == Count then 
+        --             LSliceX2 = Area["X2"]
+        --         end
                     
-                for Z=1,Count do
-                    term.setCursorPos(1, 1)
+        --         for Z=1,Count do
+        --             term.setCursorPos(1, 1)
 
-                    if Z == 1 then 
-                        LSliceZ1 = Area["Z1"]
-                    end
+        --             if Z == 1 then 
+        --                 LSliceZ1 = Area["Z1"]
+        --             end
 
-                    LSliceZ2 = LSliceZ1 + SliceZ
+        --             LSliceZ2 = LSliceZ1 + SliceZ
 
-                    if Z == Count then 
-                        LSliceZ2 = Area["Z2"]
-                    end
+        --             if Z == Count then 
+        --                 LSliceZ2 = Area["Z2"]
+        --             end
 
-                    local CurSlice = {
-                        X1 = LSliceX1,
-                        Z1 = LSliceZ1,
-                        X2 = LSliceX2,
-                        Z2 = LSliceZ2
-                    }
-                    table.insert(Area["Slices"], CurSlice)
-                    print(#Area["Slices"])
-                    LSliceZ1 = LSliceZ2 + 1
-                end
-                LSliceX1 = LSliceX2 + 1
-            end
-            rednet.broadcast(Area, "TestingOrder")
-            MD.SaveArea(ID,Area)
-        end
+        --             local CurSlice = {
+        --                 X1 = LSliceX1,
+        --                 Z1 = LSliceZ1,
+        --                 X2 = LSliceX2,
+        --                 Z2 = LSliceZ2
+        --             }
+        --             table.insert(Area["Slices"], CurSlice)
+        --             print(#Area["Slices"])
+        --             LSliceZ1 = LSliceZ2 + 1
+        --         end
+        --         LSliceX1 = LSliceX2 + 1
+        --     end
+        --     rednet.broadcast(Area, "TestingOrder")
+        --     MD.SaveArea(ID,Area)
+        -- end
 
         t1,t2,t3,t4 = GridMath(3,3)
-        Page:add("Send", function() Slice(Count) end, t1, t2, t3, t4, colors.red, colors.lime)
+        Page:add("Send", function() SliceArea(ID,Count)  end, t1, t2, t3, t4, colors.red, colors.lime)
 
         --# draw the buttons
         Page:draw()
