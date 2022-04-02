@@ -20,21 +20,8 @@ if GF ~= nil and MF ~= nil then -- APIs are required
     MasterMainframeID = nil
     MyID = os.getComputerID()
     while true do
-        parallel.waitForAll(MF.Listen, MF.Respond)
-        
+        parallel.waitForAll(MF.Listen, MF.Respond) 
     end
-    read()
-    -- while true do
-    --     MF.BootMainframe()
-    --     if MasterMainframeID == MyID then
-    --         MF.ListenRespond() 
-    --     else
-    --         term.clear()
-    --         term.setCursorPos(1, 1)
-    --         print("Mainframe in Backup Mode")
-    --         MF.BackupMode()
-    --     end
-    -- end
 else
     error("Requires GF and MF to be passed to Program")
 end
