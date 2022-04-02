@@ -7,9 +7,10 @@ and a turtle
 run the installer on both
 
 run
+''
     pastebin get wPbHNfDM Installer
     Installer
-
+''
 
 Tools Used or may use
 bbpack -- git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
@@ -51,7 +52,7 @@ Bug List
 * = Done
 - = Partially Impemented
 
-Minium Viable Product
+Minimum Viable Product
     Turtle
         - DGPS- 
             - Entry point - Works but needs refinement for non perfect start
@@ -71,7 +72,7 @@ Minium Viable Product
         - Ore Deposit Site -
 
 Milestone 0
-    
+
 
 
 
