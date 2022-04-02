@@ -49,31 +49,36 @@ Bug List
     responder keeps Restarting
 
 * = Done
-- = Works but with requirements
+- = Partially Impemented
 
 Minium Viable Product
     Turtle
         - DGPS- 
             - Entry point - Works but needs refinement for non perfect start
                 * Get the turtle setup for use * 
-                GPS Detection of settings
+                GPS Detection of settings?? not sure what i ment by this
                 if no GPS get user input
             * Goto *
                 * XYZ Movement *
                 * Travel Height *
         Mine
             - Recieve Area To Mine -
-            Deposit Ores at Set Site
+            - Deposit Ores at Set Site -  only deposites at start
     Mainframe
         Areas
             - Stripmine - 
-                Even Distubion between Turtles
+                * Even Distubion between Turtles * --Each slice is assigned 1 turtle
         - Ore Deposit Site -
+
+Milestone 0
+    
+
+
 
 Milestone 1
     Mainframe
         Send out Update Commands
-        Mining Styles
+        More Mining Styles
         Stats
             Connected Turtles
     Turtles
