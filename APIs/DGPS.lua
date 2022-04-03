@@ -331,6 +331,18 @@ end
 function DGPS.StripMine(Area,Slice)
     term.clear()
     term.setCursorPos(1,1)
+
+    if Area == nil then
+        error("DGPS Needs Area Arg")
+    else
+        if Area["ID"] == nil then
+            --no ID but area isnt nil then assume its a number
+            Area = 
+
+        end
+    end
+
+
     
     StartX = Area["Slices"][Slice]["X1"] 
     StartZ = Area["Slices"][Slice]["Z1"]
