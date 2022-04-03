@@ -179,6 +179,7 @@ end
 
 function AF.SliceArea(AreaID,Count)
     Area = AF.LoadArea(AreaID)
+    Area["Slices"] = {}
 
     if Area["Style"] == "EvenSplit" then
         --Get the Total Span of the X And Z
