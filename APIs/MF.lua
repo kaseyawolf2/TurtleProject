@@ -92,7 +92,7 @@ function MF.Respond()
 
         if Protocol == "MineSlotRequest" then
             local MD = require("/LocalGit/APIs/MD")
-            local Area = MD.LoadArea(Message)
+            local Area = AF.LoadArea(Message)
             CurAssigned = Area["SlicesAssigned"]
             AssignNum = 1 + CurAssigned
             Area["SlicesAssigned"] = AssignNum
@@ -106,7 +106,7 @@ function MF.Respond()
             local MD = require("/LocalGit/APIs/MD")
 
             -- 
-            local Area = MD.LoadArea(1)
+            local Area = AF.LoadArea(1)
 
             
             CurAssigned = Area["SlicesAssigned"]
