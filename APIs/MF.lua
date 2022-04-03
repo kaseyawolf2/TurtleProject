@@ -117,7 +117,7 @@ function MF.Respond()
             print("Assigning " .. AssignNum ..  " To " .. Sender)
 
             
-            Pack = {Area = Area["ID"], Slice = AssignNum}
+            Pack = {Area = AF.LoadArea(Area["ID"]), Slice = AssignNum}
             
             AF.SaveArea(Area["ID"],Area)
             

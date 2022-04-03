@@ -330,12 +330,13 @@ end
  
 -- Mining
 --function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
-function DGPS.StripMine(AreaID,Slice)
+function DGPS.StripMine(Area,Slice)
     term.clear()
     term.setCursorPos(1,1)
+    
+    print("Assigned Slice " .. Slice .. " of ".. #Area["Slices"])
+    
 
-    Area = AF.LoadArea(AreaID)
-    print("Assigned Slice " .. Slice)
     
     StartX = Area["Slices"][Slice]["X1"] 
     StartZ = Area["Slices"][Slice]["Z1"]
