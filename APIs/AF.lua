@@ -200,6 +200,10 @@ function AF.SliceArea(AreaID,Count)
             -- Add the Slice Size to Start Coords to get the End Coords
             LSliceX2 = LSliceX1 + SliceX
             
+            if X == 1 then 
+                LSliceX1 = Area["X1"]
+            end
+            
             --If the last slice set End Coords to the Area end
             if X == Count then 
                 LSliceX2 = Area["X2"]
@@ -209,6 +213,9 @@ function AF.SliceArea(AreaID,Count)
             for Z=1,Count do
                 --Increment the ID
                 CurSliceID = CurSliceID + 1
+                if Z == 1 then 
+                    LSliceZ1 = Area["Z1"]
+                end
 
                 -- Add the Slice Size to Start Coords to get the End Coords
                 LSliceZ2 = LSliceZ1 + SliceZ
