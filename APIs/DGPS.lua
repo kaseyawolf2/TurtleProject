@@ -366,20 +366,24 @@ function DGPS.StripMine(Area,Slice)
         temp = nil
     end
 
-
-    CT = 0
-    for i=1,16 do
-        CT = CT + turtle.getItemCount(i)
-    end
-
-    if CT ~= 0 then
-        DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
+    function Check_Inv()
+        FreeSlots = 0
         for i=1,16 do
-            turtle.select(i)
-            turtle.dropDown()
+            if turtle.getItemCount(i) == 0 then
+                FreeSlots = FreeSlots + 1
+            end 
         end
-    end
 
+        if FreeSlots < 10 then
+            DGPS.Goto(Area["Deposits"]["X"],Area["Deposits"]["Y"]+1,Area["Deposits"]["Z"],70)
+            for i=1,16 do
+                turtle.select(i)
+                turtle.dropDown()
+            end
+        end
+
+    end
+    Check_Inv()
 
     DGPS.Goto(StartX,StartY,StartZ,70)
     print("Arrived at Quarry")
@@ -397,6 +401,7 @@ function DGPS.StripMine(Area,Slice)
                 print("Col " .. curZ .." Of " .. EndZ)
                 DGPS.Goto(curX,curY,curZ,curY)
                 turtle.digDown()
+                Check_Inv()
             end
         end
     end
