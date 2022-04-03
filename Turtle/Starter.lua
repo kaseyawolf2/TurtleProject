@@ -1,4 +1,4 @@
---GF = require("/LocalGit/APIs/GF")
+GF = require("/LocalGit/APIs/GF")
 DGPS = require("/LocalGit/APIs/DGPS")
 TF = require("/LocalGit/APIs/TF")
 
@@ -64,7 +64,7 @@ end
 
 --DGPS.Goto(-1918,68,1531,67)
 --DGPS.StripMine(-1935,1540,67,-1925,1550,1)
-rednet.send(Sender, AssignNum ,"MineRequest")
+--rednet.send(Sender, AssignNum ,"MineRequest")
 TF.OrderListen() 
 
 --Connect to GPS System
