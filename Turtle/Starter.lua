@@ -63,7 +63,7 @@ end
 --DGPS.Goto(-1918,68,1531,67)
 --DGPS.StripMine(-1935,1540,67,-1925,1550,1)
 --TF.OrderListen() 
-rednet.send("0", AssignNum ,"MineRequest")
+rednet.send("0", "AssignNum" ,"MineRequest")
 
 --Connect to GPS System
     --If no GPS Download GPS Builder and build One
