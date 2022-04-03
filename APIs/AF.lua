@@ -178,7 +178,7 @@ function SliceAreaOld(AreaInfo)
 end
 
 function AF.SliceArea(AreaID,Count)
-    Area = AF.LoadArea(ID)
+    Area = AF.LoadArea(AreaID)
 
     if Area["Style"] == "EvenSplit" then
         --Get the Total Span of the X And Z
@@ -236,7 +236,7 @@ function AF.SliceArea(AreaID,Count)
         end
     end
     --rednet.broadcast(Area, "TestingOrder")
-    AF.SaveArea(ID,Area)
+    AF.SaveArea(AreaID,Area)
 end
 
 
