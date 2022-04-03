@@ -32,37 +32,36 @@ end
 
 --Area Functions
 function AF.LoadArea(ID)
-    function AF.LoadArea(ID)
-        local DefaultArea = NewAreaTable()
-    
-    
-    
-        --if gps connection then set x and z         
-        if gps.locate(5) ~= nil then
-            local X, Y, Z = gps.locate(5)
-            DefaultArea["X1"] = X
-            DefaultArea["X2"] = X
-            DefaultArea["Z1"] = Z
-            DefaultArea["Z2"] = Z
-            DefaultArea["Deposits"]["X"] = X
-            DefaultArea["Deposits"]["Y"] = Y
-            DefaultArea["Deposits"]["Z"] = Z
-        end
-    
-    
-        if fs.exists("/Knowledge/MineAreas/"..ID) then
-            local AreaInfo = {}
-            local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
-            local LResults = FResults.readAll()
-            FResults.close()
-            local AreaInfo = textutils.unserialize(LResults)
-            return AreaInfo
-        else
-            DefaultArea["ID"] = #fs.find("/Knowledge/MineAreas/*")+1
-    
-            return DefaultArea
-        end
+    local DefaultArea = NewAreaTable()
+
+
+
+    --if gps connection then set x and z         
+    if gps.locate(5) ~= nil then
+        local X, Y, Z = gps.locate(5)
+        DefaultArea["X1"] = X
+        DefaultArea["X2"] = X
+        DefaultArea["Z1"] = Z
+        DefaultArea["Z2"] = Z
+        DefaultArea["Deposits"]["X"] = X
+        DefaultArea["Deposits"]["Y"] = Y
+        DefaultArea["Deposits"]["Z"] = Z
     end
+
+
+    if fs.exists("/Knowledge/MineAreas/"..ID) then
+        local AreaInfo = {}
+        local FResults = fs.open("/Knowledge/MineAreas/"..ID , "r" )
+        local LResults = FResults.readAll()
+        FResults.close()
+        local AreaInfo = textutils.unserialize(LResults)
+        return AreaInfo
+    else
+        DefaultArea["ID"] = #fs.find("/Knowledge/MineAreas/*")+1
+
+        return DefaultArea
+    end
+end
 function AF.SaveArea(ID,AreaInfo)
     --X1/Z1 should always be the smaller number
     if AreaInfo["X1"] > AreaInfo["X2"] then
