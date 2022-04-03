@@ -399,7 +399,7 @@ function TF.Respond()
 
         if Protocol == "MineSlotAssignment" then
             local DGPS = require("/LocalGit/APIs/DGPS")
-            DGPS.StripMine(Message,ResponceMessage)
+            DGPS.StripMine(Message["Area"],Message["Slice"])
 
         elseif Protocol == "TurtleUpdate" then
             sleep(math.random(5)) -- fine until update over rednet is ready
