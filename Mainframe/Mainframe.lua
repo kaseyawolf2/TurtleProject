@@ -14,6 +14,8 @@ while not HasWireless do
     if ModList ~= nil then
         if ModList.isWireless() then
             HasWireless = true
+            rednet.close()
+            rednet.open(peripheral.getName(peripheral.find("modem")))
         end
     else
         print("Please Attach a Wireless Modem")

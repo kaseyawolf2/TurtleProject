@@ -15,6 +15,8 @@ while not HasWireless do
     if ModList ~= nil then
         if ModList.isWireless() then
             HasWireless = true
+            rednet.close()
+            rednet.open(peripheral.getName(peripheral.find("modem")))
         end
     else
         if not TF.Equip("modem") then
@@ -38,9 +40,6 @@ while not gpsConnection do
     
 end
 
-rednet.close()
-rednet.open(peripheral.getName(peripheral.find("modem")))
-
 DGPS.Start()
 
 
@@ -63,8 +62,8 @@ end
 
 --DGPS.Goto(-1918,68,1531,67)
 --DGPS.StripMine(-1935,1540,67,-1925,1550,1)
---rednet.send(Sender, AssignNum ,"MineRequest")
-TF.OrderListen() 
+--TF.OrderListen() 
+rednet.send("0", AssignNum ,"MineRequest")
 
 --Connect to GPS System
     --If no GPS Download GPS Builder and build One
