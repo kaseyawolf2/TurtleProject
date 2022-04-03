@@ -12,6 +12,11 @@ run
     Installer
 ```
 
+Update
+```
+    LocalGit/Installer/installer.lua
+```
+
 Tools Used or may use
 bbpack -- git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
     pastebin get cUYTGbpb bbpack        

@@ -115,10 +115,13 @@ function MF.Respond()
             AssignNum = 1 + CurAssigned
             Area["SlicesAssigned"] = AssignNum
             print("Assigning " .. AssignNum ..  " To " .. Sender)
-            Pack = {Area = Area, Slice = AssignNum}
-            rednet.send(Sender, Pack ,"MineSlotAssignment")
 
+            
+            Pack = {Area = Area["ID"], Slice = AssignNum}
+            
             MD.SaveArea(Area["ID"],Area)
+            
+            rednet.send(Sender, Pack ,"MineSlotAssignment")
 
             
         else

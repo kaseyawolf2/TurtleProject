@@ -330,19 +330,11 @@ end
  
 -- Mining
 --function DGPS.StripMine(StartX,StartZ,StartY,EndX,EndZ,EndY)
-function DGPS.StripMine(Area,Slice)
+function DGPS.StripMine(AreaID,Slice)
     term.clear()
     term.setCursorPos(1,1)
 
-    if Area == nil then
-        error("DGPS Needs Area Arg")
-    else
-        if Area["ID"] == nil then
-            --no ID but area isnt nil then assume its a number
-            Area = AF.LoadArea(Area)
-        end
-    end
-
+    Area = AF.LoadArea(AreaID)
 
     
     StartX = Area["Slices"][Slice]["X1"] 
