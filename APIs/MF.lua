@@ -99,7 +99,7 @@ function MF.Respond()
             print("Assigning " .. AssignNum ..  " To " .. Sender)
             rednet.send(Sender, AssignNum ,"MineSlotAssignment")
 
-            MD.SaveArea(Area["ID"],Area)
+            AF.SaveArea(Area["ID"],Area)
 
 
         elseif Protocol == "MineRequest" then
@@ -119,7 +119,7 @@ function MF.Respond()
             
             Pack = {Area = Area["ID"], Slice = AssignNum}
             
-            MD.SaveArea(Area["ID"],Area)
+            AF.SaveArea(Area["ID"],Area)
             
             rednet.send(Sender, Pack ,"MineSlotAssignment")
 
@@ -204,7 +204,7 @@ function MF.ListenRespond()
     --         print("Assigning " .. AssignNum ..  " To " .. Sender)
     --         rednet.send(Sender, AssignNum ,"MineSlotAssignment")
 
-    --         MD.SaveArea(Message["ID"],Message)
+    --         AF.SaveArea(Message["ID"],Message)
     --     else
     --         print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
     --     end

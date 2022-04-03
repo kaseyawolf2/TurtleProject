@@ -234,7 +234,7 @@ function MiningAreasList(PageNum)
             NewArea["Z1"] = Z1
             NewArea["X2"] = X2
             NewArea["Z2"] = Z2
-            MD.SaveArea(ID,NewArea)
+            AF.SaveArea(ID,NewArea)
         end
 
         -- intialize button set on the monitor
@@ -420,7 +420,7 @@ function MiningDepositList(PageNum)
             Area["Deposits"]["X"] = X
             Area["Deposits"]["Z"] = Z
             Area["Deposits"]["Y"] = Y
-            MD.SaveArea(ID,Area)
+            AF.SaveArea(ID,Area)
         end
 
         LoadToVars()
@@ -584,7 +584,7 @@ function MiningAssignment(PageNum)
         if Count < 1 then Count = 1 end
 
         t1,t2,t3,t4 = GridMath(3,3)
-        Page:add("Slice", function() SliceArea(ID,Count)  end, t1, t2, t3, t4, colors.red, colors.lime)
+        Page:add("Slice", function() AF.SliceArea(ID,Count)  end, t1, t2, t3, t4, colors.red, colors.lime)
 
         --# draw the buttons
         Page:draw()
@@ -736,7 +736,7 @@ function TunnelMineType()
                 else
                     Area["Style"] = "Tunnel-Standard"
                     Area["Y"] = TempMiningY
-                    MD.SaveArea(ID,Area)
+                    AF.SaveArea(ID,Area)
                 end
             elseif p1 == "Y+" then
                 TempMiningY = TempMiningY + 1
@@ -758,7 +758,7 @@ function TunnelMineType()
             else
                 Area = AF.LoadArea(ID)
                 Area["Style"] = Style
-                MD.SaveArea(ID,Area)
+                AF.SaveArea(ID,Area)
             end
             if Page.buttonList[p1].func ~= nil then
                 Page.buttonList[p1].func()
