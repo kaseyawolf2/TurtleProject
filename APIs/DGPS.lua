@@ -12,6 +12,8 @@ local DGPS_TimeSinceUpdate = 0
 local DGPS_Travelheight = 100
 local DGPS_DEBUG_LOGGING = False
 
+AF = require("/LocalGit/APIs/AF")
+
 function DGPS.Start() -- get gps using other computers
     if gps.locate(5) == nil then
         -- Ask for current Cords
@@ -337,8 +339,7 @@ function DGPS.StripMine(Area,Slice)
     else
         if Area["ID"] == nil then
             --no ID but area isnt nil then assume its a number
-            Area = 
-
+            Area = AF.LoadArea(Area)
         end
     end
 
