@@ -378,6 +378,39 @@ function TF.RunClass(ClassName)
     end
 end
 
+function TF.Listen()
+    --Listen for Message
+    local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
+    --Package Message
+    local MessagePackage = {Event = Event,Sender = Sender,Message = Message, Protocol = Protocol}
+    --Add package to table
+    table.insert(MessageQueue,MessagePackage)
+end
+
+function TF.Respond()
+    if #MessageQueue > 0 then
+
+        local MessagePackage = table.remove(MessageQueue,1)
+        local Event =   MessagePackage["Event"]
+        local Sender =  MessagePackage["Sender"]
+        local Message = MessagePackage["Message"]
+        local Protocol =MessagePackage["Protocol"]
+
+
+        if Protocol == "MineSlotAssignment" then
+            local DGPS = require("/LocalGit/APIs/DGPS")
+            DGPS.StripMine(Message,ResponceMessage)
+
+
+        else
+            print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
+        end
+    else 
+        print("Message Queue now : " .. #MessageQueue)
+
+    end
+end
+
 --Mining Functions
 function TF.OrderListen()   
     term.clear()

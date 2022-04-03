@@ -72,67 +72,61 @@ function MF.BootMainframe()
 end
 
 function MF.Listen()
-    --while true do
-        --term.setCursorPos(1, 1)
-        print("Mainframe Online")
-        --Listen
-        local Event1, Sender1, Message1, Protocol1 = os.pullEvent("rednet_message")
-        print("Message from " .. Sender1)
-        local MessagePackage = {Event = Event1,Sender = Sender1,Message = Message1, Protocol = Protocol1}
-        table.insert(MessageQueue,MessagePackage)
-        print("Message Queue now : " .. #MessageQueue)
-    --end
+    --Listen for Message
+    local Event, Sender, Message, Protocol = os.pullEvent("rednet_message")
+    --Package Message
+    local MessagePackage = {Event = Event,Sender = Sender,Message = Message, Protocol = Protocol}
+    --Add package to table
+    table.insert(MessageQueue,MessagePackage)
 end
 
 function MF.Respond()
-    --while true do
-        if #MessageQueue > 0 then
+    if #MessageQueue > 0 then
 
-            local MessagePackage = table.remove(MessageQueue,1)
-            local Event =   MessagePackage["Event"]
-            local Sender =  MessagePackage["Sender"]
-            local Message = MessagePackage["Message"]
-            local Protocol =MessagePackage["Protocol"]
-
-
-            if Protocol == "MineSlotRequest" then
-                local MD = require("/LocalGit/APIs/MD")
-                local Area = MD.LoadArea(Message)
-                CurAssigned = Area["SlicesAssigned"]
-                AssignNum = 1 + CurAssigned
-                Area["SlicesAssigned"] = AssignNum
-                print("Assigning " .. AssignNum ..  " To " .. Sender)
-                rednet.send(Sender, AssignNum ,"MineSlotAssignment")
-
-                MD.SaveArea(Area["ID"],Area)
+        local MessagePackage = table.remove(MessageQueue,1)
+        local Event =   MessagePackage["Event"]
+        local Sender =  MessagePackage["Sender"]
+        local Message = MessagePackage["Message"]
+        local Protocol =MessagePackage["Protocol"]
 
 
-            elseif Protocol == "MineRequest" then
-                local MD = require("/LocalGit/APIs/MD")
+        if Protocol == "MineSlotRequest" then
+            local MD = require("/LocalGit/APIs/MD")
+            local Area = MD.LoadArea(Message)
+            CurAssigned = Area["SlicesAssigned"]
+            AssignNum = 1 + CurAssigned
+            Area["SlicesAssigned"] = AssignNum
+            print("Assigning " .. AssignNum ..  " To " .. Sender)
+            rednet.send(Sender, AssignNum ,"MineSlotAssignment")
 
-                -- 
-                local Area = MD.LoadArea(1)
-
-                
-                CurAssigned = Area["SlicesAssigned"]
+            MD.SaveArea(Area["ID"],Area)
 
 
-                AssignNum = 1 + CurAssigned
-                Area["SlicesAssigned"] = AssignNum
-                print("Assigning " .. AssignNum ..  " To " .. Sender)
-                rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+        elseif Protocol == "MineRequest" then
+            local MD = require("/LocalGit/APIs/MD")
 
-                MD.SaveArea(Area["ID"],Area)
+            -- 
+            local Area = MD.LoadArea(1)
 
-                
-            else
-                print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
-            end
-        else 
-            print("Message Queue now : " .. #MessageQueue)
+            
+            CurAssigned = Area["SlicesAssigned"]
 
+
+            AssignNum = 1 + CurAssigned
+            Area["SlicesAssigned"] = AssignNum
+            print("Assigning " .. AssignNum ..  " To " .. Sender)
+            rednet.send(Sender, AssignNum ,"MineSlotAssignment")
+
+            MD.SaveArea(Area["ID"],Area)
+
+            
+        else
+            print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
         end
-    --end
+    else 
+        print("Message Queue now : " .. #MessageQueue)
+
+    end
 end
 
 
