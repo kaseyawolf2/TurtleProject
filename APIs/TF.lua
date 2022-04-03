@@ -401,6 +401,8 @@ function TF.Respond()
             local DGPS = require("/LocalGit/APIs/DGPS")
             DGPS.StripMine(Message,ResponceMessage)
 
+        elseif Protocol == "TurtleUpdate" then
+            shell.run("/LocalGit/Installer/Installer.lua")
 
         else
             print("Unknown Message from " .. Sender .. " with Protocol " .. tostring(Protocol))
