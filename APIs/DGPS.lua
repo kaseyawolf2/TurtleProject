@@ -335,7 +335,7 @@ function DGPS.StripMine(AreaID,Slice)
     term.setCursorPos(1,1)
 
     Area = AF.LoadArea(AreaID)
-
+    print("Assigned Slice " .. Slice)
     
     StartX = Area["Slices"][Slice]["X1"] 
     StartZ = Area["Slices"][Slice]["Z1"]
