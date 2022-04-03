@@ -1,5 +1,5 @@
 local TF = {}
-
+MessageQueue = {}
 --Peripheral/Item Names (incase something changes )
 PeriDiskDrive = "computercraft:disk_drive"
 PeriFloppyDisk = "computercraft:disk"

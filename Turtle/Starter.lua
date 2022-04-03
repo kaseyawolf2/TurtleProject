@@ -1,7 +1,6 @@
 GF = require("/LocalGit/APIs/GF")
 DGPS = require("/LocalGit/APIs/DGPS")
 TF = require("/LocalGit/APIs/TF")
-MessageQueue = {}
 
 term.clear()
 print("Turtle Starter")
