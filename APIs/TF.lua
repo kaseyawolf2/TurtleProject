@@ -402,6 +402,7 @@ function TF.Respond()
             DGPS.StripMine(Message,ResponceMessage)
 
         elseif Protocol == "TurtleUpdate" then
+            sleep(math.random(5))
             shell.run("/LocalGit/Installer/Installer.lua")
 
         else
