@@ -1,48 +1,35 @@
+-- This is the installer for the TurtleProject
 term.clear()
 term.setCursorPos(1, 1)
--- download and set up BBpack as it has a github Downloader
-if not fs.exists("/LocalGit/ExternalPrograms/bbpack.lua") then -- if it has a local BBpack lets not download from pastebin
-    print("No BBpack Downloading Now")
-    shell.run("pastebin", "get", "cUYTGbpb","bbpack")
-else
+
+-- Check if BBpack is installed if not download it from paste bin
+if fs.exists("/LocalGit/ExternalPrograms/bbpack.lua") then
     print("BBpack Detected")
-    --Make a Copy of BBpack since were about to delete LocalGit
+    --Make a Copy of BBpack in the main directory 
     fs.copy("/LocalGit/ExternalPrograms/bbpack.lua","/bbpack")
+else
+    print("No copy of BBpack found, Downloading it Now")
+    shell.run("pastebin", "get", "cUYTGbpb","bbpack")
 end
---Mount Github Repo
-shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","/Install")
---Remove old files and make a local copy from the mounted Repo 
+
+--Mount Github Repo to the Git Folder
+shell.run("bbpack", "mount", "https://github.com/kaseyawolf2/TurtleProject","/Git")
+
+
+--Delete the old LocalGit
 fs.delete("/LocalGit")
-fs.copy("/Install/","/LocalGit")
+
+--Make a copy of the Github repo to the LocalGit Folder
+fs.copy("/Git/","/LocalGit")
+
+
 --Delete BBpack so less clutter
 fs.delete("bbpack")
 fs.delete(".bbpack.cfg")
--- Make the Mainframe run on Startup
-fs.delete("/Startup.lua")
-StartUp = [[
+
+--Move the Startup Folder from the LocalGit to the root directory
+fs.copy("/LocalGit/Startup","/Startup")
+
+--Delete the launcher program from the pastebin
 fs.delete("Installer")
-shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
-]]
-
-if periphemu then
-    StartUp = StartUp .. [[
-periphemu.create("top","monitor")
-shell.run("/LocalGit/Mainframe/MonitorInterface")  
-]]
-end
-
-if not turtle then -- check if a turtle or PC
-    StartUp = StartUp .. [[
-shell.setAlias("Mainframe", "/LocalGit/Mainframe/Mainframe.lua")
-shell.run("Mainframe")        
-]]
-else-- if a turtle
-    StartUp = StartUp .. [[
-shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
-shell.run("Starter")
-]]
-end 
-file = fs.open("/Startup.lua","w")
-file.write(StartUp)
-file.close()
 os.reboot()

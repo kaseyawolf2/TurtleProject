@@ -1,4 +1,9 @@
+Old Installer
 https://pastebin.com/wPbHNfDM
+
+
+New Installer
+https://pastebin.com/fmLrQ3Wq
 
 To Start
 
@@ -8,21 +13,26 @@ run the installer on both
 
 run
 ```
-    pastebin get wPbHNfDM Installer
+    pastebin get fmLrQ3Wq Installer
     Installer
 ```
 
 Update
 ```
     LocalGit/Installer/installer.lua
+    or (there should be an alias)
+    Update
 ```
 
-Tools Used or may use
-bbpack -- git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
+Libaries/Tools Used
+bbpack -- A Libary that will allow Computercraft computers/turtles to download programs from github instead of just pastebin
+    git hub get http://www.computercraft.info/forums2/index.php?/topic/21801-bbpack-pastebin-uploader-downloader/
     pastebin get cUYTGbpb bbpack        
-GPS System Builder --   https://pastebin.com/qLthLak5
+GPS System Builder -- A complete program that will build a gps constellation allowing GPS services to be used   https://pastebin.com/qLthLak5
     pastebin get qLthLak5 GPSbuild
 
+
+Documention 
 https://computercraft.info/wiki/Category:APIs
 https://tweaked.cc/
 
