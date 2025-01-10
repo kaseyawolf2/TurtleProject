@@ -2,16 +2,18 @@ if term.isColor() then -- if advanced
     if not multishell then -- Check if we can access multishell
         --If we cant access multishell then we are most likely in a multishell
         --If we are in a multishell, Require wont work
-        MD, AF = ... -- you need to pass them in to multi shell
+        MD, AF, touchpoint = ... -- you need to pass them in to multi shell
     else
         --not in a multishell so require the APIs 
         MD = require("/LocalGit/APIs/MD")
         AF = require("/LocalGit/APIs/AF")
+        touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
     end
 else
     --not in a advanced pc so just require the APIs 
     MD = require("/LocalGit/APIs/MD")
     AF = require("/LocalGit/APIs/AF")
+    touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 end
 
 -- Global variables
