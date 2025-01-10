@@ -1,6 +1,7 @@
 
 -- set an alias for the update command to the local git copy
 shell.setAlias("Update", "/LocalGit/Installer/Installer.lua")
+shell.setAlias("update", "/LocalGit/Installer/Installer.lua")
 
 
 -- If using CraftOS-PC (Computercraft emulator) then set up the monitor for it to use
