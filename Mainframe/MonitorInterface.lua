@@ -31,13 +31,12 @@ local MiningAreaPanel, StripmineType, TunnelMineType, WaterType
 -- Function to handle page drawing and event handling
 local function handlePage(Page)
     Page:draw()
-    while true do 
-        local event, p1 = os.pullEvent()
-        if event == "monitor_touch" then
-            local buttonEvent, buttonName = MD.handlePageEvents(Page)
-            if buttonEvent == "button_click" and Page.buttonList[buttonName].func then
-                Page.buttonList[buttonName].func()
-            end
+    while true do
+        local event, side, x, y = os.pullEvent("monitor_touch")
+        local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
+        if buttonEvent then
+            term.native().write(string.format("Button Event: %s, Button Name: %s, X: %d, Y: %d\n", buttonEvent, buttonName, x, y))
+            return buttonEvent, buttonName
         end
     end
 end
