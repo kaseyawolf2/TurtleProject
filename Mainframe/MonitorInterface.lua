@@ -1,18 +1,18 @@
 if term.isColor() then -- if advanced
-    if not multishell then -- and doesnt have access to Multishell 
-        --we are in a multishell so Require dont work
-        MD = ... -- you need to pass them in to multi shell
+    if not multishell then -- Check if we can access multishell
+        --If we cant access multishell then we are most likely in a multishell
+        --If we are in a multishell, Require wont work
+        MD, AF = ... -- you need to pass them in to multi shell
     else
-        --not in a muiltishell so require the APIs 
-        MD = require("/LocalGit/APIs/MD")
+        --not in a multishell so require the APIs 
+        MD = require("APIs/MD")
+        AF = require("APIs/AF")
     end
 else
     --not in a advanced pc so just require the APIs 
-    MD = require("/LocalGit/APIs/MD")
+    MD = require("APIs/MD")
+    AF = require("APIs/AF")
 end
-
--- Dependencies
-local AF = require("/LocalGit/APIs/AF")
 
 -- Global variables
 local monitor, MonX, MonY, FourPanX, FourPanY
