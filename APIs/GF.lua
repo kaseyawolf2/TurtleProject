@@ -1,4 +1,5 @@
 local GF = {}
+--GF? What does that stand for? I'm guessing it's short for "General Functions" or something like that.
 
 -- Make Crafting Knowledge Folder
 if not fs.isDir("/Knowledge/Crafting") then
