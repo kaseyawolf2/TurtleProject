@@ -32,9 +32,12 @@ local MiningAreaPanel, StripmineType, TunnelMineType, WaterType
 local function handlePage(Page)
     Page:draw()
     while true do 
-        local event, p1 = MD.handlePageEvents(Page)
-        if event == "button_click" and Page.buttonList[p1].func then
-            Page.buttonList[p1].func()
+        local event, p1 = os.pullEvent()
+        if event == "monitor_touch" then
+            local buttonEvent, buttonName = MD.handlePageEvents(Page)
+            if buttonEvent == "button_click" and Page.buttonList[buttonName].func then
+                Page.buttonList[buttonName].func()
+            end
         end
     end
 end

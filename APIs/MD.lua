@@ -62,8 +62,9 @@ function MD.getListMath(Y)
 end
 
 function MD.handlePageEvents(page)
-    local event, p1 = page:handleEvents(os.pullEvent())
-    return event, p1
+    local event, side, x, y = os.pullEvent("monitor_touch")
+    local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
+    return buttonEvent, buttonName
 end
 
 return MD
