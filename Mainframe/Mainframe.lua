@@ -1,8 +1,8 @@
 -- Get the General Functions
-GF = require("APIs/GF")
-MF = require("APIs/MF")
-MD = require("APIs/MD")
-AF = require("APIs/AF")
+GF = require("/LocalGit/APIs/GF")
+MF = require("/LocalGit/APIs/MF")
+MD = require("/LocalGit/APIs/MD")
+AF = require("/LocalGit/APIs/AF")
 
 os.setComputerLabel("Mainframe")
 
@@ -30,9 +30,9 @@ term.setCursorPos(1, 1)
 
 if term.isColor() then
     print("Advanced PC starting Network Coordinator in a new tab")
-    multishell.launch({},"Mainframe/NetworkCoordinator.lua",GF,AF,MF)
-    multishell.launch({},"Mainframe/MonitorInterface.lua",MD,AF)
+    multishell.launch({},"/LocalGit/Mainframe/NetworkCoordinator.lua",GF,MF)
+    multishell.launch({},"/LocalGit/Mainframe/MonitorInterface.lua",MD,AF)
 else
     print("Standard PC Starting Network Coordinator")
-    shell.run("Mainframe/NetworkCoordinator.lua")
+    shell.run("/LocalGit/Mainframe/NetworkCoordinator.lua")
 end

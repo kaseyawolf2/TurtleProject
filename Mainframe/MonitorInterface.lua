@@ -5,13 +5,13 @@ if term.isColor() then -- if advanced
         MD, AF = ... -- you need to pass them in to multi shell
     else
         --not in a multishell so require the APIs 
-        MD = require("APIs/MD")
-        AF = require("APIs/AF")
+        MD = require("/LocalGit/APIs/MD")
+        AF = require("/LocalGit/APIs/AF")
     end
 else
     --not in a advanced pc so just require the APIs 
-    MD = require("APIs/MD")
-    AF = require("APIs/AF")
+    MD = require("/LocalGit/APIs/MD")
+    AF = require("/LocalGit/APIs/AF")
 end
 
 -- Global variables

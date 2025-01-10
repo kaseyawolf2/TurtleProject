@@ -5,15 +5,15 @@ if term.isColor() then -- if advanced
         GF, AF, MD = ... -- you need to pass them in to multi shell
     else
         --not in a multishell so require the APIs 
-        GF = require("APIs/GF")
-        AF = require("APIs/AF")
-        MD = require("APIs/MD")
+        GF = require("/LocalGit/APIs/GF")
+        AF = require("/LocalGit/APIs/AF")
+        MD = require("/LocalGit/APIs/MD")
     end
 else
     --not in a advanced pc so just require the APIs 
-    GF = require("APIs/GF")
-    AF = require("APIs/AF")
-    MD = require("APIs/MD")
+    GF = require("/LocalGit/APIs/GF")
+    AF = require("/LocalGit/APIs/AF")
+    MD = require("/LocalGit/APIs/MD")
 end
 
 if GF ~= nil then -- APIs are required
