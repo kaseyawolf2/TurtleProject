@@ -28,6 +28,9 @@ fs.delete("bbpack")
 fs.delete(".bbpack.cfg")
 
 --Move the Startup Folder from the LocalGit to the root directory
+if fs.exists("/Startup") then
+    fs.delete("/Startup")
+end
 fs.copy("/LocalGit/Startup","/Startup")
 
 --Delete the launcher program from the pastebin
