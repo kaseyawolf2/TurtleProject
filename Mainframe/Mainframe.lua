@@ -5,17 +5,19 @@ MD = require("/LocalGit/APIs/MD")
 
 os.setComputerLabel("Mainframe")
 
--- Find/Await A Modem and open Rednet
+--Since The Command and control Mainframe Requires a Wireless Modem
+--We will check for one and open rednet if a wireless modem is found
+--If not we will wait for one to be attached and then open rednet
 HasWireless = false
 while not HasWireless do
     term.clear()
     term.setCursorPos(1, 1)
-    local ModList = peripheral.find("modem")
-    if ModList ~= nil then
-        if ModList.isWireless() then
+    local modem = peripheral.find("modem")
+    if modem ~= nil then
+        if modem.isWireless() then
             HasWireless = true
             rednet.close()
-            rednet.open(peripheral.getName(peripheral.find("modem")))
+            rednet.open(peripheral.getName(modem))
         end
     else
         print("Please Attach a Wireless Modem")

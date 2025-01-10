@@ -1,5 +1,5 @@
 AF = {}
-
+-- Area Functions
 function NewAreaTable()
     DefaultArea = {
         ID = 0,
