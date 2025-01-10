@@ -4,6 +4,9 @@
     Provides panels for system updates, drone controls, mining operations, and statistics.
 ]]
 
+-- Main program wrapped in vararg function to handle dependency injection
+local function main(...)
+
 -- Dependencies initialization with error handling
 local function initializeDependencies(...)
     local function loadDependency(path, name)
@@ -34,7 +37,7 @@ local function initializeDependencies(...)
     end
 end
 
-local MD, AF, touchpoint = initializeDependencies()
+local MD, AF, touchpoint = initializeDependencies(...)
 
 -- Debug logging functionality
 local DEBUG = true
@@ -521,5 +524,7 @@ local function errorHandler(err)
     log("ERROR:", err)
 end
 
+end
+
 -- Start the interface with error handling
-xpcall(main, errorHandler)
+xpcall(function() main(...) end, errorHandler)
