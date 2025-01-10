@@ -9,7 +9,7 @@ if periphemu then
     shell.run("/LocalGit/Mainframe/MonitorInterface")  
 end
 
-if not turtle then -- check if a turtle or PC
+if turtle then -- check if a turtle
     shell.setAlias("Starter", "/LocalGit/Turtle/Starter.lua")
     shell.run("Starter")     
 else-- if PC load the C2 program
