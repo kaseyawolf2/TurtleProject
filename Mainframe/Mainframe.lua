@@ -28,10 +28,10 @@ term.clear()
 term.setCursorPos(1, 1)
 
 if term.isColor() then
-    print("Advanced PC starting Responder in a new tab")
-    multishell.launch({},"/LocalGit/Mainframe/Responder.lua",GF,MF)
+    print("Advanced PC starting Network Coordinator in a new tab")
+    multishell.launch({},"/LocalGit/Mainframe/NetworkCoordinator.lua",GF,MF)
     multishell.launch({},"/LocalGit/Mainframe/MonitorInterface.lua",MD)
 else
-    print("Standard PC Starting Responder")
-    shell.run("/LocalGit/Mainframe/Responder.lua")
+    print("Standard PC Starting Network Coordinator")
+    shell.run("/LocalGit/Mainframe/NetworkCoordinator.lua")
 end
