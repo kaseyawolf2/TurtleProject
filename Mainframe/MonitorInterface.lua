@@ -646,6 +646,7 @@ function AssignmentPanel(ID)
         DrawText()
         local event, p1 = MD.handlePageEvents(Page)
         if event == "button_click" and Page.buttonList[p1].func then
+            print("Button Click") --DEBUG
             Page.buttonList[p1].func()
         end
     end
