@@ -53,7 +53,7 @@ function MD.initializeMonitor()
 end
 
 function MD.createPage()
-    return touchpoint.newPage(peripheral.getName(monitor))
+    return newPage(peripheral.getName(monitor))
 end
 
 function MD.getGridMath(X, Y)
