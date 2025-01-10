@@ -69,6 +69,7 @@ function MD.handlePageEvents(page)
         local event, side, x, y = os.pullEvent("monitor_touch")
         local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
         if buttonEvent then
+            term.native().write(string.format("Button Event: %s, Button Name: %s, X: %d, Y: %d\n", buttonEvent, buttonName, x, y))
             return buttonEvent, buttonName
         end
     end
