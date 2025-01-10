@@ -4,6 +4,9 @@ local MD = {}
 touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 AF = require("/LocalGit/APIs/AF")
 
+-- Local Variables
+local monitor
+
 -- Local Functions
 local function GridMath(X,Y)
     local ButtonX = 6
@@ -50,7 +53,7 @@ function MD.initializeMonitor()
 end
 
 function MD.createPage()
-    return newPage(peripheral.getName(monitor))
+    return touchpoint.newPage(peripheral.getName(monitor))
 end
 
 function MD.getGridMath(X, Y)
@@ -62,9 +65,13 @@ function MD.getListMath(Y)
 end
 
 function MD.handlePageEvents(page)
-    local event, side, x, y = os.pullEvent("monitor_touch")
-    local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
-    return buttonEvent, buttonName
+    while true do
+        local event, side, x, y = os.pullEvent("monitor_touch")
+        local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
+        if buttonEvent then
+            return buttonEvent, buttonName
+        end
+    end
 end
 
 return MD
