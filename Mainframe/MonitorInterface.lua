@@ -397,6 +397,9 @@ local function Draw()
     monitor, MonX, MonY, FourPanX, FourPanY = MD.initializeMonitor()
 
     if monitor.isColor() then -- Is advanced
+        term.native().clear()
+        term.native().setCursorPos(1, 1)
+        term.native().write("Test")
         LandingPanel()
     else -- Standard
         term.native().clear()
