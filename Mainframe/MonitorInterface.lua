@@ -5,7 +5,7 @@
 ]]
 
 -- Dependencies initialization with error handling
-local function initializeDependencies()
+local function initializeDependencies(...)
     local function loadDependency(path, name)
         local success, result = pcall(require, path)
         if not success then
