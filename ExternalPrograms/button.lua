@@ -1,3 +1,5 @@
+--Direwolf20's button API
+
 local mon = peripheral.wrap("top")
 mon.setTextScale(1)
 mon.setTextColor(colors.white)
