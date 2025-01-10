@@ -1,18 +1,22 @@
 if term.isColor() then -- if advanced
-    if not multishell then -- and doesnt have access to Multishell 
-        --we are in a multishell so Require dont work
-        GF = ... -- you need to pass them in to multi shell
+    if not multishell then -- Check if we can access multishell
+        --If we cant access multishell then we are most likely in a multishell
+        --If we are in a multishell, Require wont work
+        GF, AF, MD = ... -- you need to pass them in to multi shell
     else
-        --not in a muiltishell so require the APIs 
+        --not in a multishell so require the APIs 
         GF = require("APIs/GF")
+        AF = require("APIs/AF")
+        MD = require("APIs/MD")
     end
 else
     --not in a advanced pc so just require the APIs 
     GF = require("APIs/GF")
+    AF = require("APIs/AF")
+    MD = require("APIs/MD")
 end
 
 if GF ~= nil then -- APIs are required
-    AF = require("APIs/AF")
     MessageQueue = {}
 
     local function BackupMode()
@@ -58,8 +62,8 @@ if GF ~= nil then -- APIs are required
         local function ListenForMainframe()
             for i=1,5 do
                 rednet.broadcast("Hello" , "MainframeRequest")
-                print("Mainframe Attempt " .. i .. " : " .. tostring(Sender))
                 local Sender, Message, Protocol = rednet.receive("MainframeResponce",5)
+                print("Mainframe Attempt " .. i .. " : " .. tostring(Sender))
                 if Sender ~= nil then
                     MasterMainframeID = Sender
                     return false
@@ -101,7 +105,6 @@ if GF ~= nil then -- APIs are required
             local Protocol =MessagePackage["Protocol"]
 
             if Protocol == "MineSlotRequest" then
-                local MD = require("APIs/MD")
                 local Area = AF.LoadArea(Message)
                 CurAssigned = Area["SlicesAssigned"]
                 AssignNum = 1 + CurAssigned
@@ -111,7 +114,6 @@ if GF ~= nil then -- APIs are required
                 AF.SaveArea(Area["ID"],Area)
 
             elseif Protocol == "MineRequest" then
-                local MD = require("APIs/MD")
                 local Area = AF.LoadArea(1)
                 CurAssigned = Area["SlicesAssigned"]
                 AssignNum = 1 + CurAssigned
