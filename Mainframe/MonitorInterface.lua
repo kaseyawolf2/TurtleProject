@@ -524,3 +524,4 @@ end
 
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
+end
