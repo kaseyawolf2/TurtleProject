@@ -485,31 +485,29 @@ local Panels = {
 }
 
 -- Main initialization and entry point
-local function main()
-    log("Initializing monitor interface")
+log("Initializing monitor interface")
     
-    -- Initialize monitor
-    local success, result = pcall(function()
-        State.monitor, State.monX, State.monY, State.fourPanX, State.fourPanY = MD.initializeMonitor()
-    end)
-    
-    if not success then
-        error("Failed to initialize monitor: " .. tostring(result))
-    end
+-- Initialize monitor
+local success, result = pcall(function()
+    State.monitor, State.monX, State.monY, State.fourPanX, State.fourPanY = MD.initializeMonitor()
+end)
 
-    -- Start interface based on monitor type
-    if State.monitor.isColor() then
-        log("Starting advanced interface")
-        Panels.landing()
-    else
-        log("Starting basic interface")
-        term.native().clear()
-        term.native().setCursorPos(1, 1)
-        term.native().write("Requires Advanced Monitors for commands")
-        term.native().setCursorPos(1, 2)
-        term.native().write("Opening Stats")
-        Panels.stats()
-    end
+if not success then
+    error("Failed to initialize monitor: " .. tostring(result))
+end
+
+-- Start interface based on monitor type
+if State.monitor.isColor() then
+    log("Starting advanced interface")
+    Panels.landing()
+else
+    log("Starting basic interface")
+    term.native().clear()
+    term.native().setCursorPos(1, 1)
+    term.native().write("Requires Advanced Monitors for commands")
+    term.native().setCursorPos(1, 2)
+    term.native().write("Opening Stats")
+    Panels.stats()
 end
 
 -- Error handling wrapper
@@ -524,7 +522,5 @@ local function errorHandler(err)
     log("ERROR:", err)
 end
 
-end
-
 -- Start the interface with error handling
-xpcall(function() main(...) end, errorHandler)
+xpcall(main, errorHandler, ...)
