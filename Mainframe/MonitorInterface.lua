@@ -711,4 +711,4 @@ end
 xpcall(main, errorHandler, ...)
 
 main.log("test")
-error("test")
+main.error("test")
