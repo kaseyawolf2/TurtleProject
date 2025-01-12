@@ -16,7 +16,7 @@ local function log(...)
         for i, v in ipairs(args) do
             msg = msg .. tostring(v) .. " "
         end
-        term.native().write(msg .. "\n")
+        term.native().write("\n" .. msg .. "\n")
     end
 end
 
