@@ -709,3 +709,6 @@ end
 
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
+
+log("test")
+error("test")
