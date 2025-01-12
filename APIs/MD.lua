@@ -1,8 +1,9 @@
 local MD = {}
 
 --# load the touchpoint API
-touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
-AF = require("/LocalGit/APIs/AF")
+local touchpoint = require("ExternalPrograms/Touchpoint")
+local AF = require("APIs/AF")
+local newPage = touchpoint.newPage
 
 -- Local Variables
 local monitor
@@ -24,6 +25,9 @@ local function GridMath(X,Y)
 end
 
 local function ListMath(Y)
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
     local MonX, MonY = monitor.getSize()
     local ButtonX = math.floor((MonX)-1)
     local ButtonY = 2
@@ -41,19 +45,76 @@ end
 
 -- Utility functions for panel creation and management
 function MD.initializeMonitor()
+    -- Set the module-level monitor variable
     monitor = peripheral.find("monitor")
-    monitor.setTextScale(0.5)
-    term.redirect(monitor)
+    if not monitor then
+        error("No monitor found")
+    end
     
-    MonX, MonY = monitor.getSize()
-    FourPanX = math.floor((MonX/2)-1)
-    FourPanY = math.floor((MonY/2)-1)
+    -- Clear the monitor and set initial state
+    monitor.setTextScale(0.5)
+    monitor.setBackgroundColor(colors.black)
+    monitor.setTextColor(colors.white)
+    monitor.clear()
+    
+    -- Save monitor dimensions
+    local MonX, MonY = monitor.getSize()
+    local FourPanX = math.floor((MonX/2)-1)
+    local FourPanY = math.floor((MonY/2)-1)
 
     return monitor, MonX, MonY, FourPanX, FourPanY
 end
 
+function MD.clearMonitor()
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
+    monitor.setBackgroundColor(colors.black)
+    monitor.clear()
+    monitor.setCursorPos(1,1)
+end
+
+function MD.redirectToMonitor()
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
+    return term.redirect(monitor)
+end
+
+function MD.restoreTerminal(old)
+    if old then
+        term.redirect(old)
+    end
+end
+
+function MD.getMonitor()
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
+    return monitor
+end
+
 function MD.createPage()
-    return newPage(peripheral.getName(monitor))
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
+    local monitorName = peripheral.getName(monitor)
+    if not monitorName then
+        error("Failed to get monitor name")
+    end
+    
+    -- Clear monitor and ensure we're drawing to it
+    local oldTerm = term.current()
+    term.redirect(monitor)
+    MD.clearMonitor()
+    
+    -- Create page with monitor properly set
+    local page = newPage(monitorName)
+    
+    -- Restore terminal
+    term.redirect(oldTerm)
+    
+    return page
 end
 
 function MD.getGridMath(X, Y)
@@ -65,13 +126,30 @@ function MD.getListMath(Y)
 end
 
 function MD.handlePageEvents(page)
+    if not monitor then
+        error("Monitor not initialized. Call initializeMonitor() first.")
+    end
+    
+    -- Save current terminal state
+    local oldTerm = term.current()
+    term.redirect(monitor)
+    
     while true do
         local event, side, x, y = os.pullEvent("monitor_touch")
+        if side ~= peripheral.getName(monitor) then
+            -- Ignore touches from other monitors
+            goto continue
+        end
         local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
         if buttonEvent then
+            -- Restore terminal for logging
+            term.redirect(oldTerm)
             term.native().write(string.format("Button Event: %s, Button Name: %s, X: %d, Y: %d\n", buttonEvent, buttonName, x, y))
+            -- Switch back to monitor for further drawing
+            term.redirect(monitor)
             return buttonEvent, buttonName
         end
+        ::continue::
     end
 end
 

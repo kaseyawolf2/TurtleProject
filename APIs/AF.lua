@@ -1,7 +1,18 @@
-AF = {}
+local AF = {}
+
+-- Create MineAreas directory if it doesn't exist
+if not fs.exists("/Knowledge") then
+    fs.makeDir("/Knowledge")
+end
+if not fs.exists("/Knowledge/MineAreas") then
+    fs.makeDir("/Knowledge/MineAreas")
+end
+-- Constants
+local DefaultHeight = 3  -- Default tunnel height
+
 -- Area Functions
-function NewAreaTable()
-    DefaultArea = {
+local function NewAreaTable()
+    local DefaultArea = {
         ID = 0,
         X1 = 0,
         X2 = 0,
@@ -19,7 +30,7 @@ function NewAreaTable()
         }
     }
     --Not Returned currently but here for the info
-    DefaultSlice = {
+    local DefaultSlice = {
         X1 = 0,
         X2 = 0,
         Z1 = 0,
@@ -81,19 +92,19 @@ function AF.SaveArea(ID,AreaInfo)
     FResults.close()
     --SliceArea(AreaInfo)
 end
-function SliceAreaOld(AreaInfo)
+local function SliceAreaOld(AreaInfo) -- this is the old version of the function will soon be deprecated
     local SlicedArea = AreaInfo
-    Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
+    local Format, Type = string.match(AreaInfo["Style"],"(.*)-%s*(.*)") --fucking regex black magic (Splits The Style at the -)
 
     local BoundX1 = AreaInfo["X1"]
     local BoundX2 = AreaInfo["X2"]
     local BoundZ1 = AreaInfo["Z1"]
     local BoundZ2 = AreaInfo["Z2"]
     --Get the Chunks affected
-    XChunk1 = math.floor(BoundX1/16) -- Block/16 = chunk + where in the chunk
-    XChunk2 = math.floor(BoundX2/16) -- floor it to get only the chunk
-    ZChunk1 = math.floor(BoundZ1/16)
-    ZChunk2 = math.floor(BoundZ2/16)
+    local XChunk1 = math.floor(BoundX1/16) -- Block/16 = chunk + where in the chunk
+    local XChunk2 = math.floor(BoundX2/16) -- floor it to get only the chunk
+    local ZChunk1 = math.floor(BoundZ1/16)
+    local ZChunk2 = math.floor(BoundZ2/16)
 
     local Slices = {}
     if Format == "Strip" then
@@ -178,27 +189,27 @@ function SliceAreaOld(AreaInfo)
 end
 
 function AF.SliceArea(AreaID,Count)
-    Area = AF.LoadArea(AreaID)
+    local Area = AF.LoadArea(AreaID)
     Area["Slices"] = {}
 
     if Area["Style"] == "EvenSplit" then
         --Get the Total Span of the X And Z
-        XSpan = Area["X2"] - Area["X1"]            
-        ZSpan = Area["Z2"] - Area["Z1"] 
+        local XSpan = Area["X2"] - Area["X1"]            
+        local ZSpan = Area["Z2"] - Area["Z1"] 
 
         --Get the Slice Size to the smallest Int
-        SliceX = math.floor(XSpan / Count)
-        SliceZ = math.floor(ZSpan / Count)
+        local SliceX = math.floor(XSpan / Count)
+        local SliceZ = math.floor(ZSpan / Count)
 
         --Set Starting Coords to the Start of the Area
-        LSliceX1 = Area["X1"]
-        LSliceZ1 = Area["Z1"]
+        local LSliceX1 = Area["X1"]
+        local LSliceZ1 = Area["Z1"]
 
         local CurSliceID = 0
 
         for X=1,Count do
             -- Add the Slice Size to Start Coords to get the End Coords
-            LSliceX2 = LSliceX1 + SliceX
+            local LSliceX2 = LSliceX1 + SliceX
             
             if X == 1 then 
                 LSliceX1 = Area["X1"]
@@ -218,7 +229,7 @@ function AF.SliceArea(AreaID,Count)
                 end
 
                 -- Add the Slice Size to Start Coords to get the End Coords
-                LSliceZ2 = LSliceZ1 + SliceZ
+                local LSliceZ2 = LSliceZ1 + SliceZ
 
                 --If the last slice set End Coords to the Area end
                 if Z == Count then 

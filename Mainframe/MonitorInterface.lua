@@ -7,38 +7,6 @@
 -- Main program wrapped in vararg function to handle dependency injection
 local function main(...)
 
--- Dependencies initialization with error handling
-local function initializeDependencies(...)
-    local function loadDependency(path, name)
-        local success, result = pcall(require, path)
-        if not success then
-            error(string.format("Failed to load %s: %s", name, result))
-        end
-        return result
-    end
-
-    if term.isColor() then -- Advanced computer
-        if not multishell then
-            -- In multishell environment, dependencies are passed in
-            return ...
-        else
-            -- Not in multishell, load dependencies normally
-            return 
-                loadDependency("/LocalGit/APIs/MD"),
-                loadDependency("/LocalGit/APIs/AF"),
-                loadDependency("/LocalGit/ExternalPrograms/Touchpoint")
-        end
-    else
-        -- Basic computer, load dependencies normally
-        return 
-            loadDependency("/LocalGit/APIs/MD"),
-            loadDependency("/LocalGit/APIs/AF"),
-            loadDependency("/LocalGit/ExternalPrograms/Touchpoint")
-    end
-end
-
-local MD, AF, touchpoint = initializeDependencies(...)
-
 -- Debug logging functionality
 local DEBUG = true
 local function log(...)
@@ -51,6 +19,46 @@ local function log(...)
         term.native().write(msg .. "\n")
     end
 end
+
+-- Dependencies initialization with error handling
+local function initializeDependencies(...)
+    local function loadDependency(path, name)
+        log("Loading dependency:", name, "from path:", path)
+        local success, result = pcall(require, path)
+        if not success then
+            log("Failed to load dependency:", name, "Error:", result)
+            error(string.format("Failed to load %s: %s", name, result))
+        end
+        log("Successfully loaded dependency:", name)
+        return result
+    end
+
+    if term.isColor() then -- Advanced computer
+        if multishell then
+            -- In multishell environment, dependencies are passed in
+            log("Running in multishell environment, using passed dependencies")
+            return ...
+        end
+    end
+    -- Load dependencies normally for both basic computer and non-multishell advanced computer
+    log("Loading dependencies normally")
+    return 
+        loadDependency("APIs/MD", "MD"),
+        loadDependency("APIs/AF", "AF"),
+        loadDependency("ExternalPrograms/Touchpoint", "Touchpoint")
+end
+
+local MD, AF, touchpoint = initializeDependencies(...)
+if not MD then
+    error("Failed to load MD dependency - MD is nil")
+end
+if not AF then
+    error("Failed to load AF dependency - AF is nil")
+end
+if not touchpoint then
+    error("Failed to load Touchpoint dependency - Touchpoint is nil")
+end
+log("Dependencies loaded successfully")
 
 -- Configuration
 local Config = {
@@ -85,16 +93,26 @@ local State = {
 local UI = {
     handlePage = function(page)
         log("Drawing page")
+        
+        -- Save current terminal state
+        local oldTerm = term.current()
+        
+        -- Ensure we're drawing to monitor
+        term.redirect(State.monitor)
+        State.monitor.setBackgroundColor(colors.black)
+        State.monitor.clear()
+        
+        -- Draw the page
         page:draw()
         
-        while true do
-            local event, side, x, y = os.pullEvent("monitor_touch")
-            local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
-            if buttonEvent then
-                log("Button pressed:", buttonName, "at", x, y)
-                return buttonEvent, buttonName
-            end
-        end
+        -- Handle events through MD module which manages terminal state
+        local buttonEvent, buttonName = MD.handlePageEvents(page)
+        
+        -- Restore terminal before returning
+        term.redirect(oldTerm)
+        
+        log("Button pressed:", buttonName)
+        return buttonEvent, buttonName
     end,
 
     addBackButton = function(page, func)
@@ -121,28 +139,61 @@ local UI = {
         end
 
         -- X1 controls
-        addControl("X1-", function() coords.X1 = coords.X1 - delta end, 1, 3)
-        addControl("X1+", function() coords.X1 = coords.X1 + delta end, 3, 3)
+        addControl("X1-", function() 
+            coords.X1 = coords.X1 - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 1, 3)
+        addControl("X1+", function() 
+            coords.X1 = coords.X1 + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 3, 3)
         
         -- Z1 controls
-        addControl("Z1-", function() coords.Z1 = coords.Z1 - delta end, 1, 4)
-        addControl("Z1+", function() coords.Z1 = coords.Z1 + delta end, 3, 4)
+        addControl("Z1-", function() 
+            coords.Z1 = coords.Z1 - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 1, 4)
+        addControl("Z1+", function() 
+            coords.Z1 = coords.Z1 + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 3, 4)
         
         -- X2 controls
-        addControl("X2-", function() coords.X2 = coords.X2 - delta end, 5, 3)
-        addControl("X2+", function() coords.X2 = coords.X2 + delta end, 7, 3)
+        addControl("X2-", function() 
+            coords.X2 = coords.X2 - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 5, 3)
+        addControl("X2+", function() 
+            coords.X2 = coords.X2 + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 7, 3)
         
         -- Z2 controls
-        addControl("Z2-", function() coords.Z2 = coords.Z2 - delta end, 5, 4)
-        addControl("Z2+", function() coords.Z2 = coords.Z2 + delta end, 7, 4)
+        addControl("Z2-", function() 
+            coords.Z2 = coords.Z2 - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 5, 4)
+        addControl("Z2+", function() 
+            coords.Z2 = coords.Z2 + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 7, 4)
     end,
 
     displayText = function(text, gridX, gridY, offset)
+        -- Save current terminal state
+        local oldTerm = term.current()
+        
+        -- Ensure we're writing to monitor
+        term.redirect(State.monitor)
         term.setBackgroundColor(Config.colors.text.background)
         term.setTextColor(Config.colors.text.color)
+        
         local t1, t2 = MD.getGridMath(gridX, gridY)
         term.setCursorPos(t1 + (offset or 1), t2 + 1)
         term.write(text)
+        
+        -- Restore terminal
+        term.redirect(oldTerm)
     end
 }
 
@@ -198,8 +249,15 @@ local Panels = {
         page:add(
             "Sync Turtles",
             function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(term.native())
+                
                 log("Broadcasting turtle update")
                 rednet.broadcast("Update All Turtles", "TurtleUpdate")
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
             end,
             2, 2, 3, 3,
             Config.colors.button.background,
@@ -210,9 +268,16 @@ local Panels = {
         page:add(
             "Download Updates",
             function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(term.native())
+                
                 log("Running installer")
                 shell.run("/LocalGit/Installer/Installer.lua")
                 term.write("Updating And Rebooting")
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
             end,
             4, 4, 5, 5,
             Config.colors.button.background,
@@ -282,7 +347,16 @@ local Panels = {
         -- Navigation buttons
         page:add(
             "Up",
-            function() Panels.miningAreasList(pageNum - 1) end,
+            function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(State.monitor)
+                
+                Panels.miningAreasList(pageNum - 1)
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
+            end,
             2, 2, 3, 3,
             Config.colors.button.background,
             Config.colors.button.text
@@ -305,7 +379,16 @@ local Panels = {
         
         page:add(
             "Down",
-            function() Panels.miningAreasList(pageNum + 1) end,
+            function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(State.monitor)
+                
+                Panels.miningAreasList(pageNum + 1)
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
+            end,
             4, 4, 5, 5,
             Config.colors.button.background,
             Config.colors.button.text
@@ -313,7 +396,16 @@ local Panels = {
         
         page:add(
             "New Area",
-            function() Panels.miningArea(totalAreas + 1) end,
+            function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(State.monitor)
+                
+                Panels.miningArea(totalAreas + 1)
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
+            end,
             6, 6, 7, 7,
             Config.colors.button.background,
             Config.colors.button.text
@@ -341,11 +433,18 @@ local Panels = {
         page:add(
             "Save",
             function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(term.native())
+                
                 log("Saving area:", id)
                 local newArea = area or {}
                 newArea["X1"], newArea["Z1"] = coords.X1, coords.Z1
                 newArea["X2"], newArea["Z2"] = coords.X2, coords.Z2
                 AF.SaveArea(id, newArea)
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
             end,
             6, 6, 7, 7,
             Config.colors.button.background,
@@ -436,12 +535,19 @@ local Panels = {
         page:add(
             "Save",
             function()
+                -- Save current terminal state
+                local oldTerm = term.current()
+                term.redirect(term.native())
+                
                 log("Saving deposit for area:", id)
                 if not area["Deposits"] then area["Deposits"] = {} end
                 area["Deposits"]["X"] = x
                 area["Deposits"]["Y"] = y
                 area["Deposits"]["Z"] = z
                 AF.SaveArea(id, area)
+                
+                -- Restore terminal
+                term.redirect(oldTerm)
             end,
             6, 6, 7, 7,
             Config.colors.button.background,
@@ -461,24 +567,60 @@ local Panels = {
         end
 
         -- X controls
-        addControl("X-", function() x = x - delta end, 1, 3)
-        addControl("X+", function() x = x + delta end, 3, 3)
+        addControl("X-", function() 
+            x = x - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 1, 3)
+        addControl("X+", function() 
+            x = x + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 3, 3)
         
         -- Z controls
-        addControl("Z-", function() z = z - delta end, 1, 4)
-        addControl("Z+", function() z = z + delta end, 3, 4)
+        addControl("Z-", function() 
+            z = z - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 1, 4)
+        addControl("Z+", function() 
+            z = z + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 3, 4)
         
         -- Y controls
-        addControl("Y-", function() y = y - delta end, 5, 3)
-        addControl("Y+", function() y = y + delta end, 7, 3)
+        addControl("Y-", function() 
+            y = y - delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 5, 3)
+        addControl("Y+", function() 
+            y = y + delta 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 7, 3)
 
         -- Delta controls
-        addControl("-1", function() delta = math.max(0, delta - 1) end, 1, 5)
-        addControl("-10", function() delta = math.max(0, delta - 10) end, 2, 5)
-        addControl("-100", function() delta = math.max(0, delta - 100) end, 3, 5)
-        addControl("+100", function() delta = delta + 100 end, 5, 5)
-        addControl("+10", function() delta = delta + 10 end, 6, 5)
-        addControl("+1", function() delta = delta + 1 end, 7, 5)
+        addControl("-1", function() 
+            delta = math.max(0, delta - 1) 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 1, 5)
+        addControl("-10", function() 
+            delta = math.max(0, delta - 10) 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 2, 5)
+        addControl("-100", function() 
+            delta = math.max(0, delta - 100) 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 3, 5)
+        addControl("+100", function() 
+            delta = delta + 100 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 5, 5)
+        addControl("+10", function() 
+            delta = delta + 10 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 6, 5)
+        addControl("+1", function() 
+            delta = delta + 1 
+            MD.clearMonitor() -- Ensure clean redraw
+        end, 7, 5)
 
         UI.handlePage(page)
     end
@@ -487,40 +629,61 @@ local Panels = {
 -- Main initialization and entry point
 log("Initializing monitor interface")
     
--- Initialize monitor
+-- Initialize monitor and terminal state
+log("Initializing monitor...")
 local success, result = pcall(function()
-    State.monitor, State.monX, State.monY, State.fourPanX, State.fourPanY = MD.initializeMonitor()
+    local mon, monX, monY, fourPanX, fourPanY = MD.initializeMonitor()
+    State.monitor = mon
+    State.monX = monX
+    State.monY = monY
+    State.fourPanX = fourPanX
+    State.fourPanY = fourPanY
 end)
 
 if not success then
     error("Failed to initialize monitor: " .. tostring(result))
 end
+log("Monitor initialized successfully")
+
+-- Save current terminal
+local oldTerm = MD.redirectToMonitor()
 
 -- Start interface based on monitor type
-if State.monitor.isColor() then
-    log("Starting advanced interface")
-    Panels.landing()
-else
-    log("Starting basic interface")
-    term.native().clear()
-    term.native().setCursorPos(1, 1)
-    term.native().write("Requires Advanced Monitors for commands")
-    term.native().setCursorPos(1, 2)
-    term.native().write("Opening Stats")
-    Panels.stats()
+local ok, err = pcall(function()
+    if State.monitor.isColor() then
+        log("Starting advanced interface")
+        Panels.landing()
+    else
+        log("Starting basic interface")
+        term.native().clear()
+        term.native().setCursorPos(1, 1)
+        term.native().write("Requires Advanced Monitors for commands")
+        term.native().setCursorPos(1, 2)
+        term.native().write("Opening Stats")
+        Panels.stats()
+    end
+end)
+
+-- Always restore terminal before exiting
+MD.restoreTerminal(oldTerm)
+
+if not ok then
+    error(err) -- Re-throw error after terminal restoration
 end
 
 end -- Close main() function defined at line 8
 
 -- Error handling wrapper
 local function errorHandler(err)
-    term.native().setBackgroundColor(colors.black)
-    term.native().setTextColor(colors.red)
-    term.native().clear()
-    term.native().setCursorPos(1, 1)
-    term.native().write("Monitor Interface Error:")
-    term.native().setCursorPos(1, 2)
-    term.native().write(tostring(err))
+    -- Ensure we're writing to the native terminal
+    local nativeTerm = term.native()
+    nativeTerm.setBackgroundColor(colors.black)
+    nativeTerm.setTextColor(colors.red)
+    nativeTerm.clear()
+    nativeTerm.setCursorPos(1, 1)
+    nativeTerm.write("Monitor Interface Error:")
+    nativeTerm.setCursorPos(1, 2)
+    nativeTerm.write(tostring(err))
     log("ERROR:", err)
 end
 
