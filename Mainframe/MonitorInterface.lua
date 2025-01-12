@@ -710,5 +710,5 @@ end
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
 
-log("test")
+main.log("test")
 error("test")
