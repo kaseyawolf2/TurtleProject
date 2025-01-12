@@ -42,7 +42,7 @@ local function initializeDependencies(...)
             return ...
         end
     end
-    -- IMPORTANT: All paths must use /LocalGit/ prefix for end device compatibility
+    -- IMPORTANT: All require paths must use /LocalGit/ prefix for end device compatibility
     -- DO NOT change these paths - they are required for the program to work on the end device
     log("Loading dependencies normally")
     return 
