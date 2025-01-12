@@ -524,4 +524,5 @@ end
 
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
-end
+
+end -- Close main() function defined at line 8
