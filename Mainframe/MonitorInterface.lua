@@ -683,10 +683,10 @@ end -- Close main() function defined at line 8
 -- Error handling wrapper
 local function errorHandler(err)
     -- Ensure we're writing to the native terminal
-    local nativeTerm = term.current()
-    nativeTerm.setBackgroundColor(colors.black)
-    nativeTerm.setTextColor(colors.red)
-    nativeTerm.clear()
+    local CurrentTerm = term.current()
+    CurrentTerm.setBackgroundColor(colors.black)
+    CurrentTerm.setTextColor(colors.red)
+    CurrentTerm.clear()
     
     -- Split error message into lines for better readability
     local lines = {}
@@ -695,13 +695,13 @@ local function errorHandler(err)
     end
     
     -- Write header
-    nativeTerm.setCursorPos(1, 1)
-    nativeTerm.write("Monitor Interface Error:")
+    CurrentTerm.setCursorPos(1, 1)
+    CurrentTerm.write("Monitor Interface Error:")
     
     -- Write each line of the error
     for i, line in ipairs(lines) do
-        nativeTerm.setCursorPos(1, i + 1)
-        nativeTerm.write(line)
+        CurrentTerm.setCursorPos(1, i + 1)
+        CurrentTerm.write(line)
     end
     
     -- Log the full error
