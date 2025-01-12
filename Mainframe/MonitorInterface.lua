@@ -16,6 +16,7 @@ local function log(...)
         for i, v in ipairs(args) do
             msg = msg .. tostring(v) .. " "
         end
+        term.native().setCursorPos(1, 1)
         term.native().write("\n" .. msg .. "\n")
     end
 end
@@ -682,7 +683,7 @@ end -- Close main() function defined at line 8
 -- Error handling wrapper
 local function errorHandler(err)
     -- Ensure we're writing to the native terminal
-    local nativeTerm = term.native()
+    local nativeTerm = term.current()
     nativeTerm.setBackgroundColor(colors.black)
     nativeTerm.setTextColor(colors.red)
     nativeTerm.clear()
@@ -710,5 +711,3 @@ end
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
 
-main.log("test")
-main.error("test")
