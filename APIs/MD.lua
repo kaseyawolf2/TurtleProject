@@ -27,7 +27,7 @@ end
 
 local function ListMath(Y)
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
     end
     local MonX, MonY = monitor.getSize()
     local ButtonX = math.floor((MonX)-1)
@@ -68,7 +68,7 @@ end
 
 function MD.clearMonitor()
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.")
     end
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
@@ -77,7 +77,7 @@ end
 
 function MD.redirectToMonitor()
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
     end
     return term.redirect(monitor)
 end
@@ -90,14 +90,14 @@ end
 
 function MD.getMonitor()
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
     end
     return monitor
 end
 
 function MD.createPage()
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
     end
     local monitorName = peripheral.getName(monitor)
     if not monitorName then
@@ -128,7 +128,7 @@ end
 
 function MD.handlePageEvents(page)
     if not monitor then
-        error("Monitor not initialized. Call initializeMonitor() first.")
+        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
     end
     
     -- Save current terminal state

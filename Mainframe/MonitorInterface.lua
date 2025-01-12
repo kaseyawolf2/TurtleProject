@@ -26,8 +26,10 @@ local function initializeDependencies(...)
         log("Loading dependency:", name, "from path:", path)
         local success, result = pcall(require, path)
         if not success then
-            log("Failed to load dependency:", name, "Error:", result)
-            error(string.format("Failed to load %s: %s", name, result))
+            -- Format error message to be more readable
+            local errorMsg = string.format("Failed to load %s:\n%s", name, result)
+            log("Error:", errorMsg)
+            error(errorMsg)
         end
         log("Successfully loaded dependency:", name)
         return result
@@ -336,7 +338,7 @@ local Panels = {
         pageNum = pageNum or 0
         
         local availSpace = math.floor(State.monY / 4) - 4
-        -- IMPORTANT: Path must use not /LocalGit/ prefix for end device compatibility
+        -- IMPORTANT: Path is accurate for end device compatibility
         local areas = fs.find("/Knowledge/MineAreas/*")
         local totalAreas = #areas
         
@@ -464,7 +466,7 @@ local Panels = {
         pageNum = pageNum or 0
         
         local availSpace = math.floor(State.monY / 4) - 4
-        -- IMPORTANT: Path must use not /LocalGit/ prefix for end device compatibility
+        -- IMPORTANT: Path is accurate for end device compatibility
         local areas = fs.find("/Knowledge/MineAreas/*")
         local totalAreas = #areas
         
@@ -684,10 +686,24 @@ local function errorHandler(err)
     nativeTerm.setBackgroundColor(colors.black)
     nativeTerm.setTextColor(colors.red)
     nativeTerm.clear()
+    
+    -- Split error message into lines for better readability
+    local lines = {}
+    for line in tostring(err):gmatch("[^\n]+") do
+        table.insert(lines, line)
+    end
+    
+    -- Write header
     nativeTerm.setCursorPos(1, 1)
     nativeTerm.write("Monitor Interface Error:")
-    nativeTerm.setCursorPos(1, 2)
-    nativeTerm.write(tostring(err))
+    
+    -- Write each line of the error
+    for i, line in ipairs(lines) do
+        nativeTerm.setCursorPos(1, i + 1)
+        nativeTerm.write(line)
+    end
+    
+    -- Log the full error
     log("ERROR:", err)
 end
 
