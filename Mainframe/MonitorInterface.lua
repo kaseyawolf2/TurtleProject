@@ -510,6 +510,8 @@ else
     Panels.stats()
 end
 
+end -- Close main() function defined at line 8
+
 -- Error handling wrapper
 local function errorHandler(err)
     term.native().setBackgroundColor(colors.black)
@@ -524,5 +526,3 @@ end
 
 -- Start the interface with error handling
 xpcall(main, errorHandler, ...)
-
-end -- Close main() function defined at line 8
