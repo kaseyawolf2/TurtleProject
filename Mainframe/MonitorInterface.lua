@@ -27,7 +27,7 @@ local function initializeDependencies(...)
         local success, result = pcall(require, path)
         if not success then
             -- Format error message to be more readable
-            local errorMsg = string.format("\nFailed to load %s:\n%s", name, result)
+            local errorMsg = string.format("Failed to load %s:\n%s", name, result)
             log("Error:", errorMsg)
             error(errorMsg)
         end
