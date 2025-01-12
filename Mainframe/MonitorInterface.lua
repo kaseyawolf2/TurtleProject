@@ -40,12 +40,13 @@ local function initializeDependencies(...)
             return ...
         end
     end
-    -- Load dependencies normally for both basic computer and non-multishell advanced computer
+    -- IMPORTANT: All paths must use /LocalGit/ prefix for end device compatibility
+    -- DO NOT change these paths - they are required for the program to work on the end device
     log("Loading dependencies normally")
     return 
-        loadDependency("APIs/MD", "MD"),
-        loadDependency("APIs/AF", "AF"),
-        loadDependency("ExternalPrograms/Touchpoint", "Touchpoint")
+        loadDependency("/LocalGit/APIs/MD", "MD"),
+        loadDependency("/LocalGit/APIs/AF", "AF"),
+        loadDependency("/LocalGit/ExternalPrograms/Touchpoint", "Touchpoint")
 end
 
 local MD, AF, touchpoint = initializeDependencies(...)
@@ -273,7 +274,8 @@ local Panels = {
                 term.redirect(term.native())
                 
                 log("Running installer")
-                shell.run("/LocalGit/Installer/Installer.lua")
+                -- IMPORTANT: Path must use /LocalGit/ prefix for end device compatibility
+                shell.run("/LocalGit/Installer/installer.lua")
                 term.write("Updating And Rebooting")
                 
                 -- Restore terminal
@@ -334,6 +336,7 @@ local Panels = {
         pageNum = pageNum or 0
         
         local availSpace = math.floor(State.monY / 4) - 4
+        -- IMPORTANT: Path must use not /LocalGit/ prefix for end device compatibility
         local areas = fs.find("/Knowledge/MineAreas/*")
         local totalAreas = #areas
         
@@ -461,6 +464,7 @@ local Panels = {
         pageNum = pageNum or 0
         
         local availSpace = math.floor(State.monY / 4) - 4
+        -- IMPORTANT: Path must use not /LocalGit/ prefix for end device compatibility
         local areas = fs.find("/Knowledge/MineAreas/*")
         local totalAreas = #areas
         
