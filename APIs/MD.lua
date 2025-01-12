@@ -27,7 +27,7 @@ end
 
 local function ListMath(Y)
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     local MonX, MonY = monitor.getSize()
     local ButtonX = math.floor((MonX)-1)
@@ -68,7 +68,7 @@ end
 
 function MD.clearMonitor()
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
@@ -77,7 +77,7 @@ end
 
 function MD.redirectToMonitor()
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     return term.redirect(monitor)
 end
@@ -90,18 +90,18 @@ end
 
 function MD.getMonitor()
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     return monitor
 end
 
 function MD.createPage()
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     local monitorName = peripheral.getName(monitor)
     if not monitorName then
-        error("Failed to get monitor name")
+        error("Monitor not found")
     end
     
     -- Clear monitor and ensure we're drawing to it
@@ -128,7 +128,7 @@ end
 
 function MD.handlePageEvents(page)
     if not monitor then
-        error("Monitor not initialized.\nCall initializeMonitor() first to set up the monitor.\nMake sure a monitor is connected and try again.")
+        error("No monitor.\nRun initializeMonitor()")
     end
     
     -- Save current terminal state

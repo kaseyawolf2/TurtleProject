@@ -26,8 +26,8 @@ local function initializeDependencies(...)
         log("Loading dependency:", name, "from path:", path)
         local success, result = pcall(require, path)
         if not success then
-            -- Format error message to be more readable
-            local errorMsg = string.format("Failed to load %s:\n%s", name, result)
+            -- Keep error message concise
+            local errorMsg = string.format("%s error:\n%s", name, result)
             log("Error:", errorMsg)
             error(errorMsg)
         end
@@ -53,13 +53,13 @@ end
 
 local MD, AF, touchpoint = initializeDependencies(...)
 if not MD then
-    error("Failed to load MD dependency - MD is nil")
+    error("MD not found")
 end
 if not AF then
-    error("Failed to load AF dependency - AF is nil")
+    error("AF not found")
 end
 if not touchpoint then
-    error("Failed to load Touchpoint dependency - Touchpoint is nil")
+    error("Touchpoint not found")
 end
 log("Dependencies loaded successfully")
 
@@ -647,7 +647,7 @@ local success, result = pcall(function()
 end)
 
 if not success then
-    error("Failed to initialize monitor: " .. tostring(result))
+    error("Monitor error:\n" .. tostring(result))
 end
 log("Monitor initialized successfully")
 
