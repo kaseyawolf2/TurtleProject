@@ -1,6 +1,6 @@
 local MD = {}
 
---# IMPORTANT: All paths must use /LocalGit/ prefix for end device compatibility
+--# IMPORTANT: All require paths must use /LocalGit/ prefix for end device compatibility
 --# DO NOT change these paths - they are required for the program to work on the end device
 local touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 local AF = require("/LocalGit/APIs/AF")
@@ -44,78 +44,47 @@ local function ListMath(Y)
     return Rx, Ry, Rxe, Rye
 end
 
+function MD.SimplePrint(Text, mon)
+    if not mon then
+        error("No monitor.\nRun initializeMonitor()")
+    end
+    mon.scroll(-1)
+    mon.setCursorPos(1,1)
+    mon.write(Text)
+end
+
 -- Utility functions for panel creation and management
 function MD.initializeMonitor()
     -- Set the module-level monitor variable
-    monitor = peripheral.find("monitor")
+    local monitor = peripheral.find("monitor")
     if not monitor then
         error("No monitor found")
     end
     
     -- Clear the monitor and set initial state
+    monitor.clear()
     monitor.setTextScale(0.5)
     monitor.setBackgroundColor(colors.black)
     monitor.setTextColor(colors.white)
-    monitor.clear()
+    MD.SimplePrint("MD: Monitor Initialized", monitor)
     
     -- Save monitor dimensions
     local MonX, MonY = monitor.getSize()
     local FourPanX = math.floor((MonX/2)-1)
     local FourPanY = math.floor((MonY/2)-1)
 
-    return monitor, MonX, MonY, FourPanX, FourPanY
+    local monAddress = peripheral.getName(monitor)
+
+    return monitor, MonX, MonY, FourPanX, FourPanY, monAddress
 end
 
-function MD.clearMonitor()
+function MD.clearMonitor(monitor)
     if not monitor then
         error("No monitor.\nRun initializeMonitor()")
     end
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
     monitor.setCursorPos(1,1)
-end
-
-function MD.redirectToMonitor()
-    if not monitor then
-        error("No monitor.\nRun initializeMonitor()")
-    end
-    return term.redirect(monitor)
-end
-
-function MD.restoreTerminal(old)
-    if old then
-        term.redirect(old)
-    end
-end
-
-function MD.getMonitor()
-    if not monitor then
-        error("No monitor.\nRun initializeMonitor()")
-    end
-    return monitor
-end
-
-function MD.createPage()
-    if not monitor then
-        error("No monitor.\nRun initializeMonitor()")
-    end
-    local monitorName = peripheral.getName(monitor)
-    if not monitorName then
-        error("Monitor not found")
-    end
-    
-    -- Clear monitor and ensure we're drawing to it
-    local oldTerm = term.current()
-    term.redirect(monitor)
-    MD.clearMonitor()
-    
-    -- Create page with monitor properly set
-    local page = newPage(monitorName)
-    
-    -- Restore terminal
-    term.redirect(oldTerm)
-    
-    return page
 end
 
 function MD.getGridMath(X, Y)

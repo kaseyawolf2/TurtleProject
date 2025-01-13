@@ -179,7 +179,3 @@ function newPage(monSide)
 	setmetatable(buttonInstance, {__index = Button})
 	return buttonInstance
 end
-
-return {
-	newPage = newPage
-}
