@@ -95,32 +95,4 @@ function MD.getListMath(Y)
     return ListMath(Y)
 end
 
-function MD.handlePageEvents(page)
-    if not monitor then
-        error("No monitor.\nRun initializeMonitor()")
-    end
-    
-    -- Save current terminal state
-    local oldTerm = term.current()
-    term.redirect(monitor)
-    
-    while true do
-        local event, side, x, y = os.pullEvent("monitor_touch")
-        if side ~= peripheral.getName(monitor) then
-            -- Ignore touches from other monitors
-            goto continue
-        end
-        local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
-        if buttonEvent then
-            -- Restore terminal for logging
-            term.redirect(oldTerm)
-            term.native().write(string.format("Button Event: %s, Button Name: %s, X: %d, Y: %d\n", buttonEvent, buttonName, x, y))
-            -- Switch back to monitor for further drawing
-            term.redirect(monitor)
-            return buttonEvent, buttonName
-        end
-        ::continue::
-    end
-end
-
 return MD
