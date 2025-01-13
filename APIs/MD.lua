@@ -52,31 +52,6 @@ function MD.SimplePrint(Text, mon)
     mon.write(Text)
 end
 
--- Utility functions for panel creation and management
-function MD.initializeMonitor()
-    -- Set the module-level monitor variable
-    local monitor = peripheral.find("monitor")
-    if not monitor then
-        error("No monitor found")
-    end
-    
-    -- Clear the monitor and set initial state
-    monitor.clear()
-    monitor.setTextScale(0.5)
-    monitor.setBackgroundColor(colors.black)
-    monitor.setTextColor(colors.white)
-    MD.SimplePrint("MD: Monitor Initialized", monitor)
-    
-    -- Save monitor dimensions
-    local MonX, MonY = monitor.getSize()
-    local FourPanX = math.floor((MonX/2)-1)
-    local FourPanY = math.floor((MonY/2)-1)
-
-    local monAddress = peripheral.getName(monitor)
-
-    return monitor, MonX, MonY, FourPanX, FourPanY, monAddress
-end
-
 function MD.clearMonitor(monitor)
     if not monitor then
         error("No monitor.\nRun initializeMonitor()")

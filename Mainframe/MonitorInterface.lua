@@ -117,6 +117,30 @@ local function main(...)
     
     -- UI Helper Functions
     local UI = {
+        initializeMonitor = function()
+            -- Find and validate monitor
+            local monitor = peripheral.find("monitor")
+            if not monitor then
+                error("No monitor found")
+            end
+            
+            -- Clear the monitor and set initial state
+            monitor.clear()
+            monitor.setTextScale(0.5)
+            monitor.setBackgroundColor(colors.black)
+            monitor.setTextColor(colors.white)
+            MD.SimplePrint("Monitor Initialized", monitor)
+            
+            -- Save monitor dimensions
+            local MonX, MonY = monitor.getSize()
+            local FourPanX = math.floor((MonX/2)-1)
+            local FourPanY = math.floor((MonY/2)-1)
+
+            local monAddress = peripheral.getName(monitor)
+
+            return monitor, MonX, MonY, FourPanX, FourPanY, monAddress
+        end,
+
         handlePageEvents = function(page)
             if not State.monitor then
                 error("No monitor.\nRun initializeMonitor()")
@@ -680,7 +704,7 @@ local function main(...)
     -- Initialize monitor and terminal state
     log("Initializing monitor...")
     local success, result = pcall(function()
-        local mon, monX, monY, fourPanX, fourPanY, monAddress = MD.initializeMonitor()
+        local mon, monX, monY, fourPanX, fourPanY, monAddress = UI.initializeMonitor()
         State.monitor = mon
         State.monX = monX
         State.monY = monY
@@ -692,7 +716,7 @@ local function main(...)
     if not success then
         error("Monitor error:\n" .. tostring(result))
     end
-    MD.SimplePrint("Monitor initialized successfully",State.monitor)
+    MD.SimplePrint("Monitor initialized successfully", State.monitor)
     log("Monitor initialized successfully")
     
     -- Start interface based on monitor type
