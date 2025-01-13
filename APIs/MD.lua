@@ -4,7 +4,6 @@ local MD = {}
 --# DO NOT change these paths - they are required for the program to work on the end device
 local touchpoint = require("/LocalGit/ExternalPrograms/Touchpoint")
 local AF = require("/LocalGit/APIs/AF")
-local newPage = touchpoint.newPage
 
 -- Local Variables
 local monitor
