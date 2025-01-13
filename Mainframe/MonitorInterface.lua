@@ -27,9 +27,9 @@ local function main(...)
             
             -- Write each line of the log message
             for _, line in ipairs(lines) do
-                term.current().setCursorPos(1, 1)
-                term.current().write(line .. "\n")
-                term.current().scroll(-1)
+                State.console.setCursorPos(1, 1)
+                State.console.write(line .. "\n")
+                State.console.scroll(-1)
             end
         end
     end
@@ -102,6 +102,7 @@ local function main(...)
     
     -- State management
     local State = {
+        console = term.current(),
         monitor = nil,
         monAddress = nil,
         monX = nil,
@@ -116,14 +117,42 @@ local function main(...)
     
     -- UI Helper Functions
     local UI = {
+        handlePageEvents = function(page)
+            if not State.monitor then
+                error("No monitor.\nRun initializeMonitor()")
+            end
+            
+            -- Save current terminal state
+            local oldTerm = term.current()
+            term.redirect(State.monitor)
+            
+            while true do
+                local event, side, x, y = os.pullEvent("monitor_touch")
+                if side ~= State.monAddress then
+                    -- Ignore touches from other monitors
+                    goto continue
+                end
+                local buttonEvent, buttonName = page:handleEvents(event, side, x, y)
+                if buttonEvent then
+                    -- Restore terminal for logging
+                    term.redirect(oldTerm)
+                    term.native().write(string.format("Button Event: %s, Button Name: %s, X: %d, Y: %d\n", buttonEvent, buttonName, x, y))
+                    -- Switch back to monitor for further drawing
+                    term.redirect(State.monitor)
+                    return buttonEvent, buttonName
+                end
+                ::continue::
+            end
+        end,
+
         handlePage = function(page)
             log("Drawing page")
             
             -- Draw the page
             page:draw()
             
-            -- Handle events through MD module which manages terminal state
-            local buttonEvent, buttonName = MD.handlePageEvents(page)
+            -- Handle events using local function
+            local buttonEvent, buttonName = UI.handlePageEvents(page)
             
             log("Button pressed:", buttonName)
             return buttonEvent, buttonName
@@ -690,10 +719,9 @@ local function main(...)
     
     -- Error handling wrapper
     local function errorHandler(err)
-        -- Ensure we're writing to the native terminal
-        local ComputerTerm = term.current()
-        ComputerTerm.setBackgroundColor(colors.black)
-        ComputerTerm.setTextColor(colors.red)
+        -- Set the console Colors to error colors
+        State.console.setBackgroundColor(colors.black)
+        State.console.setTextColor(colors.red)
         
         -- Split error message into lines for better readability
         local lines = {}
@@ -704,24 +732,22 @@ local function main(...)
         end
         
         -- Write header
-        ComputerTerm.setCursorPos(1, 1)
-        ComputerTerm.write("Monitor Interface Error:")
-        ComputerTerm.scroll(-1)
+        State.console.setCursorPos(1, 1)
+        State.console.write("Monitor Interface Error:")
+        State.console.scroll(-1)
         
         -- Write each line of the error, extracting line number and error message
         for i, line in ipairs(lines) do
             local lineNumber, errorMessage = line:match(":(%d+): (.+)")
-            ComputerTerm.setCursorPos(1, 1)
-            ComputerTerm.write("Line " .. (lineNumber or "unknown") .. ": " .. (errorMessage or line) .. "\n")
-            ComputerTerm.scroll(-1)
+            State.console.setCursorPos(1, 1)
+            State.console.write("Line " .. (lineNumber or "unknown") .. ": " .. (errorMessage or line) .. "\n")
+            State.console.scroll(-1)
         end
         
-        ComputerTerm.setTextColor(colors.white)
+        State.console.setTextColor(colors.white)
         -- Move cursor to bottom of screen for press any key dialogue
-        ComputerTerm.setCursorPos(1, 18)
+        State.console.setCursorPos(1, 18)
     end
     
     -- Start the interface with error handling
     xpcall(main, errorHandler, ...)
-    
-    
